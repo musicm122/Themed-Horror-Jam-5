@@ -1,0 +1,19 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Themed Horror Jam 5", "Themed Horror Jam 5.csproj", "{3CEE8998-1329-4B79-88B2-138264D36780}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	ExportDebug|Any CPU = ExportDebug|Any CPU
+	ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CEE8998-1329-4B79-88B2-138264D36780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CEE8998-1329-4B79-88B2-138264D36780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CEE8998-1329-4B79-88B2-138264D36780}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{3CEE8998-1329-4B79-88B2-138264D36780}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{3CEE8998-1329-4B79-88B2-138264D36780}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{3CEE8998-1329-4B79-88B2-138264D36780}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal
