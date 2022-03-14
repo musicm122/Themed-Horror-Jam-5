@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Entities/Enemy2.cs" type="Script" id=1]
+
+[sub_resource type="CapsuleShape2D" id=1]
+height = 44.0
+
+[node name="Enemy2" type="KinematicBody2D"]
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.890196, 0.109804, 0.733333, 1 )
+polygon = PoolVector2Array( -8, -16, -8, 24, 0, 24, 8, 24, 8, -16, 0, -24 )

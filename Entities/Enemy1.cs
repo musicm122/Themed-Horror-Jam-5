@@ -1,24 +1,32 @@
 using Godot;
 
+/// <summary>
+/// This was put together using a combination of
+/// https://kidscancode.org/godot_recipes/ai/path_follow/
+/// https://kidscancode.org/godot_recipes/ai/chase/
+/// https://kidscancode.org/godot_recipes/ai/changing_behaviors/
+/// </summary>
 public class Enemy1 : KinematicBody2D
 {
-    public EnemyBehaviorStates CurrentState { get; set; } = EnemyBehaviorStates.Idle;
-
     [Export]
     public float MoveSpeed { get; set; } = 50f;
 
     [Export]
     public float MoveMultiplier { get; set; } = 1.5f;
 
+    [Export]
+    public NodePath PatrolPath { get; set; }
+
+    public EnemyBehaviorStates CurrentState { get; set; } = EnemyBehaviorStates.Idle;
+
     public Path2D Path { get; set; }
 
     public Player player { get; set; }
 
-    [Export]
-    public NodePath PatrolPath { get; set; }
-
     public bool CanMove = true;
+
     public bool IsRunning = false;
+
     public Vector2 Velocity { get; set; } = Vector2.Zero;
 
     private Vector2[] PatrolPoints { get; set; }
@@ -28,16 +36,19 @@ public class Enemy1 : KinematicBody2D
     {
         if (PatrolPath != null)
         {
-            //patrol_points = get_node(patrol_path).curve.get_baked_points()
             Path = (Path2D)GetNode(PatrolPath);
             PatrolPoints = Path.Curve.GetBakedPoints();
             CurrentState = EnemyBehaviorStates.Patrol;
+        }
+        else
+        {
+            CurrentState = EnemyBehaviorStates.Idle;
         }
     }
 
     private void Patrol()
     {
-        if (PatrolPath == null) return;
+        if (PatrolPath == null || !CanMove) return;
         var target = PatrolPoints[PatrolIndex];
         if (Position.DistanceTo(target) <= 1)
         {
@@ -51,14 +62,14 @@ public class Enemy1 : KinematicBody2D
 
     private void ChasePlayer()
     {
-        if (player != null)
+        if (player == null || !CanMove)
         {
-            Velocity = Position.DirectionTo(player.Position) * MoveSpeed;
-            Velocity = MoveAndSlide(Velocity);
+            CurrentState = EnemyBehaviorStates.Idle;
         }
         else
         {
-            CurrentState = EnemyBehaviorStates.Patrol;
+            Velocity = Position.DirectionTo(player.Position) * MoveSpeed;
+            Velocity = MoveAndSlide(Velocity);
         }
     }
 
@@ -86,6 +97,7 @@ public class Enemy1 : KinematicBody2D
     {
         if (body.Name.ToLower() == "player")
         {
+            GD.Print("OnVisionRadiusBodyEntered");
             this.player = (Player)body;
             this.CurrentState = EnemyBehaviorStates.ChasePlayer;
         }
@@ -95,6 +107,7 @@ public class Enemy1 : KinematicBody2D
     {
         if (body.Name.ToLower() == "player")
         {
+            GD.Print("OnVisionRadiusBodyExit");
             this.player = null;
             this.CurrentState = EnemyBehaviorStates.Patrol;
         }
