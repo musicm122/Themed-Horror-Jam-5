@@ -28,7 +28,11 @@ public class Enemy2 : KinematicBody2D
     public PathFollow2D PathFollow2D { get; set; }
 
     public float SteerForce = 1f;
+
+    [Export]
     public float LookAhead = 100;
+
+    [Export]
     public int RayCount = 16;
 
     private Vector2[] RayDirections;
@@ -62,15 +66,26 @@ public class Enemy2 : KinematicBody2D
         {
             GD.PushWarning("PatrolPathFollow2D could not be found");
         }
-        //Path = (Path2D)GetNode("Enemy2_Path2D");
-        //PathFollow2D = (PathFollow2D)GetNode("Enemy2_Path2D/Enemy2_PathFollow2D");
         Interest = new float[RayCount];
         Danger = new float[RayCount];
         RayDirections = new Vector2[RayCount];
         for (int i = 0; i < RayCount; i++)
         {
+            //(2 * Mathf.Pi)/ RayCount
             var angle = i * 2 * Mathf.Pi / RayCount;
-            RayDirections[i] = Vector2.Right.Rotated(angle);
+            //var angle = degrees * i;
+            //var angle = degrees / (i + 1);
+            //RayDirections[i] = Vector2.Zero.Rotated(angleToDrawAt);
+            //RayDirections[i] = Vector2.Right.Rotated(Mathf.Deg2Rad(angleToDrawAt));
+
+            //var angle = i * 2 * PI / num_rays
+
+            //ray_directions[i] = Vector2.RIGHT.rotated(angle)
+
+            RayDirections[i] = Vector2.Right.Rotated(angle * 180 / Mathf.Pi);
+            //RayDirections[i] = Vector2.Left.Rotated(Mathf.Deg2Rad(angle * 180 / Mathf.Pi));
+            //RayDirections[i] = Vector2.Right.Rotated(Mathf.Deg2Rad(angle * 180 / Mathf.Pi));
+
         }
     }
 
@@ -79,19 +94,36 @@ public class Enemy2 : KinematicBody2D
     /// </summary>
     private void SetInterest()
     {
+
+
         //Set interest in each slot based on world direction
         if (Owner != null && Owner.HasMethod("GetPathDirection"))
         {
             var pathDir = (Vector2)Owner.Call("GetPathDirection", Position);
             for (int i = 0; i < RayCount; i++)
             {
-                var direction = RayDirections[i].Rotated(Rotation).Dot(pathDir);
-                Interest[i] = Mathf.Max(0f, direction);
-
-                if (!firstPass)
+                float direction;
+                if (player != null)
                 {
-                    GD.PrintT($"Interest[{i}]= ", Interest[i]);
+                    direction = RayDirections[i].Dot(player.Position);
                 }
+                else
+                {
+                    //direction = RayDirections[i].Rotated(Rotation).Dot(pathDir);
+                    direction = RayDirections[i].Dot(pathDir);
+                }
+                if (direction > 0)
+                {
+                    GD.Print("Interest = ", direction);
+                }
+                Interest[i] = direction;
+
+                //Interest[i] = Mathf.Max(0f, direction);
+
+                //if (!firstPass)
+                //{
+                //    GD.PrintT($"Interest[{i}]= ", Interest[i]);
+                //}
             }
             if (!firstPass)
             {
@@ -111,9 +143,15 @@ public class Enemy2 : KinematicBody2D
         for (int i = 0; i < RayCount; i++)
         {
             var direction = RayDirections[i].Rotated(Rotation).Dot(Transform.x);
+            if (player != null)
+            {
+                direction = RayDirections[i].Rotated(Rotation).Dot(player.Position);
+            }
             Interest[i] = Mathf.Max(0f, direction);
         }
     }
+
+
 
     private void SetDanger()
     {
@@ -121,7 +159,7 @@ public class Enemy2 : KinematicBody2D
         for (int i = 0; i < RayCount; i++)
         {
             var to = Position + RayDirections[i].Rotated(Rotation) * LookAhead;
-            var except = new Godot.Collections.Array(this);
+            var except = new Godot.Collections.Array(this, player);
             var result = spaceState.IntersectRay(Position, to, except);
             Danger[i] = result != null ? 1f : 0.0f;
         }
@@ -129,6 +167,8 @@ public class Enemy2 : KinematicBody2D
 
     private void ChooseDirection()
     {
+        ChosenDirection = Vector2.Zero;
+
         for (int i = 0; i < RayCount; i++)
         {
             if (Danger[i] > 0.0f)
@@ -136,13 +176,17 @@ public class Enemy2 : KinematicBody2D
                 Interest[i] = 0.0f;
             }
         }
-        ChosenDirection = Vector2.Zero;
         for (int i = 0; i < RayCount; i++)
         {
+            //GD.Print($"RayDirection[{i}]:{RayDirections[i]} * Interest[{i}]:{Interest[i]}=", RayDirections[i] * Interest[i]);
             ChosenDirection += RayDirections[i] * Interest[i];
+            GD.Print($"ChosenDirection ", ChosenDirection);
         }
+
         ChosenDirection = ChosenDirection.Normalized();
+
     }
+    private float Degree { get; set; } = 360;
 
     public override void _PhysicsProcess(float delta)
     {
@@ -160,6 +204,9 @@ public class Enemy2 : KinematicBody2D
         Rotation = Velocity.Angle();
 
         MoveAndCollide(Velocity * delta);
+        //Rotate(Mathf.Deg2Rad(Degree));
+        //Degree--;
+        //Degree = (Degree <= 0) ? 360 : Degree;
     }
 
     public override void _Draw()
@@ -169,12 +216,12 @@ public class Enemy2 : KinematicBody2D
             for (var i = 0; i < RayDirections.Length; i++)
             {
                 var from = RayDirections[i];
-                var to = Position + RayDirections[0].Rotated(Rotation) * LookAhead;
-
-                DrawLine(from, to, new Color(255, 255, 255, 1f));
+                var to = Position + RayDirections[i].Rotated(Rotation) * LookAhead;
+                DrawLine(from, to, new Color(255, 0, 0, 1f));
             }
         }
     }
+
 
     private void OnVisionRadiusBodyEntered(Node body)
     {
