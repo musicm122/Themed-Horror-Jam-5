@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Entities/Enemy1.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Level1.cs" type="Script" id=5]
 [ext_resource path="res://Entities/Enemy3.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Entities/Flashlight.tscn" type="PackedScene" id=7]
 
 [sub_resource type="NavigationPolygon" id=3]
 vertices = PoolVector2Array( -384, 112, -464, 64, -464, -152, -200, -232, 8, 72, 8, 120, -152, 112, -120, 72, -200, -224, 72, -128, -88, 24, -88, 64, -120, 24, -456, -152, -456, 64, -288, 56, -256, 56, -360, 104, -384, 104 )
@@ -27,13 +28,16 @@ script = ExtResource( 5 )
 PatrolPath = NodePath("Enemy2_Path2D")
 PatrolPathFollow2D = NodePath("Enemy2_Path2D/Enemy2_PathFollow2D")
 
+[node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
+position = Vector2( -248, -32 )
+
+[node name="Item_Flashlight" parent="." instance=ExtResource( 7 )]
+position = Vector2( -192, -64 )
+
 [node name="Navigation2D" type="Navigation2D" parent="."]
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
 navpoly = SubResource( 3 )
-
-[node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( -248, -32 )
 
 [node name="Block" parent="." instance=ExtResource( 2 )]
 position = Vector2( -280, 72 )
@@ -73,8 +77,9 @@ position = Vector2( -104, 48 )
 [node name="Enemy1_Path" type="Path2D" parent="."]
 curve = SubResource( 1 )
 
-[node name="Enemy1" parent="." instance=ExtResource( 3 )]
+[node name="Enemy1" parent="." groups=["Movable"] instance=ExtResource( 3 )]
 visible = false
+Enable = true
 PatrolPath = NodePath("../Enemy1_Path")
 
 [node name="Enemy2_Path2D" type="Path2D" parent="."]
@@ -85,8 +90,9 @@ curve = SubResource( 2 )
 position = Vector2( -336, 88 )
 rotation = -2.61153
 
-[node name="Enemy3" parent="." instance=ExtResource( 6 )]
+[node name="Enemy3" parent="." groups=["Movable"] instance=ExtResource( 6 )]
 position = Vector2( -24, -72 )
+Enable = true
 PatrolPath = NodePath("../Enemy2_Path2D")
 
 [node name="Line2D" type="Line2D" parent="."]

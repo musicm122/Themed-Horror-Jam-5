@@ -6,6 +6,9 @@
 /// </summary>
 public class Enemy2 : KinematicBody2D
 {
+    [Export]
+    public bool Enable { get; set; }
+
     private bool firstPass = false;
 
     [Export]
@@ -85,7 +88,6 @@ public class Enemy2 : KinematicBody2D
             RayDirections[i] = Vector2.Right.Rotated(angle * 180 / Mathf.Pi);
             //RayDirections[i] = Vector2.Left.Rotated(Mathf.Deg2Rad(angle * 180 / Mathf.Pi));
             //RayDirections[i] = Vector2.Right.Rotated(Mathf.Deg2Rad(angle * 180 / Mathf.Pi));
-
         }
     }
 
@@ -94,8 +96,6 @@ public class Enemy2 : KinematicBody2D
     /// </summary>
     private void SetInterest()
     {
-
-
         //Set interest in each slot based on world direction
         if (Owner != null && Owner.HasMethod("GetPathDirection"))
         {
@@ -151,8 +151,6 @@ public class Enemy2 : KinematicBody2D
         }
     }
 
-
-
     private void SetDanger()
     {
         var spaceState = GetWorld2d().DirectSpaceState;
@@ -184,15 +182,15 @@ public class Enemy2 : KinematicBody2D
         }
 
         ChosenDirection = ChosenDirection.Normalized();
-
     }
+
     private float Degree { get; set; } = 360;
 
     public override void _PhysicsProcess(float delta)
     {
         this.Velocity = Vector2.Zero;
+        if (Enable == false) return;
         SetInterest();
-
         SetDanger();
         ChooseDirection();
         var desiredVelocity = ChosenDirection.Rotated(Rotation) * MoveSpeed;
@@ -222,7 +220,6 @@ public class Enemy2 : KinematicBody2D
         }
     }
 
-
     private void OnVisionRadiusBodyEntered(Node body)
     {
         if (body.Name.ToLower() == "player")
@@ -239,5 +236,29 @@ public class Enemy2 : KinematicBody2D
             this.player = null;
             this.CurrentState = EnemyBehaviorStates.Patrol;
         }
+    }
+
+    public void OnExaminablePlayerInteracting()
+    {
+        GD.Print($"OnExaminablePlayerInteracting called for {this.Name}");
+        this.LockMovement();
+    }
+
+    public void OnExaminablePlayerInteractingComplete()
+    {
+        GD.Print($"OnExaminablePlayerInteractingComplete called for {this.Name}");
+        this.UnlockMovement();
+    }
+
+    private void LockMovement()
+    {
+        GD.Print($"Locking Movement for {this.Name}");
+        this.CanMove = false;
+    }
+
+    private void UnlockMovement()
+    {
+        GD.Print($"Unlocking Movement for {this.Name}");
+        this.CanMove = true;
     }
 }

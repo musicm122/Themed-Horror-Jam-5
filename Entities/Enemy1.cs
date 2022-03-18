@@ -9,6 +9,9 @@ using Godot;
 public class Enemy1 : KinematicBody2D
 {
     [Export]
+    public bool Enable { get; set; }
+
+    [Export]
     public float MoveSpeed { get; set; } = 50f;
 
     [Export]
@@ -76,6 +79,7 @@ public class Enemy1 : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         this.Velocity = Vector2.Zero;
+        if (Enable == false) return;
         switch (CurrentState)
         {
             case EnemyBehaviorStates.Patrol:
@@ -111,5 +115,29 @@ public class Enemy1 : KinematicBody2D
             this.player = null;
             this.CurrentState = EnemyBehaviorStates.Patrol;
         }
+    }
+
+    public void OnExaminablePlayerInteracting()
+    {
+        GD.Print($"OnExaminablePlayerInteracting called for {this.Name}");
+        this.LockMovement();
+    }
+
+    public void OnExaminablePlayerInteractingComplete()
+    {
+        GD.Print($"OnExaminablePlayerInteractingComplete called for {this.Name}");
+        this.UnlockMovement();
+    }
+
+    private void LockMovement()
+    {
+        GD.Print($"Locking Movement for {this.Name}");
+        this.CanMove = false;
+    }
+
+    private void UnlockMovement()
+    {
+        GD.Print($"Unlocking Movement for {this.Name}");
+        this.CanMove = true;
     }
 }

@@ -16,11 +16,6 @@ public class Player : KinematicBody2D
     public bool CanMove = true;
     public bool IsRunning = false;
 
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
     }
@@ -37,25 +32,15 @@ public class Player : KinematicBody2D
         this.CanMove = true;
     }
 
-    public void OnExaminablePlayerInteracting()
-    {
-        GD.Print("OnExaminablePlayerInteracting");
-        this.LockMovement();
-    }
-
-    public void OnExaminablePlayerInteractingComplete()
-    {
-        GD.Print("OnExaminablePlayerInteractingComplete");
-        this.UnlockMovement();
-    }
-
     public void AddItem(string name, int amt = 1)
     {
+        GD.PrintT($"AddItem", name, amt);
         Inventory.AddItem(name, amt);
     }
 
     public void RemoveItem(string name, int amt = 1)
     {
+        GD.PrintT($"RemoveItem", name, amt);
         Inventory.RemoveItem(name);
     }
 
@@ -72,5 +57,25 @@ public class Player : KinematicBody2D
         {
             this.MoveAndSlide(MoveCheck(IsRunning));
         }
+    }
+
+    public void DialogListenerCallback(string val)
+    {
+        GD.Print("DialogListenerCallback called with arg ", val);
+    }
+
+    public void OnExaminablePlayerInteracting()
+    {
+        GD.Print("----------------------------");
+        GD.Print("OnExaminablePlayerInteracting");
+        GD.Print("----------------------------");
+        //var new_dialog = Dialogic.start('Your Timeline Name Here') add_child(new_dialog)
+        this.LockMovement();
+    }
+
+    public void OnExaminablePlayerInteractingComplete()
+    {
+        GD.Print("OnExaminablePlayerInteractingComplete");
+        this.UnlockMovement();
     }
 }

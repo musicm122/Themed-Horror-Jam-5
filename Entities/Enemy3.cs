@@ -1,9 +1,12 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
 public class Enemy3 : KinematicBody2D
 {
+    [Export]
+    public bool Enable { get; set; }
+
+    public bool CanMove = true;
 
     [Export]
     public float MaxCoolDownTime { get; set; } = 10f;
@@ -24,7 +27,6 @@ public class Enemy3 : KinematicBody2D
 
     public Navigation2D Navigation2D { get; set; }
 
-
     [Export]
     public NodePath PatrolPath { get; set; }
 
@@ -35,8 +37,6 @@ public class Enemy3 : KinematicBody2D
     public Player player { get; set; }
 
     public Line2D Line { get; set; }
-
-    public bool CanMove = true;
 
     public bool IsRunning = false;
 
@@ -83,7 +83,6 @@ public class Enemy3 : KinematicBody2D
         }
         else
         {
-
             if (Owner.HasNode("Line2D"))
             {
                 Line = (Line2D)Owner.GetNode("Line2D");
@@ -105,7 +104,6 @@ public class Enemy3 : KinematicBody2D
                     if (distance_to_walk <= distance_to_next_point)
                     {
                         Position += Position.DirectionTo(NavPath.Peek()) * distance_to_walk;
-
                     }
                     else
                     {
@@ -140,9 +138,9 @@ public class Enemy3 : KinematicBody2D
             //Velocity = Position.DirectionTo(player.Position) * MoveSpeed;
             //Velocity = MoveAndSlide(Velocity);
         }
-
     }
-    bool IsPlayerInSight()
+
+    private bool IsPlayerInSight()
     {
         var bodies = VisionRadius.GetOverlappingBodies();
         if (bodies == null || bodies.Count == 0) return false;
@@ -160,6 +158,8 @@ public class Enemy3 : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         this.Velocity = Vector2.Zero;
+        if (Enable == false) return;
+
         switch (CurrentState)
         {
             case EnemyBehaviorStates.Patrol:
@@ -175,7 +175,6 @@ public class Enemy3 : KinematicBody2D
                 this.Velocity = Vector2.Zero;
                 break;
         }
-
     }
 
     private void OnVisionRadiusBodyEntered(Node body)
@@ -198,5 +197,29 @@ public class Enemy3 : KinematicBody2D
             //this.player = null;
             //this.CurrentState = EnemyBehaviorStates.Patrol;
         }
+    }
+
+    public void OnExaminablePlayerInteracting()
+    {
+        GD.Print($"OnExaminablePlayerInteracting called for {this.Name}");
+        this.LockMovement();
+    }
+
+    public void OnExaminablePlayerInteractingComplete()
+    {
+        GD.Print($"OnExaminablePlayerInteractingComplete called for {this.Name}");
+        this.UnlockMovement();
+    }
+
+    private void LockMovement()
+    {
+        GD.Print($"Locking Movement for {this.Name}");
+        this.CanMove = false;
+    }
+
+    private void UnlockMovement()
+    {
+        GD.Print($"Unlocking Movement for {this.Name}");
+        this.CanMove = true;
     }
 }

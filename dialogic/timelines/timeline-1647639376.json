@@ -1,0 +1,27 @@
+{
+	"events": [
+		{
+			"character": "character-1647639414.json",
+			"event_id": "dialogic_001",
+			"portrait": "",
+			"text": "You found a flashlight. Press \"F\" or the Flashlight button to toggle."
+		},
+		{
+			"definition": "1647639601-648",
+			"event_id": "dialogic_014",
+			"operation": "=",
+			"random_upper_limit": 100,
+			"set_random": false,
+			"set_value": "1"
+		},
+		{
+			"emit_signal": "Flashlight",
+			"event_id": "dialogic_040"
+		}
+	],
+	"metadata": {
+		"dialogic-version": "1.4",
+		"file": "timeline-1647639376.json",
+		"name": "FlashlightFound"
+	}
+}

@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/GDScript/Examinable.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Art/Item/Flashlight.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/ItemComponents/ItemBehavior.cs" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 24 )
+
+[node name="Flashlight" type="Node2D"]
+script = ExtResource( 1 )
+timeline = "FlashlightFound"
+
+[node name="Area2D" type="Area2D" parent="."]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Area2D"]
+texture = ExtResource( 2 )
+
+[node name="Tween" type="Tween" parent="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D2_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_Area2D2_body_exited"]
+[connection signal="tween_completed" from="Area2D/Tween" to="Area2D" method="OnTweenCompleted"]
