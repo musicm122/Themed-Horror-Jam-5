@@ -67,7 +67,7 @@ public partial class LockedDoor : Node2D
         if (Sprite.Animation == ClosedAnimation)
         {
             Sprite.Stop();
-            Sprite.Play(IdleAnimation);
+            Sprite.Frame = 3;
         }
     }
 
