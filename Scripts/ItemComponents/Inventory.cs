@@ -19,4 +19,21 @@ public class Inventory
         Items.RemoveItemIfExists(name, amt);
         GD.Print($@"Removed {amt} {name}(s) from inventory.");
     }
+
+    public string InventoryDisplay()
+    {
+        var retval = "Items: \r\n=======\r\n";
+        if (Items.Count > 0)
+        {
+            for (int i = 0; i < Items.Count; i++)
+            {
+                retval += Items[i].Name + "\r\n";
+            }
+        }
+        else
+        {
+            retval += "Empty\r\n";
+        }
+        return retval;
+    }
 }

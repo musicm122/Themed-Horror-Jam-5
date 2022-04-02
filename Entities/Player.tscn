@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Entities/Player.cs" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
 
@@ -17,3 +18,17 @@ zoom = Vector2( 0.5, 0.5 )
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color( 0, 1, 0.505882, 1 )
 polygon = PoolVector2Array( -8, -16, -8, 16, 8, 16, 8, -16 )
+
+[node name="ExaminableNotification" type="Sprite" parent="."]
+position = Vector2( 0, -40 )
+scale = Vector2( 0.25, 0.375 )
+texture = ExtResource( 2 )
+
+[node name="InventoryDisplay" type="Label" parent="."]
+margin_left = -240.0
+margin_top = -120.0
+margin_right = -200.0
+margin_bottom = -106.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -3,6 +3,8 @@ using ThemedHorrorJam5.Scripts.GDUtils;
 
 public class Player : KinematicBody2D
 {
+    public Sprite ExaminableNotification { get; set; }
+    public Label InventoryDisplay { get; set; }
     public Inventory Inventory { get; set; } = new Inventory();
 
     public bool IsHidden = false;
@@ -21,6 +23,20 @@ public class Player : KinematicBody2D
 
     public override void _Ready()
     {
+        ExaminableNotification = (Sprite)GetNode("ExaminableNotification");
+        ExaminableNotification.Hide();
+        InventoryDisplay = (Label)GetNode("InventoryDisplay");
+        InventoryDisplay.Text = Inventory.InventoryDisplay();
+    }
+
+    public void ShowExamineNotification()
+    {
+        ExaminableNotification.Show();
+    }
+
+    public void HideExamineNotification()
+    {
+        ExaminableNotification.Hide();
     }
 
     private void LockMovement()
@@ -39,12 +55,14 @@ public class Player : KinematicBody2D
     {
         GD.PrintT($"AddItem", name, amt);
         Inventory.AddItem(name, amt);
+        InventoryDisplay.Text = Inventory.InventoryDisplay();
     }
 
     public void RemoveItem(string name, int amt = 1)
     {
         GD.PrintT($"RemoveItem", name, amt);
         Inventory.RemoveItem(name);
+        InventoryDisplay.Text = Inventory.InventoryDisplay();
     }
 
     private Vector2 MoveCheck(bool isRunning = false) =>
@@ -91,8 +109,6 @@ public class Player : KinematicBody2D
     private void CheckBoxCollision(Vector2 motion)
     {
         motion = motion.Normalized();
-        //var sumOfAbs = Mathf.Abs(motion.x) + Mathf.Abs(motion.y);
-        //if (sumOfAbs > 1) return;
         var box = GetSlideCollision(0).Collider as PushBlock;
         if (box != null)
         {

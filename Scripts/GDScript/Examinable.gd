@@ -2,10 +2,11 @@ extends Node2D
 
 signal player_interacting
 signal player_interacting_complete
-
+var playerRef
 export var timeline = ""
 var interactAction = "interact"
 var canInteract = false
+var shouldRemove = false
 
 func waitSec(sec):
 	var t = Timer.new()
@@ -31,6 +32,16 @@ func removeItem():
 	get_tree().paused = false
 	visible = false
 	set_process(false)
+	set_physics_process(false)
+	set_process_input(false)
+	var area = get_node("Area2D")
+	area.disconnect("body_entered", self, "_on_Area2D2_body_entered")
+	area.disconnect("body_exited", self, "_on_Area2D2_body_exited")
+	remove_child(area)
+	if(playerRef!=null):
+		playerRef.HideExamineNotification()
+		
+	
 
 func dialog_listener(arg):
 	get_tree().paused = true
@@ -42,16 +53,17 @@ func dialog_listener(arg):
 		"Pizza":
 			if name == "Item_Pizza" :
 				get_tree().call_group("Player", "AddItem", "pizza", 1)
-				removeItem()
+				shouldRemove = true
 		"Flashlight":
-			if name == "Item_Flashlight" :
+			if name == "Flashlight" :
 				get_tree().call_group("Player", "AddItem", "flashlight", 1)
-				removeItem()
+				shouldRemove = true
 		"Keys":
-			if name == "Item_Keychain" :
+			if name == "Keychain" :
 				get_tree().call_group("Player", "AddKeys")
 				get_tree().call_group("Level", "EndGame")
-				removeItem()
+				shouldRemove = true
+				
 
 	print("ending dialog")
 	get_tree().call_group("Movable", "OnExaminablePlayerInteractingComplete")
@@ -60,6 +72,8 @@ func dialog_listener(arg):
 	yield(get_tree().create_timer(0.2), "timeout")
 	get_tree().paused = false
 	canInteract = true
+	if(shouldRemove) :
+		removeItem()
 			
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -74,8 +88,14 @@ func _process(_delta):
 func _on_Area2D2_body_entered(body):
 	print("entered area")
 	canInteract = body.get_name() == "Player"
+	playerRef= body
+	body.ShowExamineNotification()
 
 func _on_Area2D2_body_exited(body):
 	print("exited area")
+	
 	if body.get_name() == "Player": 
+		playerRef = body
+		print("Player exited area")
 		canInteract = false
+		body.HideExamineNotification()	
