@@ -34,14 +34,21 @@ func removeItem():
 	set_process(false)
 	set_physics_process(false)
 	set_process_input(false)
-	var area = get_node("Area2D")
-	area.disconnect("body_entered", self, "_on_Area2D2_body_entered")
-	area.disconnect("body_exited", self, "_on_Area2D2_body_exited")
-	remove_child(area)
 	if(playerRef!=null):
 		playerRef.HideExamineNotification()
 		
-	
+	print("printing children")
+	for _i in self.get_children():
+		print(_i)
+		
+	if(get_child_count()>0):
+		var area = get_child(0)
+		#var area = get_node("Area2D")
+		
+		if(area!=null && area.name == "Area2D"):
+			area.disconnect("body_entered", self, "_on_Area2D2_body_entered")
+			area.disconnect("body_exited", self, "_on_Area2D2_body_exited")
+			remove_child(area)
 
 func dialog_listener(arg):
 	get_tree().paused = true
@@ -59,9 +66,8 @@ func dialog_listener(arg):
 				get_tree().call_group("Player", "AddItem", "flashlight", 1)
 				shouldRemove = true
 		"Keys":
-			if name == "Keychain" :
-				get_tree().call_group("Player", "AddKeys")
-				get_tree().call_group("Level", "EndGame")
+			if name == "Key" :
+				get_tree().call_group("Player", "AddItem", "KeyA", 1)
 				shouldRemove = true
 				
 
@@ -93,7 +99,6 @@ func _on_Area2D2_body_entered(body):
 
 func _on_Area2D2_body_exited(body):
 	print("exited area")
-	
 	if body.get_name() == "Player": 
 		playerRef = body
 		print("Player exited area")

@@ -1,5 +1,6 @@
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using static LockedDoor;
 
 public class Player : KinematicBody2D
 {
@@ -115,4 +116,6 @@ public class Player : KinematicBody2D
             box.Push(PushSpeed * motion);
         }
     }
+
+    public bool HasKey(Key key) => Inventory.HasKey(key);
 }

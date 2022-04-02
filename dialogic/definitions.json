@@ -4,14 +4,14 @@
 	],
 	"variables": [
 		{
-			"id": "1647639616-787",
-			"name": "Player_Has_Keys",
+			"id": "1647639601-648",
+			"name": "Player_Has_Flashlight",
 			"type": 0,
 			"value": "0"
 		},
 		{
-			"id": "1647639601-648",
-			"name": "Player_Has_Flashlight",
+			"id": "1647639616-787",
+			"name": "Player_Has_Keys",
 			"type": 0,
 			"value": "0"
 		}
