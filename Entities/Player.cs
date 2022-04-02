@@ -11,6 +11,9 @@ public class Player : KinematicBody2D
     public float MoveSpeed { get; set; } = 50f;
 
     [Export]
+    public float PushSpeed { get; set; } = 20f;
+
+    [Export]
     public float MoveMultiplier { get; set; } = 1.5f;
 
     public bool CanMove = true;
@@ -55,7 +58,13 @@ public class Player : KinematicBody2D
 
         if (CanMove)
         {
-            this.MoveAndSlide(MoveCheck(IsRunning));
+            var movement = MoveCheck(IsRunning);
+            this.MoveAndSlide(movement);
+            if (GetSlideCount() > 0)
+            {
+                GD.Print("Slide count is greater than 0");
+                CheckBoxCollision(movement);
+            }
         }
     }
 
@@ -77,5 +86,17 @@ public class Player : KinematicBody2D
     {
         GD.Print("OnExaminablePlayerInteractingComplete");
         this.UnlockMovement();
+    }
+
+    private void CheckBoxCollision(Vector2 motion)
+    {
+        motion = motion.Normalized();
+        //var sumOfAbs = Mathf.Abs(motion.x) + Mathf.Abs(motion.y);
+        //if (sumOfAbs > 1) return;
+        var box = GetSlideCollision(0).Collider as PushBlock;
+        if (box != null)
+        {
+            box.Push(PushSpeed * motion);
+        }
     }
 }
