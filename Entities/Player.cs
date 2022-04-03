@@ -5,10 +5,19 @@ using static LockedDoor;
 public class Player : KinematicBody2D
 {
     public Sprite ExaminableNotification { get; set; }
-    public Label InventoryDisplay { get; set; }
+
+    public PauseMenu PauseMenu { get; set; }
+
+    public MissionManager MissionManager { get; set; } = new MissionManager();
     public Inventory Inventory { get; set; } = new Inventory();
 
     public bool IsHidden = false;
+
+    [Export]
+    private float PauseToggleCooldownWaitTime = 1.0f;
+
+    private float AccumulatorPauseToggleCooldown = 0.0f;
+    private bool CanTogglePause = true;
 
     [Export]
     public float MoveSpeed { get; set; } = 50f;
@@ -24,10 +33,11 @@ public class Player : KinematicBody2D
 
     public override void _Ready()
     {
-        ExaminableNotification = (Sprite)GetNode("ExaminableNotification");
+        ExaminableNotification = GetNode<Sprite>("ExaminableNotification");
         ExaminableNotification.Hide();
-        InventoryDisplay = (Label)GetNode("InventoryDisplay");
-        InventoryDisplay.Text = Inventory.InventoryDisplay();
+        PauseMenu = GetNode<PauseMenu>("PauseMenu");
+        PauseMenu.Hide();
+        RefreshUI();
     }
 
     public void ShowExamineNotification()
@@ -54,16 +64,26 @@ public class Player : KinematicBody2D
 
     public void AddItem(string name, int amt = 1)
     {
-        GD.PrintT($"AddItem", name, amt);
-        Inventory.AddItem(name, amt);
-        InventoryDisplay.Text = Inventory.InventoryDisplay();
+        Inventory.Add(name, amt);
+        RefreshUI();
+    }
+
+    public void AddMission(Mission mission)
+    {
+        MissionManager.AddIfDNE(mission);
+        RefreshUI();
+    }
+
+    public void EvaluateMissions()
+    {
+        MissionManager.EvaluateMissionsState(this);
+        RefreshUI();
     }
 
     public void RemoveItem(string name, int amt = 1)
     {
-        GD.PrintT($"RemoveItem", name, amt);
-        Inventory.RemoveItem(name);
-        InventoryDisplay.Text = Inventory.InventoryDisplay();
+        Inventory.Remove(name);
+        RefreshUI();
     }
 
     private Vector2 MoveCheck(bool isRunning = false) =>
@@ -81,7 +101,6 @@ public class Player : KinematicBody2D
             this.MoveAndSlide(movement);
             if (GetSlideCount() > 0)
             {
-                GD.Print("Slide count is greater than 0");
                 CheckBoxCollision(movement);
             }
         }
@@ -89,21 +108,16 @@ public class Player : KinematicBody2D
 
     public void DialogListenerCallback(string val)
     {
-        GD.Print("DialogListenerCallback called with arg ", val);
+        GD.Print("Player.DialogListenerCallback called with arg ", val);
     }
 
     public void OnExaminablePlayerInteracting()
     {
-        GD.Print("----------------------------");
-        GD.Print("OnExaminablePlayerInteracting");
-        GD.Print("----------------------------");
-        //var new_dialog = Dialogic.start('Your Timeline Name Here') add_child(new_dialog)
         this.LockMovement();
     }
 
     public void OnExaminablePlayerInteractingComplete()
     {
-        GD.Print("OnExaminablePlayerInteractingComplete");
         this.UnlockMovement();
     }
 
@@ -118,4 +132,9 @@ public class Player : KinematicBody2D
     }
 
     public bool HasKey(Key key) => Inventory.HasKey(key);
+
+    private void RefreshUI()
+    {
+        this.PauseMenu.RefreshUI(this);
+    }
 }

@@ -3,10 +3,12 @@
     public Item(string name)
     {
         this.Name = name.ToLowerInvariant();
+        this.Description = name.ToLowerInvariant();
         this.ImagePath = ImagePathLookup(name);
     }
 
     public string Name { get; set; }
+    public string Description { get; set; }
     public string ImagePath { get; set; }
 
     public string ImagePathLookup(string name) =>

@@ -5,13 +5,13 @@ using static LockedDoor;
 
 public class Inventory
 {
-    public List<Item> Items { get; set; } = new List<Item>();
+    private List<Item> Items { get; set; } = new List<Item>();
 
-    public bool HasItem(string name) => Items.Any(item => item.Name == name);
+    public bool HasResource(string name) => Items.Any(item => item.Name == name);
 
     public bool HasKey(Key key) => Items.Any(item => item.Name.ToLower() == key.ToString().ToLower());
 
-    public void AddItem(string name, int amt)
+    public void Add(string name, int amt)
     {
         for (int i = 0; i < amt; i++)
         {
@@ -19,16 +19,31 @@ public class Inventory
         }
     }
 
-    public void RemoveItem(string name, int amt = 1)
+    public void Remove(string name, int amt = 1)
     {
         GD.Print($@"Attempting to remove {amt} {name}(s) from inventory.");
         Items.RemoveItemIfExists(name, amt);
         GD.Print($@"Removed {amt} {name}(s) from inventory.");
     }
 
-    public string InventoryDisplay()
+    public IEnumerable<string> Names() =>
+        Items.Select(i => i.Name);
+
+    public IEnumerable<string> Descriptions() =>
+        Items.Select(i => i.Description);
+
+    public IEnumerable<string> ImagePaths() =>
+        Items.Select(i => i.ImagePath);
+
+    public int Count() =>
+        Items.Count();
+
+    public int CountOfType(string name) =>
+        Items.Count(i => i.Name.ToLowerInvariant() == name.ToLowerInvariant());
+
+    public string Display()
     {
-        var retval = "Items: \r\n=======\r\n";
+        var retval = "Items:\r\n=======\r\n";
         if (Items.Count > 0)
         {
             for (int i = 0; i < Items.Count; i++)

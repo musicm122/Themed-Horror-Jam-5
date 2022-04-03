@@ -4,7 +4,6 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class InputUtils
     {
-
         public static bool IsInteracting() => Input.IsActionJustPressed(InputAction.Interact);
 
         public static Vector2 GetTopDownMovementInput(float speed = 1f)
@@ -32,7 +31,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         public static Vector2 GetTopDownWithDiagMovementInput(float speed = 1f)
         {
             var velocity = Vector2.Zero;
-            
+
             if (Input.IsActionPressed(InputAction.Right) && Input.IsActionPressed(InputAction.Up))
             {
                 velocity.x += 0.5f;

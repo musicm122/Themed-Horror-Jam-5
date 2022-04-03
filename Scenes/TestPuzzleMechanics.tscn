@@ -16,6 +16,7 @@ position = Vector2( 112, 96 )
 position = Vector2( 168, -48 )
 
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
+visible = false
 collision/safe_margin = 0.001
 
 [node name="Block" parent="." instance=ExtResource( 2 )]
@@ -28,6 +29,7 @@ position = Vector2( -80, 24 )
 position = Vector2( -80, 96 )
 
 [node name="Label" type="Label" parent="."]
+show_behind_parent = true
 margin_left = -160.0
 margin_top = -96.0
 margin_right = -24.0
@@ -38,17 +40,31 @@ __meta__ = {
 }
 
 [node name="Label2" type="Label" parent="."]
+show_behind_parent = true
 margin_left = 120.0
 margin_top = -104.0
 margin_right = 293.0
 margin_bottom = -90.0
-rect_pivot_offset = Vector2( 32, 120 )
+rect_pivot_offset = Vector2( 272, 88 )
 text = "Examinable Item Mechanic"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label4" type="Label" parent="."]
+show_behind_parent = true
+margin_left = -432.0
+margin_top = -104.0
+margin_right = -259.0
+margin_bottom = -90.0
+rect_pivot_offset = Vector2( 272, 88 )
+text = "Mission Mechanic"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Label3" type="Label" parent="."]
+show_behind_parent = true
 margin_left = 80.0
 margin_top = 32.0
 margin_right = 253.0
