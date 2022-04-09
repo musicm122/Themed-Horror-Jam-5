@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/ItemComponents/Examinable.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/ItemComponents/ItemBehavior.cs" type="Script" id=2]
+[ext_resource path="res://Assets/Art/UI/information.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 20 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [  ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="NPC" type="Node2D"]
+script = ExtResource( 1 )
+Timeline = "hello_world"
+
+[node name="Area2D" type="Area2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, -4 )
+shape = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="Area2D"]
+frames = SubResource( 2 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.7211, 0.0351563, 1, 1 )
+polygon = PoolVector2Array( 0, -16, -8, -8, -8, 8, 8, 8, 8, 0, 8, -8 )
+
+[node name="TalkIcon" type="Sprite" parent="."]
+position = Vector2( 0, -32 )
+scale = Vector2( 0.26, 0.26 )
+texture = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = -8.0
+margin_top = 24.0
+margin_right = 218.0
+margin_bottom = 72.0
+text = "
+Todo: 
+cleanup removal logic of this scene"
+__meta__ = {
+"_edit_use_anchors_": false
+}

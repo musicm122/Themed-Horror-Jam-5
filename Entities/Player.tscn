@@ -92,9 +92,9 @@ __meta__ = {
 }
 
 [node name="InventoryDisplay" type="Label" parent="PauseMenu/InventoryPanel"]
-margin_top = 130.0
+margin_top = 132.0
 margin_right = 256.0
-margin_bottom = 161.0
+margin_bottom = 163.0
 text = "  Items:
 ======="
 __meta__ = {

@@ -1,8 +1,14 @@
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class PauseMenu : Control
+public class PauseMenu : Control, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+
+    public bool IsDebugPrintEnabled() => IsDebugging;
+
     [Export]
     private string InventoryDisplayPath { get; set; } = "./InventoryPanel/InventoryDisplay";
 
@@ -19,7 +25,7 @@ public class PauseMenu : Control
     public bool IsHidden = false;
 
     [Export]
-    private float PauseToggleCooldownWaitTime = 1.0f;
+    private readonly float PauseToggleCooldownWaitTime = 1.0f;
 
     private float AccumulatorPauseToggleCooldown = 0.0f;
     private bool CanTogglePause = true;
@@ -64,16 +70,16 @@ public class PauseMenu : Control
 
     private void TogglePauseMenu()
     {
-        GD.Print("Toggling Pause Menu");
+        this.Print("Toggling Pause Menu");
         this.TogglePause();
         if (this.IsPaused())
         {
-            GD.Print("Should be showing Pause Menu");
+            this.Print("Should be showing Pause Menu");
             Show();
         }
         else
         {
-            GD.Print("Should be hiding Pause Menu");
+            this.Print("Should be hiding Pause Menu");
             Hide();
         }
     }

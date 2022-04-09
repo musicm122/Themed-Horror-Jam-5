@@ -1,8 +1,13 @@
 using Godot;
 using System.Collections.Generic;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class Enemy3 : KinematicBody2D
+public class Enemy3 : KinematicBody2D, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+    public bool IsDebugPrintEnabled() => IsDebugging;
+    
     [Export]
     public bool Enable { get; set; }
 

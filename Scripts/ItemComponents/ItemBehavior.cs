@@ -1,14 +1,13 @@
 ﻿using Godot;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public class ItemBehavior : Area2D
+    public class ItemBehavior : Area2D, IDebuggable<Node>
     {
+        [Export]
+        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugPrintEnabled() => IsDebugging;
+        
         public string Direction = "down";
 
         public float Time = 0.5f;
@@ -34,9 +33,15 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            Tween = GetNode<Tween>(new NodePath("Tween"));
-            Sprite = GetNode<Sprite>(new NodePath("Sprite"));
-            GrowShrink(ScaleDown, ScaleUp, Time);
+            if (HasNode("Sprite"))
+            {
+                Sprite = GetNode<Sprite>(new NodePath("Sprite"));
+            }
+            if (HasNode("Tween"))
+            {
+                Tween = GetNode<Tween>(new NodePath("Tween"));
+                GrowShrink(ScaleDown, ScaleUp, Time);
+            }
         }
 
         public void OnTweenCompleted(Godot.Object obj, NodePath key)

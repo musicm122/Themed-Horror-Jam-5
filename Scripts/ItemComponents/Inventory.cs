@@ -1,10 +1,29 @@
-﻿using Godot;
+﻿using System.Xml.Linq;
+using Godot;
 using System.Collections.Generic;
 using System.Linq;
 using static LockedDoor;
 
 public class Inventory
 {
+    public delegate void AddingItemHandler(object sender, InventoryEventArgs args);
+
+    public event AddingItemHandler AddItemEvent;
+
+    public delegate void RemovingItemHandler(object sender, InventoryEventArgs args);
+
+    public event RemovingItemHandler RemoveItemEvent;
+
+    protected virtual void RaiseAddingItem(Item item)
+    {
+        AddItemEvent?.Invoke(this, new InventoryEventArgs(item));
+    }
+
+    protected virtual void RaiseRemovingItem(Item item)
+    {
+        RemoveItemEvent?.Invoke(this, new InventoryEventArgs(item));
+    }
+
     private List<Item> Items { get; set; } = new List<Item>();
 
     public bool HasResource(string name) => Items.Any(item => item.Name == name);
@@ -15,15 +34,16 @@ public class Inventory
     {
         for (int i = 0; i < amt; i++)
         {
-            Items.Add(new Item(name));
+            var item = new Item(name);
+            RaiseAddingItem(item);
+            Items.Add(item);
         }
     }
 
-    public void Remove(string name, int amt = 1)
+    public void Remove(string name)
     {
-        GD.Print($@"Attempting to remove {amt} {name}(s) from inventory.");
-        Items.RemoveItemIfExists(name, amt);
-        GD.Print($@"Removed {amt} {name}(s) from inventory.");
+        Items.RemoveOne(i => i.Name == name);
+        RaiseRemovingItem(new Item(name));
     }
 
     public IEnumerable<string> Names() =>
@@ -57,4 +77,43 @@ public class Inventory
         }
         return retval;
     }
+
+    public bool HasItemInInventory(string itemName)
+        => Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
+
+    private void RemoveItemIfExists(string itemName, int amt)
+    {
+        while (amt > 0)
+        {
+            if (HasItemInInventory(itemName))
+            {
+                var item = Items.Find(i => i.Name == itemName);
+                RaiseRemovingItem(item);
+                Items.Remove(item);
+                amt--;
+            }
+        }
+    }
+
+    public Item GetItem(string itemName) =>
+        Items.First(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
+
+    public bool HasItem(string itemName) =>
+        Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
+
+    public bool RemoveItemIfExists(string itemName)
+    {
+        if (Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant()))
+        {
+            var item = Items.First(i => i.Name == itemName);
+            RaiseRemovingItem(item);
+            Items.Remove(item);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
+

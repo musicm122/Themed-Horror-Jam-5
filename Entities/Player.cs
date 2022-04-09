@@ -1,23 +1,25 @@
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
-using static LockedDoor;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class Player : KinematicBody2D
+public class Player : KinematicBody2D, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+
+    public bool IsDebugPrintEnabled() => IsDebugging;
+
     public Sprite ExaminableNotification { get; set; }
 
     public PauseMenu PauseMenu { get; set; }
 
     public MissionManager MissionManager { get; set; } = new MissionManager();
+
     public Inventory Inventory { get; set; } = new Inventory();
 
     public bool IsHidden = false;
 
-    [Export]
-    private float PauseToggleCooldownWaitTime = 1.0f;
-
-    private float AccumulatorPauseToggleCooldown = 0.0f;
-    private bool CanTogglePause = true;
+    public bool CanInteract { get; set; } = false;
 
     [Export]
     public float MoveSpeed { get; set; } = 50f;
@@ -31,12 +33,47 @@ public class Player : KinematicBody2D
     public bool CanMove = true;
     public bool IsRunning = false;
 
+    private void RegisterSignals()
+    {
+        this.PrintCaller();
+
+        this.Print("Start Register Signal");
+        this.Print("================");
+        var examinableCollection = this.GetTree().GetExaminableCollection();
+        var lockedDoorCollection = this.GetTree().GetLockedDoorCollection();
+
+        this.Print("Examinable count = ", examinableCollection.Count);
+        if (!examinableCollection.IsNullOrEmpty())
+        {
+            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteracting, this, nameof(OnExaminablePlayerInteracting)));
+            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingComplete, this, nameof(OnExaminablePlayerInteractingComplete)));
+            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingAvailable, this, nameof(OnExaminablePlayerInteractionAvailable)));
+            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingUnavailable, this, nameof(OnExaminablePlayerInteractionUnavailable)));
+        }
+
+        if (!lockedDoorCollection.IsNullOrEmpty())
+        {
+            lockedDoorCollection.ForEach(e => e.Connect(CustomSignals.DoorInteraction, this, nameof(OnDoorInteraction)));
+        }
+
+        this.Print<Node>("================");
+        this.Print<Node>("End Register Signal");
+    }
+
     public override void _Ready()
     {
+        RegisterSignals();
         ExaminableNotification = GetNode<Sprite>("ExaminableNotification");
         ExaminableNotification.Hide();
+        MissionManager.AddMissionEvent += UpdateMissions;
+        MissionManager.RemoveMissionEvent += UpdateMissions;
         PauseMenu = GetNode<PauseMenu>("PauseMenu");
         PauseMenu.Hide();
+        RefreshUI();
+    }
+
+    private void UpdateMissions(object sender, MissionManagerEventArgs args)
+    {
         RefreshUI();
     }
 
@@ -52,13 +89,13 @@ public class Player : KinematicBody2D
 
     private void LockMovement()
     {
-        GD.Print("Locking Movement");
+        this.Print<Node>("Locking Movement");
         this.CanMove = false;
     }
 
     private void UnlockMovement()
     {
-        GD.Print("Unlocking Movement");
+        this.Print<Node>("Unlocking Movement");
         this.CanMove = true;
     }
 
@@ -71,7 +108,11 @@ public class Player : KinematicBody2D
     public void AddMission(Mission mission)
     {
         MissionManager.AddIfDNE(mission);
-        RefreshUI();
+    }
+
+    public void RemoveMission(Mission mission)
+    {
+        MissionManager.Remove(mission);
     }
 
     public void EvaluateMissions()
@@ -106,26 +147,44 @@ public class Player : KinematicBody2D
         }
     }
 
-    public void DialogListenerCallback(string val)
+    public void OnExaminablePlayerInteractionAvailable(Examinable examinable)
     {
-        GD.Print("Player.DialogListenerCallback called with arg ", val);
+        this.PrintCaller();
+        examinable.CanInteract = true;
+        ShowExamineNotification();
     }
 
-    public void OnExaminablePlayerInteracting()
+    public void OnExaminablePlayerInteractionUnavailable(Examinable examinable)
     {
+        this.PrintCaller();
+        examinable.CanInteract = false;
+        HideExamineNotification();
+    }
+
+    public void OnExaminablePlayerInteracting(Examinable examinable)
+    {
+        this.PrintCaller();
         this.LockMovement();
     }
 
-    public void OnExaminablePlayerInteractingComplete()
+    public void OnExaminablePlayerInteractingComplete(Examinable examinable)
     {
+        this.PrintCaller();
         this.UnlockMovement();
+    }
+
+    public void OnDoorInteraction(LockedDoor lockedDoor)
+    {
+        if (HasKey(lockedDoor.RequiredKey) && lockedDoor.CurrentDoorState == DoorState.Locked)
+        {
+            lockedDoor.CurrentDoorState = DoorState.Closed;
+        }
     }
 
     private void CheckBoxCollision(Vector2 motion)
     {
         motion = motion.Normalized();
-        var box = GetSlideCollision(0).Collider as PushBlock;
-        if (box != null)
+        if (GetSlideCollision(0).Collider is PushBlock box)
         {
             box.Push(PushSpeed * motion);
         }

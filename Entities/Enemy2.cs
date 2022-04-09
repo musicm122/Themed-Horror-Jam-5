@@ -1,11 +1,15 @@
 ﻿using Godot;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
 /// <summary>
 /// This is a wip port of this:
 /// https://kidscancode.org/godot_recipes/ai/context_map/
 /// </summary>
-public class Enemy2 : KinematicBody2D
+public class Enemy2 : KinematicBody2D, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+    public bool IsDebugPrintEnabled() => IsDebugging;
     [Export]
     public bool Enable { get; set; }
 

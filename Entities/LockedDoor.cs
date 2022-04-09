@@ -1,15 +1,15 @@
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public partial class LockedDoor : Node2D
+public class LockedDoor : Examinable
 {
-    //[Export]
-    //public string RequiredKeyName { get; set; }
-
     private const string ClosedAnimation = "Close";
     private const string OpenAnimation = "Open";
     private const string IdleAnimation = "Idle";
-    public bool CanInteract { get; set; }
+
+    [Signal]
+    public delegate void DoorInteraction(LockedDoor lockedDoor);
 
     [Export]
     public Key RequiredKey { get; set; }
@@ -17,40 +17,38 @@ public partial class LockedDoor : Node2D
     [Export]
     public DoorState CurrentDoorState { get; set; } = DoorState.Locked;
 
-    private Player PlayerRef { get; set; }
-
     public AnimatedSprite Sprite { get; set; }
 
     public CollisionShape2D Collider { get; set; }
 
     public void OpenDoor()
     {
-        GD.Print($"Opening Door");
+        this.Print($"Opening Door");
         Sprite.Play(OpenAnimation);
         CurrentDoorState = DoorState.Opened;
         this.Collider.Disabled = true;
-        GD.Print($"Door is now opened");
+        this.Print($"Door is now opened");
     }
 
     public void CloseDoor()
     {
-        GD.Print($"Closing Door");
+        this.Print($"Closing Door");
         Sprite.Play(ClosedAnimation);
         CurrentDoorState = DoorState.Closed;
         this.Collider.Disabled = false;
-        GD.Print($"Door is now closed");
+        this.Print($"Door is now closed");
     }
 
     public void StartLockedDoorInteraction()
     {
-        GD.Print($"Door is locked and requires {RequiredKey.ToString()}");
+        this.Print($"Door is locked and requires {RequiredKey}");
     }
 
     public override void _Ready()
     {
-        Sprite = (AnimatedSprite)GetNode("AnimatedSprite");
+        Sprite = GetNode<AnimatedSprite>("AnimatedSprite");
         Sprite.Connect("animation_finished", this, nameof(OnAnimationFinished));
-        Collider = (CollisionShape2D)GetNode("Collider/ColliderShape2d");
+        Collider = GetNode<CollisionShape2D>("Collider/ColliderShape2d");
         if (CurrentDoorState == DoorState.Closed || CurrentDoorState == DoorState.Locked)
         {
             this.Collider.Disabled = true;
@@ -75,9 +73,9 @@ public partial class LockedDoor : Node2D
     {
         if (body.Name.ToLower() == "player")
         {
-            PlayerRef = (Player)body;
+            //PlayerRef = (Player)body;
             this.CanInteract = true;
-            PlayerRef.ShowExamineNotification();
+            //PlayerRef.ShowExamineNotification();
         }
     }
 
@@ -85,29 +83,31 @@ public partial class LockedDoor : Node2D
     {
         if (body.Name.ToLower() == "player")
         {
-            PlayerRef = (Player)body;
+            //PlayerRef = (Player)body;
             this.CanInteract = false;
-            PlayerRef.HideExamineNotification();
+            //PlayerRef.HideExamineNotification();
         }
     }
 
     private bool IsInteracting() => InputUtils.IsInteracting();
 
-    private void OnInteract()
+    protected override void OnInteract()
     {
-        GD.Print($"LockedDoor.OnOnInteract called with the current door state set to {CurrentDoorState}");
+        base.OnInteract();
+        this.Print($"LockedDoor.OnOnInteract called with the current door state set to {CurrentDoorState}");
+        EmitSignal(nameof(DoorInteraction), this);
         switch (CurrentDoorState)
         {
             case DoorState.Locked:
-                GD.Print($"PlayerRef.HasKey({RequiredKey})", PlayerRef.HasKey(RequiredKey));
-                if (PlayerRef.HasKey(RequiredKey))
-                {
-                    OpenDoor();
-                }
-                else
-                {
-                    StartLockedDoorInteraction();
-                }
+                //this.Print($"PlayerRef.HasKey({RequiredKey})", PlayerRef.HasKey(RequiredKey));
+                //if (PlayerRef.HasKey(RequiredKey))
+                //{
+                //    OpenDoor();
+                //}
+                //else
+                //{
+                //    StartLockedDoorInteraction();
+                //}
                 break;
 
             case DoorState.Closed:
@@ -124,14 +124,14 @@ public partial class LockedDoor : Node2D
     {
         if (IsInteracting())
         {
-            GD.Print("Interacting with door...");
-            GD.Print("PlayerRef != null = ", PlayerRef != null);
-            GD.Print("CanInteract= ", CanInteract);
+            this.Print("Interacting with door...");
+            //this.Print("PlayerRef != null = ", PlayerRef != null);
+            this.Print("CanInteract= ", CanInteract);
         }
-        if (PlayerRef != null && CanInteract && IsInteracting())
-        {
-            GD.Print("Interacting with door...");
-            OnInteract();
-        }
+        //if (PlayerRef != null && CanInteract && IsInteracting())
+        //{
+        //    this.Print("Interacting with door...");
+        //    OnInteract();
+        //}
     }
 }

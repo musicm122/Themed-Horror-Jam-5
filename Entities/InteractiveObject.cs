@@ -1,8 +1,12 @@
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class InteractiveObject : Node2D
+public class InteractiveObject : Node2D, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+    public bool IsDebugPrintEnabled() => IsDebugging;
     public bool CanInteract = false;
     public bool IsInteracting = false;
 
@@ -17,19 +21,6 @@ public class InteractiveObject : Node2D
     {
         CanInteract = !(body.Name == "Player");
     }
-
-    //public override void _Ready()
-    //{
-    //    Connect("dialog_listener", this, "DialogListenerCallback");
-    //}
-
-    //void DialogListenerCallback(string arg) 
-    //{
-    //    if (arg == "Flashlight") 
-    //    {
-    //        this.QueueFree();
-    //    }
-    //}
 
     public virtual void OnInteract()
     {

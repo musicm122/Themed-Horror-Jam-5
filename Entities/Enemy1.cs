@@ -1,4 +1,5 @@
 using Godot;
+using ThemedHorrorJam5.Scripts.ItemComponents;
 
 /// <summary>
 /// This was put together using a combination of
@@ -6,8 +7,12 @@ using Godot;
 /// https://kidscancode.org/godot_recipes/ai/chase/
 /// https://kidscancode.org/godot_recipes/ai/changing_behaviors/
 /// </summary>
-public class Enemy1 : KinematicBody2D
+public class Enemy1 : KinematicBody2D, IDebuggable<Node>
 {
+    [Export]
+    public bool IsDebugging { get; set; } = false;
+    public bool IsDebugPrintEnabled() => IsDebugging;
+    
     [Export]
     public bool Enable { get; set; }
 

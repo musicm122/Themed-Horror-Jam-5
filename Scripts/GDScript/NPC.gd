@@ -1,15 +1,15 @@
-extends Node2D
+extends "res://Scripts/GDScript/Examinable.gd"
 
-signal player_interacting
-signal player_interacting_complete
+# signal player_interacting
+# signal player_interacting_complete
 
-export var timeline = ""
+#export var timeline = ""
 export var imagePath = ""
 
 var imageSprite = null
 
-var interactAction = "interact"
-var canInteract = false
+# var interactAction = "interact"
+# var canInteract = false
 
 func IsInteracting():
 	return Input.is_action_just_pressed(interactAction)
