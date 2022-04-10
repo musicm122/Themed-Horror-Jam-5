@@ -1,119 +1,120 @@
-﻿using System.Xml.Linq;
-using Godot;
+﻿using Godot;
 using System.Collections.Generic;
 using System.Linq;
-using static LockedDoor;
+using ThemedHorrorJam5.Scripts.Extensions;
 
-public class Inventory
+namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public delegate void AddingItemHandler(object sender, InventoryEventArgs args);
-
-    public event AddingItemHandler AddItemEvent;
-
-    public delegate void RemovingItemHandler(object sender, InventoryEventArgs args);
-
-    public event RemovingItemHandler RemoveItemEvent;
-
-    protected virtual void RaiseAddingItem(Item item)
+    public class Inventory
     {
-        AddItemEvent?.Invoke(this, new InventoryEventArgs(item));
-    }
+        public delegate void AddingItemHandler(object sender, InventoryEventArgs args);
 
-    protected virtual void RaiseRemovingItem(Item item)
-    {
-        RemoveItemEvent?.Invoke(this, new InventoryEventArgs(item));
-    }
+        public event System.EventHandler<InventoryEventArgs> AddItemEvent;
 
-    private List<Item> Items { get; set; } = new List<Item>();
+        public delegate void RemovingItemHandler(object sender, InventoryEventArgs args);
 
-    public bool HasResource(string name) => Items.Any(item => item.Name == name);
+        public event System.EventHandler<InventoryEventArgs> RemoveItemEvent;
 
-    public bool HasKey(Key key) => Items.Any(item => item.Name.ToLower() == key.ToString().ToLower());
-
-    public void Add(string name, int amt)
-    {
-        for (int i = 0; i < amt; i++)
+        protected virtual void RaiseAddingItem(Item item)
         {
-            var item = new Item(name);
-            RaiseAddingItem(item);
-            Items.Add(item);
+            AddItemEvent?.Invoke(this, new InventoryEventArgs(item));
         }
-    }
 
-    public void Remove(string name)
-    {
-        Items.RemoveOne(i => i.Name == name);
-        RaiseRemovingItem(new Item(name));
-    }
-
-    public IEnumerable<string> Names() =>
-        Items.Select(i => i.Name);
-
-    public IEnumerable<string> Descriptions() =>
-        Items.Select(i => i.Description);
-
-    public IEnumerable<string> ImagePaths() =>
-        Items.Select(i => i.ImagePath);
-
-    public int Count() =>
-        Items.Count();
-
-    public int CountOfType(string name) =>
-        Items.Count(i => i.Name.ToLowerInvariant() == name.ToLowerInvariant());
-
-    public string Display()
-    {
-        var retval = "Items:\r\n=======\r\n";
-        if (Items.Count > 0)
+        protected virtual void RaiseRemovingItem(Item item)
         {
-            for (int i = 0; i < Items.Count; i++)
+            RemoveItemEvent?.Invoke(this, new InventoryEventArgs(item));
+        }
+
+        private List<Item> Items { get; } = new List<Item>();
+
+        public bool HasResource(string name) => Items.Any(item => item.Name == name);
+
+        public bool HasKey(Key key) => Items.Any(item => item.Name.Equals(key.ToString()));
+
+        public void Add(string name, int amt)
+        {
+            for (int i = 0; i < amt; i++)
             {
-                retval += Items[i].Name + "\r\n";
+                var item = new Item(name);
+                RaiseAddingItem(item);
+                Items.Add(item);
             }
         }
-        else
+
+        public void Remove(string name)
         {
-            retval += "Empty\r\n";
+            Items.RemoveOne(i => i.Name == name);
+            RaiseRemovingItem(new Item(name));
         }
-        return retval;
-    }
 
-    public bool HasItemInInventory(string itemName)
-        => Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
+        public IEnumerable<string> Names() =>
+            Items.Select(i => i.Name);
 
-    private void RemoveItemIfExists(string itemName, int amt)
-    {
-        while (amt > 0)
+        public IEnumerable<string> Descriptions() =>
+            Items.Select(i => i.Description);
+
+        public IEnumerable<string> ImagePaths() =>
+            Items.Select(i => i.ImagePath);
+
+        public int Count() =>
+            Items.Count;
+
+        public int CountOfType(string name) =>
+            Items.Count(i => i.Name.Equals(name));
+
+        public string Display()
         {
-            if (HasItemInInventory(itemName))
+            var retval = "Items:\r\n=======\r\n";
+            if (Items.Count > 0)
             {
-                var item = Items.Find(i => i.Name == itemName);
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    retval += Items[i].Name + "\r\n";
+                }
+            }
+            else
+            {
+                retval += "Empty\r\n";
+            }
+            return retval;
+        }
+
+        public bool HasItemInInventory(string itemName)
+            => Items.Any(i => i.Name.Trim().Equals(itemName.Trim()));
+
+        //private void RemoveItemIfExists(string itemName, int amt)
+        //{
+        //    while (amt > 0)
+        //    {
+        //        if (HasItemInInventory(itemName))
+        //        {
+        //            var item = Items.Find(i => i.Name == itemName);
+        //            RaiseRemovingItem(item);
+        //            Items.Remove(item);
+        //            amt--;
+        //        }
+        //    }
+        //}
+
+        public Item GetItem(string itemName) =>
+            Items.First(i => i.Name.Trim().Equals(itemName.Trim()));
+
+        public bool HasItem(string itemName) =>
+            Items.Any(i => i.Name.Trim().Equals(itemName.Trim()));
+
+        public bool RemoveItemIfExists(string itemName)
+        {
+            if (Items.Any(i => i.Name.Trim().Equals(itemName.Trim())))
+            {
+                var item = Items.First(i => i.Name == itemName);
                 RaiseRemovingItem(item);
                 Items.Remove(item);
-                amt--;
+                return true;
             }
-        }
-    }
-
-    public Item GetItem(string itemName) =>
-        Items.First(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
-
-    public bool HasItem(string itemName) =>
-        Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant());
-
-    public bool RemoveItemIfExists(string itemName)
-    {
-        if (Items.Any(i => i.Name.Trim().ToLowerInvariant() == itemName.Trim().ToLowerInvariant()))
-        {
-            var item = Items.First(i => i.Name == itemName);
-            RaiseRemovingItem(item);
-            Items.Remove(item);
-            return true;
-        }
-        else
-        {
-            return false;
+            else
+            {
+                return false;
+            }
         }
     }
 }
-

@@ -2,91 +2,95 @@ using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class PauseMenu : Control, IDebuggable<Node>
+namespace ThemedHorrorJam5.Entities
 {
-    [Export]
-    public bool IsDebugging { get; set; } = false;
-
-    public bool IsDebugPrintEnabled() => IsDebugging;
-
-    [Export]
-    private string InventoryDisplayPath { get; set; } = "./InventoryPanel/InventoryDisplay";
-
-    [Export]
-    private string MissionManagerDisplayPath { get; set; } = "./MissionPanel/MissionDisplay";
-
-    [Export]
-    private string TitleDisplayPath { get; set; } = "./TitlePanel/Title";
-
-    public Label InventoryDisplay { get; set; }
-    public Label MissionDisplay { get; set; }
-    public Label TitleDisplay { get; set; }
-
-    public bool IsHidden = false;
-
-    [Export]
-    private readonly float PauseToggleCooldownWaitTime = 1.0f;
-
-    private float AccumulatorPauseToggleCooldown = 0.0f;
-    private bool CanTogglePause = true;
-
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    public class PauseMenu : Control, IDebuggable<Node>
     {
-        TitleDisplay = GetNode<Label>(TitleDisplayPath);
-        InventoryDisplay = GetNode<Label>(InventoryDisplayPath);
-        MissionDisplay = GetNode<Label>(MissionManagerDisplayPath);
-    }
+        [Export]
+        public bool IsDebugging { get; set; } = false;
 
-    public override void _Process(float delta)
-    {
-        if (Input.IsActionPressed(InputAction.Pause))
+        public bool IsDebugPrintEnabled() => IsDebugging;
+
+        [Export]
+        private string InventoryDisplayPath { get; set; } = "./InventoryPanel/InventoryDisplay";
+
+        [Export]
+        private string MissionManagerDisplayPath { get; set; } = "./MissionPanel/MissionDisplay";
+
+
+        [Export]
+        private string TitleDisplayPath { get; set; } = "./TitlePanel/Title";
+
+        public Label InventoryDisplay { get; set; }
+        public Label MissionDisplay { get; set; }
+        public Label TitleDisplay { get; set; }
+
+        public bool IsHidden = false;
+
+        [Export]
+        private readonly float PauseToggleCooldownWaitTime = 1.0f;
+
+        private float AccumulatorPauseToggleCooldown = 0.0f;
+        private bool CanTogglePause = true;
+
+        // Declare member variables here. Examples:
+        // private int a = 2;
+        // private string b = "text";
+
+        // Called when the node enters the scene tree for the first time.
+        public override void _Ready()
         {
-            if (CanTogglePause)
+            TitleDisplay = GetNode<Label>(TitleDisplayPath);
+            InventoryDisplay = GetNode<Label>(InventoryDisplayPath);
+            MissionDisplay = GetNode<Label>(MissionManagerDisplayPath);
+        }
+
+        public override void _Process(float delta)
+        {
+            if (Input.IsActionPressed(InputAction.Pause))
             {
-                GD.Print("Can toggle pause yet, time left ");
-                CanTogglePause = false;
-                TogglePauseMenu();
-                AccumulatorPauseToggleCooldown = PauseToggleCooldownWaitTime;
+                if (CanTogglePause)
+                {
+                    GD.Print("Can toggle pause yet, time left ");
+                    CanTogglePause = false;
+                    TogglePauseMenu();
+                    AccumulatorPauseToggleCooldown = PauseToggleCooldownWaitTime;
+                }
+                else
+                {
+                    GD.Print("Cannot toggle pause yet, time left ", AccumulatorPauseToggleCooldown);
+                }
+            }
+            if (AccumulatorPauseToggleCooldown > 0)
+            {
+                AccumulatorPauseToggleCooldown -= delta;
             }
             else
             {
-                GD.Print("Cannot toggle pause yet, time left ", AccumulatorPauseToggleCooldown);
+                CanTogglePause = true;
             }
         }
-        if (AccumulatorPauseToggleCooldown > 0)
-        {
-            AccumulatorPauseToggleCooldown -= delta;
-        }
-        else
-        {
-            CanTogglePause = true;
-        }
-    }
 
-    private void TogglePauseMenu()
-    {
-        this.Print("Toggling Pause Menu");
-        this.TogglePause();
-        if (this.IsPaused())
+        private void TogglePauseMenu()
         {
-            this.Print("Should be showing Pause Menu");
-            Show();
+            this.Print("Toggling Pause Menu");
+            this.TogglePause();
+            if (this.IsPaused())
+            {
+                this.Print("Should be showing Pause Menu");
+                Show();
+            }
+            else
+            {
+                this.Print("Should be hiding Pause Menu");
+                Hide();
+            }
         }
-        else
-        {
-            this.Print("Should be hiding Pause Menu");
-            Hide();
-        }
-    }
 
-    public void RefreshUI(Player player)
-    {
-        InventoryDisplay.Text = player.Inventory.Display();
-        MissionDisplay.Text = player.MissionManager.Display();
+        public void RefreshUI(Player player)
+        {
+            InventoryDisplay.Text = player.Inventory.Display();
+            MissionDisplay.Text = player.MissionManager.Display();
+        }
     }
 }

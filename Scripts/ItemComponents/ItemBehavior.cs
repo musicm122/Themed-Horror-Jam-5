@@ -1,13 +1,15 @@
 ﻿using Godot;
+using ThemedHorrorJam5.Scripts.Extensions;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
     public class ItemBehavior : Area2D, IDebuggable<Node>
     {
         [Export]
-        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugging { get; set; }
+
         public bool IsDebugPrintEnabled() => IsDebugging;
-        
+
         public string Direction = "down";
 
         public float Time = 0.5f;
@@ -26,7 +28,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public void GrowShrink(float scaleUp, float scaleDown, float time)
         {
-            Tween.InterpolateProperty(Sprite, Property, new Vector2(scaleUp, scaleUp), new Vector2(scaleDown, scaleDown), Time, Tween.TransitionType.Linear, Tween.EaseType.InOut);
+            Tween.InterpolateProperty(Sprite, Property, new Vector2(scaleUp, scaleUp), new Vector2(scaleDown, scaleDown), time, Tween.TransitionType.Linear, Tween.EaseType.InOut);
             Tween.Start();
         }
 
@@ -35,11 +37,11 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         {
             if (HasNode("Sprite"))
             {
-                Sprite = GetNode<Sprite>(new NodePath("Sprite"));
+                Sprite = GetNode<Sprite>("Sprite");
             }
             if (HasNode("Tween"))
             {
-                Tween = GetNode<Tween>(new NodePath("Tween"));
+                Tween = GetNode<Tween>("Tween");
                 GrowShrink(ScaleDown, ScaleUp, Time);
             }
         }
@@ -56,6 +58,13 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 GrowShrink(ScaleUp, ScaleDown, Time);
                 this.Direction = "down";
             }
+        }
+        public virtual void OnExaminableAreaEntered(Node body)
+        {
+        }
+
+        public virtual void OnExaminableAreaExited(Node body)
+        {
         }
     }
 }

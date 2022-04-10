@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class Title : Node
 {
@@ -8,7 +7,6 @@ public class Title : Node
 
     public AudioStreamPlayer TitleSongAudio { get; set; }
     public AudioStreamPlayer ButtonAudio { get; set; }
-
 
     public override void _Ready()
     {
@@ -29,7 +27,6 @@ public class Title : Node
         }
     }
 
-
     public void OnStartButtonPressed()
     {
         GetTree().ChangeScene(NewGameScene);
@@ -44,5 +41,6 @@ public class Title : Node
     {
         ButtonAudio.Play();
     }
+
     //https://opengameart.org/content/jazzy-vibes-78-jazz-guitar-medley
 }

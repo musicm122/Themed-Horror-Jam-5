@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class End : Node
 {
@@ -23,11 +22,11 @@ public class End : Node
     //  // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(float delta)
     {
-        if(RemainingCooldownTime<=0)
+        if (RemainingCooldownTime <= 0)
         {
             GetTree().ChangeScene(TitleScene);
         }
-        RemainingCooldownTime-=delta;
+        RemainingCooldownTime -= delta;
     }
 }
 

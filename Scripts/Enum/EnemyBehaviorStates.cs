@@ -2,5 +2,5 @@
 {
     Idle,
     Patrol,
-    ChasePlayer    
+    ChasePlayer
 }

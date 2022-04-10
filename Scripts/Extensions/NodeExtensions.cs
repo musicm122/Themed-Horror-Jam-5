@@ -1,12 +1,50 @@
 ﻿using Godot;
-using System.Runtime.CompilerServices;
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class NodeExtensions
     {
-        public static bool IsPlayer(this Node node) => node.Name.ToLower() == "player";
+        public static bool TryConnectSignal(this Node node, string signal, Godot.Object target, string methodName)
+        {
+            Error result;
+            try
+            {
+                result = node.Connect(signal, target, methodName);
+                if (result != Error.Ok)
+                {
+                    GD.PrintErr(MethodBase.GetCurrentMethod().Name, new ApplicationException(result.ToString()), $"ConnectBodyEntered failed with {result}");
+                    GD.PrintStack();
+                }
+            }
+            catch (Exception ex)
+            {
+                GD.PrintErr(ex);
+                throw;
+            }
+            return result == Error.Ok;
+        }
+
+        public static bool TryDisconnectSignal(this Node node, string signal, Godot.Object target, string methodName){
+            try
+            {
+                node.Disconnect(signal, target, methodName);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                GD.PrintErr(ex);
+                return false;
+            }
+        }
+
+        public static bool IsPlayer(this Node node)
+        {
+            var result = StringExtensions.Equals(node.Name, "player");
+            return result;
+        }
 
         public static void Pause(this Node node)
         {
@@ -41,6 +79,6 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                 GD.PrintErr("WaitForSeconds threw", ex);
                 throw;
             }
-        }        
+        }
     }
 }

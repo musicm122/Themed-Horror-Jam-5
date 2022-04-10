@@ -1,25 +1,27 @@
-using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class CollectionExtensions
+namespace ThemedHorrorJam5.Scripts.Extensions
 {
-    public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection) => collection == null || collection.Count() == 0;
-
-    public static void RemoveOne<T>(this List<T> collection, Func<T, bool> match) =>
-        collection.Remove(collection.First(match));
-
-    public static void RemoveAmt<T>(this List<T> collection, Func<T, bool> match, int amt)
+    public static class CollectionExtensions
     {
-        for (int i = 0; i < collection.Count(); i++)
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection) => collection?.Any() != true;
+
+        public static void RemoveOne<T>(this List<T> collection, Func<T, bool> match) =>
+            collection.Remove(collection.First(match));
+
+        public static void RemoveAmt<T>(this List<T> collection, Func<T, bool> match, int amt)
         {
-            while (amt > 0 && collection.Any(match))
+            for (int i = 0; i < collection.Count; i++)
             {
-                if (match(collection[i]))
+                while (amt > 0 && collection.Any(match))
                 {
-                    collection.Remove(collection[i]);
-                    amt--;
+                    if (match(collection[i]))
+                    {
+                        collection.Remove(collection[i]);
+                        amt--;
+                    }
                 }
             }
         }

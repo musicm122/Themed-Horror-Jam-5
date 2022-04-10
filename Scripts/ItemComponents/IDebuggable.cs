@@ -1,13 +1,12 @@
+using Godot;
 using System;
 using System.Runtime.CompilerServices;
-using Godot;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
     public interface IDebuggable<T> where T : Node
     {
         bool IsDebugPrintEnabled();
-
     }
 
     public static class IDebuggableNodeExtensions
@@ -41,6 +40,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 GD.Print($"{callerName}:${message}");
             }
         }
+
         public static void Print<T>(this IDebuggable<T> node, float message, [CallerMemberName] string callerName = "") where T : Node
         {
             if (node.IsDebugPrintEnabled())
@@ -48,7 +48,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 GD.Print($"{callerName}:${message}");
             }
         }
-
 
         public static void Print<T>(this IDebuggable<T> node, params object[] messages) where T : Node
         {
@@ -59,6 +58,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         }
 
         public static string OwnerName<T>(this IDebuggable<T> node) where T : Node => ((T)node).Name;
+
         public static string OwnerFileName<T>(this IDebuggable<T> node) where T : Node => ((T)node).Filename;
 
         public static void PrintCaller<T>(this IDebuggable<T> node, [CallerMemberName] string callerName = "") where T : Node
@@ -68,8 +68,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 GD.Print($"{callerName} called ");
             }
         }
-
-        
 
         public static void PrintHasSignal<T>(this IDebuggable<T> node, string signal) where T : Node
         {
@@ -104,6 +102,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 result += "=========";
                 GD.Print(result);
             }
-        }        
+        }
     }
 }

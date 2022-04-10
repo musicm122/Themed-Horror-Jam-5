@@ -1,17 +1,11 @@
 ﻿using Godot;
 using System.Collections.Generic;
 using ThemedHorrorJam5.Scripts.ItemComponents;
-using TinyIoC;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class SceneTreeExtensions
     {
-        public static void RegisterIOC()
-        {
-            var container = new TinyIoCContainer();
-        }
-
         public static void AddItem(this SceneTree tree, string name, int amt = 1) => tree.CallGroup(Groups.Player, "AddItem", name, amt);
 
         public static List<Examinable> GetExaminableCollection(this SceneTree tree) => tree.GetNodesByType<Examinable>();

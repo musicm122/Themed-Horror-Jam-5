@@ -8,5 +8,4 @@ public abstract class Mission
     public string Details { get; set; }
 
     public Func<Player, bool> EvaluateCompletionState;
-    
 }

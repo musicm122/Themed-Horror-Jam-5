@@ -5,21 +5,24 @@ using ThemedHorrorJam5.Scripts.ItemComponents;
 public class InteractiveObject : Node2D, IDebuggable<Node>
 {
     [Export]
-    public bool IsDebugging { get; set; } = false;
+    public bool IsDebugging { get; set; }
+
     public bool IsDebugPrintEnabled() => IsDebugging;
+
     public bool CanInteract = false;
+
     public bool IsInteracting = false;
 
     //public Sprite Sprite { get; set; }
 
     public void OnEntered(Node body)
     {
-        CanInteract = body.Name == "Player";
+        CanInteract = body.IsPlayer();
     }
 
     public void OnExited(Node body)
     {
-        CanInteract = !(body.Name == "Player");
+        CanInteract = !body.IsPlayer();
     }
 
     public virtual void OnInteract()

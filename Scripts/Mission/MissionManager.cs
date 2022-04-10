@@ -8,16 +8,17 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
     {
         public delegate void AddingMissionHandler(object sender, MissionManagerEventArgs args);
 
-        public event AddingMissionHandler AddMissionEvent;
+        public event System.EventHandler<MissionManagerEventArgs> AddMissionEvent;
 
         public delegate void RemovingMissionHandler(object sender, MissionManagerEventArgs args);
 
-        public event RemovingMissionHandler RemoveMissionEvent;
+        public event System.EventHandler<MissionManagerEventArgs> RemoveMissionEvent;
 
         protected virtual void RaiseAddingMission(Mission mission)
         {
             AddMissionEvent?.Invoke(this, new MissionManagerEventArgs(mission));
         }
+
         protected virtual void RaiseRemovingMission(Mission mission)
         {
             RemoveMissionEvent?.Invoke(this, new MissionManagerEventArgs(mission));
@@ -26,7 +27,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         [Signal]
         public delegate void RemovingMission(Mission mission);
 
-        private List<Mission> Missions { get; set; } = new List<Mission>();
+        private List<Mission> Missions { get; } = new List<Mission>();
 
         public bool HasMission(string name) => Missions.Any(item => item.Title == name);
 
@@ -51,7 +52,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         public string Display()
         {
             var retval = "Points of Interest:\r\n================\r\n";
-            if (Missions.Count() > 0)
+            if (Missions.Count > 0)
             {
                 for (int i = 0; i < Missions.Count; i++)
                 {
@@ -78,15 +79,15 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public IEnumerable<string> Details() => Missions.Select(m => m.Details);
 
-        public IEnumerable<Mission> Completed() => Missions.Where(m => m.IsComplete == true);
+        public IEnumerable<Mission> Completed() => Missions.Where(m => m.IsComplete);
 
-        public IEnumerable<Mission> Uncompleted() => Missions.Where(m => m.IsComplete == false);
+        public IEnumerable<Mission> Uncompleted() => Missions.Where(m => !m.IsComplete);
 
-        public int Count() => Missions.Count();
+        public int Count() => Missions.Count;
 
         public void EvaluateMissionsState(Player player)
         {
-            for (int i = 0; i < Missions.Count(); i++)
+            for (int i = 0; i < Missions.Count; i++)
             {
                 if (Missions[i].EvaluateCompletionState(player))
                 {

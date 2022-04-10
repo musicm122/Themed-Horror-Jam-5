@@ -1,6 +1,6 @@
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {
-    public class InputAction
+    public static class InputAction
     {
         public const string Interact = "interact";
         public const string Left = "left";

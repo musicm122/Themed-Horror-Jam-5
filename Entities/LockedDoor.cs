@@ -71,7 +71,7 @@ public class LockedDoor : Examinable
 
     public void OnDoorBodyEntered(Node2D body)
     {
-        if (body.Name.ToLower() == "player")
+        if (body.Name.Equals("player"))
         {
             //PlayerRef = (Player)body;
             this.CanInteract = true;
@@ -81,7 +81,7 @@ public class LockedDoor : Examinable
 
     public void OnDoorBodyExited(Node2D body)
     {
-        if (body.Name.ToLower() == "player")
+        if (body.Name.Equals("player"))
         {
             //PlayerRef = (Player)body;
             this.CanInteract = false;

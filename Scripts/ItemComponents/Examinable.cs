@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.Threading.Tasks;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
@@ -30,8 +31,8 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         [Export]
         public string Timeline { get; set; }
 
-        public bool CanInteract { get; set; } = false;
-        public bool ShouldRemove { get; set; } = false;
+        public bool CanInteract { get; set; }
+        public bool ShouldRemove { get; set; }
 
         public void DialogListener(System.Object value)
         {
@@ -55,10 +56,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                     }
                     break;
             }
-            Task.Run(async () =>
-            {
-                await DialogComplete();
-            });
+            Task.Run(async () => await DialogComplete());
         }
 
         private async Task DialogComplete()
@@ -105,23 +103,32 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             {
                 InteractableArea.DisconnectBodyEntered(nameof(OnExaminableAreaEntered));
                 InteractableArea.DisconnectBodyExited(nameof(OnExaminableAreaExited));
+
                 RemoveChild(InteractableArea);
             }
         }
 
         public void OnExaminableAreaEntered(Node body)
         {
+            this.PrintCaller();
             if (body.IsPlayer())
             {
-                EmitSignal(nameof(PlayerInteractingAvailable), this);
+                if (this.HasSignal(nameof(PlayerInteractingAvailable)))
+                {
+                    EmitSignal(nameof(PlayerInteractingAvailable), this);
+                }
             }
         }
 
         public void OnExaminableAreaExited(Node body)
         {
+            this.PrintCaller();
             if (body.IsPlayer())
             {
-                EmitSignal(nameof(PlayerInteractingUnavailable), this);
+                if (this.HasSignal(nameof(PlayerInteractingUnavailable)))
+                {
+                    EmitSignal(nameof(PlayerInteractingUnavailable), this);
+                }
             }
         }
 
@@ -135,8 +142,8 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         private void RegisterInteractable(Area2D area2D)
         {
-            area2D.ConnectBodyEntered("OnExaminableAreaEntered");
-            area2D.ConnectBodyExited("OnExaminableAreaExited");
+            area2D.ConnectBodyEntered(this, nameof(OnExaminableAreaEntered));
+            area2D.ConnectBodyExited(this, nameof(OnExaminableAreaExited));
         }
 
         public override void _Ready()

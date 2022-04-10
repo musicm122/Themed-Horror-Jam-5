@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class Level1 : Node2D
 {
@@ -14,7 +13,7 @@ public class Level1 : Node2D
     public PathFollow2D PathFollow2D { get; set; }
 
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()  
+    public override void _Ready()
     {
         if (PatrolPath != null)
         {
@@ -33,6 +32,7 @@ public class Level1 : Node2D
             GD.PushWarning("PatrolPathFollow2D could not be found");
         }
     }
+
     public Vector2 GetPathDirection(Vector2 position)
     {
         var offset = Path.Curve.GetClosestOffset(position);

@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using Godot;
+using ThemedHorrorJam5.Entities;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
@@ -33,29 +36,48 @@ public class Player : KinematicBody2D, IDebuggable<Node>
     public bool CanMove = true;
     public bool IsRunning = false;
 
+    private void RegisterExaminable(List<Examinable> examinableCollection)
+    {
+        try
+        {
+            this.Print("Examinable count = ", examinableCollection.Count);
+            if (!examinableCollection.IsNullOrEmpty())
+            {
+                examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteracting), this, nameof(OnExaminablePlayerInteracting)));
+                examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingComplete), this, nameof(OnExaminablePlayerInteractingComplete)));
+                examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingAvailable), this, nameof(OnExaminablePlayerInteractionAvailable)));
+                examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingUnavailable), this, nameof(OnExaminablePlayerInteractionUnavailable)));
+            }
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+    }
+    private void RegisterLockedDoors(List<LockedDoor> lockedDoorCollection)
+    {
+        try
+        {
+            this.Print("lockedDoorCollection count = ", lockedDoorCollection.Count);
+            if (!lockedDoorCollection.IsNullOrEmpty())
+            {
+                lockedDoorCollection.ForEach(e => e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction)));
+            }
+        }
+        catch (System.Exception)
+        {
+            throw;
+        }
+    }
+
     private void RegisterSignals()
     {
         this.PrintCaller();
 
         this.Print("Start Register Signal");
         this.Print("================");
-        var examinableCollection = this.GetTree().GetExaminableCollection();
-        var lockedDoorCollection = this.GetTree().GetLockedDoorCollection();
-
-        this.Print("Examinable count = ", examinableCollection.Count);
-        if (!examinableCollection.IsNullOrEmpty())
-        {
-            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteracting, this, nameof(OnExaminablePlayerInteracting)));
-            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingComplete, this, nameof(OnExaminablePlayerInteractingComplete)));
-            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingAvailable, this, nameof(OnExaminablePlayerInteractionAvailable)));
-            examinableCollection.ForEach(e => e.Connect(CustomSignals.PlayerInteractingUnavailable, this, nameof(OnExaminablePlayerInteractionUnavailable)));
-        }
-
-        if (!lockedDoorCollection.IsNullOrEmpty())
-        {
-            lockedDoorCollection.ForEach(e => e.Connect(CustomSignals.DoorInteraction, this, nameof(OnDoorInteraction)));
-        }
-
+        RegisterExaminable(this.GetTree().GetExaminableCollection());
+        RegisterLockedDoors(this.GetTree().GetLockedDoorCollection());
         this.Print<Node>("================");
         this.Print<Node>("End Register Signal");
     }
@@ -121,7 +143,7 @@ public class Player : KinematicBody2D, IDebuggable<Node>
         RefreshUI();
     }
 
-    public void RemoveItem(string name, int amt = 1)
+    public void RemoveItem(string name)
     {
         Inventory.Remove(name);
         RefreshUI();
@@ -163,12 +185,14 @@ public class Player : KinematicBody2D, IDebuggable<Node>
 
     public void OnExaminablePlayerInteracting(Examinable examinable)
     {
+        examinable.CanInteract = false;
         this.PrintCaller();
         this.LockMovement();
     }
 
     public void OnExaminablePlayerInteractingComplete(Examinable examinable)
     {
+        examinable.CanInteract = true;
         this.PrintCaller();
         this.UnlockMovement();
     }

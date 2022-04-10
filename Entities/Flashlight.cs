@@ -1,4 +1,3 @@
-﻿public class Flashlight:InteractiveObject
+﻿public class Flashlight : InteractiveObject
 {
-
 }

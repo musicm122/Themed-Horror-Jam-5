@@ -12,6 +12,7 @@
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]
 position = Vector2( 456, -24 )
+IsDebugging = true
 
 [node name="Key" parent="." instance=ExtResource( 6 )]
 position = Vector2( 112, 97 )
@@ -22,6 +23,7 @@ position = Vector2( 168, -48 )
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
 position = Vector2( 360, -24 )
 collision/safe_margin = 0.001
+IsDebugging = true
 
 [node name="Block" parent="." instance=ExtResource( 2 )]
 position = Vector2( -80, -40 )
