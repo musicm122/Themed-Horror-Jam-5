@@ -1,3 +1,6 @@
-﻿public class Flashlight : InteractiveObject
+﻿namespace ThemedHorrorJam5.Entities
 {
+    public class Flashlight : InteractiveObject
+    {
+    }
 }

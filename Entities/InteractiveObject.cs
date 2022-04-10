@@ -2,49 +2,52 @@ using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
-public class InteractiveObject : Node2D, IDebuggable<Node>
+namespace ThemedHorrorJam5.Entities
 {
-    [Export]
-    public bool IsDebugging { get; set; }
-
-    public bool IsDebugPrintEnabled() => IsDebugging;
-
-    public bool CanInteract = false;
-
-    public bool IsInteracting = false;
-
-    //public Sprite Sprite { get; set; }
-
-    public void OnEntered(Node body)
+    public class InteractiveObject : Node2D, IDebuggable<Node>
     {
-        CanInteract = body.IsPlayer();
-    }
+        [Export]
+        public bool IsDebugging { get; set; }
 
-    public void OnExited(Node body)
-    {
-        CanInteract = !body.IsPlayer();
-    }
+        public bool IsDebugPrintEnabled() => IsDebugging;
 
-    public virtual void OnInteract()
-    {
-        if (!IsInteracting)
+        public bool CanInteract = false;
+
+        public bool IsInteracting = false;
+
+        //public Sprite Sprite { get; set; }
+
+        public void OnEntered(Node body)
         {
-            IsInteracting = true;
-            GD.Print("Interacting with thing");
-            OnInteractComplete();
+            CanInteract = body.IsPlayer();
         }
-    }
 
-    public virtual void OnInteractComplete()
-    {
-        IsInteracting = false;
-    }
-
-    public override void _Process(float delta)
-    {
-        if (CanInteract && InputUtils.IsInteracting())
+        public void OnExited(Node body)
         {
-            OnInteract();
+            CanInteract = !body.IsPlayer();
+        }
+
+        public virtual void OnInteract()
+        {
+            if (!IsInteracting)
+            {
+                IsInteracting = true;
+                GD.Print("Interacting with thing");
+                OnInteractComplete();
+            }
+        }
+
+        public virtual void OnInteractComplete()
+        {
+            IsInteracting = false;
+        }
+
+        public override void _Process(float delta)
+        {
+            if (CanInteract && InputUtils.IsInteracting())
+            {
+                OnInteract();
+            }
         }
     }
 }
