@@ -27,11 +27,11 @@ collision/safe_margin = 0.001
 position = Vector2( -80, -40 )
 
 [node name="Block3" parent="." instance=ExtResource( 2 )]
-position = Vector2( 256, 80 )
+position = Vector2( 264, 120 )
 scale = Vector2( 4.48597, 1.24564 )
 
 [node name="Block5" parent="." instance=ExtResource( 2 )]
-position = Vector2( 160, 80 )
+position = Vector2( 168, 120 )
 scale = Vector2( 4.48597, 1.24564 )
 
 [node name="PushBlock" parent="." instance=ExtResource( 3 )]
@@ -77,10 +77,10 @@ __meta__ = {
 
 [node name="Label4" type="Label" parent="."]
 show_behind_parent = true
-margin_left = -432.0
-margin_top = -104.0
-margin_right = -259.0
-margin_bottom = -90.0
+margin_left = 376.0
+margin_top = 75.0
+margin_right = 549.0
+margin_bottom = 89.0
 rect_pivot_offset = Vector2( 272, 88 )
 text = "Mission Mechanic"
 __meta__ = {
@@ -89,10 +89,10 @@ __meta__ = {
 
 [node name="Label3" type="Label" parent="."]
 show_behind_parent = true
-margin_left = 80.0
-margin_top = 32.0
-margin_right = 253.0
-margin_bottom = 46.0
+margin_left = 136.0
+margin_top = 72.0
+margin_right = 309.0
+margin_bottom = 86.0
 rect_pivot_offset = Vector2( 32, 120 )
 text = "Locked Door Mechanic"
 __meta__ = {
@@ -100,7 +100,7 @@ __meta__ = {
 }
 
 [node name="LockedDoor" parent="." instance=ExtResource( 5 )]
-position = Vector2( 208, 88 )
+position = Vector2( 216, 120 )
 IsDebugging = true
 
 [node name="Key" parent="." instance=ExtResource( 6 )]
