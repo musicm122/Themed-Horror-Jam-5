@@ -49,6 +49,10 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                     GetTree().AddItem(Flashlight);
                     ShouldRemove = true;
                     break;
+                case "HealthKitFound":
+                    GetTree().AddItem("HealthKit");
+                    ShouldRemove = true;
+                    break;
                 case "KeyA":
                     this.Print("DialogListener: KEY switch");
                     GetTree().AddItem("KeyA");

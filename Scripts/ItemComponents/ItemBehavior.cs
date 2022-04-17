@@ -41,6 +41,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             if (HasNode("Tween"))
             {
                 Tween = GetNode<Tween>("Tween");
+                Tween.Connect("tween_completed",this,nameof(OnTweenCompleted));
                 GrowShrink(ScaleDown, ScaleUp, Time);
             }
         }

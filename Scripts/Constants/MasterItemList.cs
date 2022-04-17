@@ -33,6 +33,10 @@ namespace ThemedHorrorJam5.Scripts.Constants
             Description= "Basics on surviving.",
             ImagePath = ItemConstants.FlashlightImagePath},
         new Item(){
+            Name = "HealthKit",
+            Description= "Heals damage",
+            ImagePath = ItemConstants.FlashlightImagePath},
+        new Item(){
             Name = "KeyA",
             Description= "Opens 'A' doors",
             ImagePath = ItemConstants.KeyImagePath},

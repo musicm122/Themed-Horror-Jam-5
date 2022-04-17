@@ -7,10 +7,13 @@
 [ext_resource path="res://Entities/LockedDoor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Entities/Key.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Entities/NPC.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Scripts/ItemComponents/Examinable.cs" type="Script" id=8]
 [ext_resource path="res://Entities/Spikes.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Entities/HealthKit.tscn" type="PackedScene" id=10]
 
 [node name="Node2D" type="Node2D"]
+
+[node name="HealthKit" parent="." instance=ExtResource( 10 )]
+position = Vector2( 736, 56 )
 
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
 position = Vector2( 576, 0 )
@@ -26,8 +29,6 @@ Timeline = "/NPCS/AddMission"
 
 [node name="Flashlight" parent="." instance=ExtResource( 4 )]
 position = Vector2( 168, -48 )
-script = ExtResource( 8 )
-Timeline = "/FlashlightFound"
 
 [node name="Block" parent="." instance=ExtResource( 2 )]
 position = Vector2( -80, -40 )
