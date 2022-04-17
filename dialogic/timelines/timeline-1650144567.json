@@ -4,7 +4,7 @@
 			"character": "character-1647639414.json",
 			"event_id": "dialogic_001",
 			"portrait": "",
-			"text": "Hello"
+			"text": "Unlocking door"
 		},
 		{
 			"emit_signal": "",
@@ -13,7 +13,7 @@
 	],
 	"metadata": {
 		"dialogic-version": "1.4",
-		"file": "timeline-1647636744.json",
-		"name": "hello_world"
+		"file": "timeline-1650144567.json",
+		"name": "UnlockingLockedDoor"
 	}
 }

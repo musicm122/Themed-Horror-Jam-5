@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.Collections.Generic;
+using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
@@ -26,7 +27,6 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         }
 
         public static bool HasPlayerNode(this SceneTree tree) =>
-            //get_tree().get_current_scene()
             tree.CurrentScene.FindNode("Player") != null;
 
         public static (bool, Player) GetPlayerNode(this SceneTree tree) =>

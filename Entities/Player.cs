@@ -10,6 +10,15 @@ public class Player : KinematicBody2D, IDebuggable<Node>
     [Export]
     public bool IsDebugging { get; set; } = false;
 
+    [Export]
+    public float MoveSpeed { get; set; } = 50f;
+
+    [Export]
+    public float PushSpeed { get; set; } = 20f;
+
+    [Export]
+    public float MoveMultiplier { get; set; } = 1.5f;
+
     public bool IsDebugPrintEnabled() => IsDebugging;
 
     public Sprite ExaminableNotification { get; set; }
@@ -24,16 +33,8 @@ public class Player : KinematicBody2D, IDebuggable<Node>
 
     public bool CanInteract { get; set; } = false;
 
-    [Export]
-    public float MoveSpeed { get; set; } = 50f;
-
-    [Export]
-    public float PushSpeed { get; set; } = 20f;
-
-    [Export]
-    public float MoveMultiplier { get; set; } = 1.5f;
-
     public bool CanMove = true;
+
     public bool IsRunning = false;
 
     private void RegisterExaminable(List<Examinable> examinableCollection)
@@ -54,6 +55,7 @@ public class Player : KinematicBody2D, IDebuggable<Node>
             throw;
         }
     }
+
     private void RegisterLockedDoors(List<LockedDoor> lockedDoorCollection)
     {
         try
@@ -61,7 +63,8 @@ public class Player : KinematicBody2D, IDebuggable<Node>
             this.Print("lockedDoorCollection count = ", lockedDoorCollection.Count);
             if (!lockedDoorCollection.IsNullOrEmpty())
             {
-                lockedDoorCollection.ForEach(e => e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction)));
+                lockedDoorCollection.ForEach(e =>
+                    e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction)));
             }
         }
         catch (System.Exception)
@@ -111,29 +114,25 @@ public class Player : KinematicBody2D, IDebuggable<Node>
 
     private void LockMovement()
     {
-        this.Print<Node>("Locking Movement");
+        this.Print("Locking Movement");
         this.CanMove = false;
     }
 
     private void UnlockMovement()
     {
-        this.Print<Node>("Unlocking Movement");
+        this.Print("Unlocking Movement");
         this.CanMove = true;
-    }
-
-    public void AddItem(string name, int amt = 1)
-    {
-        Inventory.Add(name, amt);
-        RefreshUI();
     }
 
     public void AddMission(Mission mission)
     {
+        this.Print($"AddMission called with mission : {mission}");
         MissionManager.AddIfDNE(mission);
     }
 
     public void RemoveMission(Mission mission)
     {
+        this.Print($"RemoveMission called with mission : {mission}");
         MissionManager.Remove(mission);
     }
 
@@ -143,8 +142,16 @@ public class Player : KinematicBody2D, IDebuggable<Node>
         RefreshUI();
     }
 
+    public void AddItem(string name, int amt = 1)
+    {
+        this.Print($"AddItem called with name:{name}, amt:{amt} ");
+        Inventory.Add(name, amt);
+        RefreshUI();
+    }
+
     public void RemoveItem(string name)
     {
+        this.Print($"RemoveItem called with name:{name}");
         Inventory.Remove(name);
         RefreshUI();
     }
@@ -199,6 +206,10 @@ public class Player : KinematicBody2D, IDebuggable<Node>
 
     public void OnDoorInteraction(LockedDoor lockedDoor)
     {
+        this.PrintCaller();
+        this.Print($"Does player have key {lockedDoor.RequiredKey}", HasKey(lockedDoor.RequiredKey));
+        this.Print($"lockedDoor.CurrentDoorState  = {lockedDoor.CurrentDoorState}");
+
         if (HasKey(lockedDoor.RequiredKey) && lockedDoor.CurrentDoorState == DoorState.Locked)
         {
             lockedDoor.CurrentDoorState = DoorState.Closed;
@@ -207,6 +218,7 @@ public class Player : KinematicBody2D, IDebuggable<Node>
 
     private void CheckBoxCollision(Vector2 motion)
     {
+        this.PrintCaller();
         motion = motion.Normalized();
         if (GetSlideCollision(0).Collider is PushBlock box)
         {

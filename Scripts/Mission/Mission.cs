@@ -8,4 +8,10 @@ public abstract class Mission
     public string Details { get; set; }
 
     public Func<Player, bool> EvaluateCompletionState;
+
+    public override string ToString() =>
+        $@"Mission:
+        Title: {Title}
+        Details: {Details}
+        IsComplete: {IsComplete}";
 }

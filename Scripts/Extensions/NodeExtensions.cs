@@ -27,7 +27,8 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             return result == Error.Ok;
         }
 
-        public static bool TryDisconnectSignal(this Node node, string signal, Godot.Object target, string methodName){
+        public static bool TryDisconnectSignal(this Node node, string signal, Godot.Object target, string methodName)
+        {
             try
             {
                 node.Disconnect(signal, target, methodName);
@@ -35,7 +36,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             }
             catch (Exception ex)
             {
-                GD.PrintErr(ex);
+                GD.Print(ex);
                 return false;
             }
         }

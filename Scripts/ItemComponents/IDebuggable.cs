@@ -17,6 +17,12 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             GD.PrintStack();
         }
 
+        public static void PrintError<T>(this IDebuggable<T> node, Error err, string message) where T : Node
+        {
+            GD.PrintErr(((Node)node).Name, err, message);
+            GD.PrintStack();
+        }
+
         public static void Print<T>(this IDebuggable<T> node, string message) where T : Node
         {
             if (node.IsDebugPrintEnabled())

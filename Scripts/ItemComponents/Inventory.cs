@@ -29,7 +29,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public bool HasResource(string name) => Items.Any(item => item.Name == name);
 
-        public bool HasKey(Key key) => Items.Any(item => item.Name.Equals(key.ToString()));
+        public bool HasKey(Key key) => Items.Any(item => item.Name.ToLower() == (key.ToString().ToLower()));
 
         public void Add(string name, int amt)
         {

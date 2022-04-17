@@ -48,7 +48,46 @@
 				"timeline-1647639533.json"
 			],
 			"folders": {
+				"Interactions": {
+					"files": [
+						"timeline-1650144567.json",
+						"timeline-1650144629.json",
+						"timeline-1650144679.json",
+						"timeline-1650144674.json",
+						"timeline-1650148633.json"
+					],
+					"folders": {
 
+					},
+					"metadata": {
+						"color": null,
+						"folded": false
+					}
+				},
+				"Items": {
+					"files": [
+
+					],
+					"folders": {
+
+					},
+					"metadata": {
+						"color": null,
+						"folded": false
+					}
+				},
+				"NPCS": {
+					"files": [
+
+					],
+					"folders": {
+
+					},
+					"metadata": {
+						"color": null,
+						"folded": false
+					}
+				}
 			},
 			"metadata": {
 				"color": null,
