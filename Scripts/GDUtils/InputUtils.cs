@@ -4,6 +4,18 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class InputUtils
     {
+
+        public static bool IsAnyKeyPressed() =>
+            Input.IsActionJustPressed(InputAction.ToggleFlashlight) ||
+            Input.IsActionJustPressed(InputAction.Run) ||
+            Input.IsActionJustPressed(InputAction.Right) ||
+            Input.IsActionJustPressed(InputAction.Up) ||
+            Input.IsActionJustPressed(InputAction.Left) ||
+            Input.IsActionJustPressed(InputAction.Down) ||
+            Input.IsActionJustPressed(InputAction.Interact) ||
+            Input.IsActionJustPressed(InputAction.Pause);
+
+
         public static bool IsInteracting() => Input.IsActionJustPressed(InputAction.Interact);
 
         public static Vector2 GetTopDownMovementInput(float speed = 1f)

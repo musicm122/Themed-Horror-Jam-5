@@ -7,12 +7,15 @@ using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Mission;
+using ThemedHorrorJam5.Scripts.UI;
 using static ThemedHorrorJam5.Entities.Components.Hurtbox;
+using static ThemedHorrorJam5.Entities.Components.Status;
 
 namespace ThemedHorrorJam5.Entities
 {
     public class Player : KinematicBody2D, IDebuggable<Node>
     {
+        public bool IsDead = false;
         [Export]
         public bool IsDebugging { get; set; } = false;
 
@@ -36,6 +39,8 @@ namespace ThemedHorrorJam5.Entities
         public Inventory Inventory { get; set; } = new Inventory();
 
         private Hurtbox HurtBox { get; set; }
+
+        private Hud Hud { get; set; }
 
         public Status Status { get; set; }
 
@@ -83,6 +88,13 @@ namespace ThemedHorrorJam5.Entities
             }
         }
 
+        private void RegisterHealthSignals()
+        {
+            Status.Connect(nameof(NoHealth), this, nameof(OnEmptyHealthBar));
+            Status.Connect(nameof(HealthChanged), this, nameof(OnHealthChanged));
+            Status.Connect(nameof(MaxHealthChanged), this, nameof(OnMaxHealthChanged));
+        }
+
         private void RegisterHurtBoxSignals()
         {
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
@@ -110,11 +122,12 @@ namespace ThemedHorrorJam5.Entities
 
             this.Print("Start Register Signal");
             this.Print("================");
+            RegisterHealthSignals();
             RegisterExaminable(this.GetTree().GetExaminableCollection());
             RegisterLockedDoors(this.GetTree().GetLockedDoorCollection());
             RegisterHurtBoxSignals();
-            this.Print<Node>("================");
-            this.Print<Node>("End Register Signal");
+            this.Print("================");
+            this.Print("End Register Signal");
         }
 
         public override void _Ready()
@@ -126,6 +139,7 @@ namespace ThemedHorrorJam5.Entities
             ExaminableNotification.Hide();
             MissionManager.AddMissionEvent += UpdateMissions;
             MissionManager.RemoveMissionEvent += UpdateMissions;
+            Hud = GetNode<Hud>("Camera2D/Hud");
             PauseMenu = GetNode<PauseMenu>("PauseMenu");
             PauseMenu.Hide();
             RefreshUI();
@@ -202,12 +216,24 @@ namespace ThemedHorrorJam5.Entities
                 InputUtils.GetTopDownWithDiagMovementInput(MoveSpeed * MoveMultiplier) :
                 InputUtils.GetTopDownWithDiagMovementInput(MoveSpeed);
 
+        public override void _Process(float delta)
+        {
+            if (IsDead)
+            {
+                PauseMenu.IsPauseOptionEnabled = false;
+                if (InputUtils.IsAnyKeyPressed())
+                {
+                    this.Print("Reloading Scene");
+                    GetTree().ReloadCurrentScene();
+                }
+            }
+        }
+
         public override void _PhysicsProcess(float delta)
         {
-            IsRunning = Input.IsActionPressed(InputAction.Run);
-
-            if (CanMove)
+            if (CanMove && !IsDead)
             {
+                IsRunning = Input.IsActionPressed(InputAction.Run);
                 var movement = MoveCheck(IsRunning);
                 this.MoveAndSlide(movement);
                 if (GetSlideCount() > 0)
@@ -215,6 +241,7 @@ namespace ThemedHorrorJam5.Entities
                     CheckBoxCollision(movement);
                 }
             }
+
         }
 
         public void OnExaminablePlayerInteractionAvailable(Examinable examinable)
@@ -272,21 +299,35 @@ namespace ThemedHorrorJam5.Entities
 
         private void RefreshUI()
         {
+            Hud.RefreshUI(this);
             this.PauseMenu.RefreshUI(this);
         }
 
         public void OnHurtboxAreaEntered(Node body)
         {
-            this.PrintCaller();
-            if (body.Name == "HitBox")
+
+            this.Print($"OnHurtboxAreaEntered({body.Name})");
+            if (body.Name == "HitBox" || body.Name == "Spikes")
             {
                 this.HurtBox.StartInvincibility(0.6f);
                 var hitBox = (HitBox)body;
+                var force = (this.Position - hitBox.Position) * hitBox.EffectForce;
+                this.MoveAndSlide(force);
                 Status.CurrentHealth -= hitBox.Damage;
+                this.Print("Current Health =", Status.CurrentHealth);
+
                 //Hurtbox.create_hit_effect()
                 //var playerHurtSound = PlayerHurtSound.instance()
                 //get_tree().current_scene.add_child(playerHurtSound)
             }
+        }
+
+        public void OnEmptyHealthBar()
+        {
+            this.PrintCaller();
+            RefreshUI();
+            IsDead = true;
+            LockMovement();
         }
 
         public void OnHurtboxInvincibilityStarted()
@@ -298,5 +339,16 @@ namespace ThemedHorrorJam5.Entities
         {
             this.PrintCaller();
         }
+
+        public void OnHealthChanged(int health)
+        {
+            RefreshUI();
+        }
+
+        public void OnMaxHealthChanged(int health)
+        {
+            RefreshUI();
+        }
+
     }
 }

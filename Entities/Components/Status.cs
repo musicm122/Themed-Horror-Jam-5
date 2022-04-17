@@ -9,10 +9,10 @@ namespace ThemedHorrorJam5.Entities.Components
         public delegate void NoHealth();
 
         [Signal]
-        public delegate void HealthChanged(float val);
+        public delegate void HealthChanged(int val);
 
         [Signal]
-        public delegate void MaxHealthChanged(float val);
+        public delegate void MaxHealthChanged(int val);
 
         private int maxHealth = 1;
         private int currentHealth = 1;
@@ -51,7 +51,7 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public override void _Ready()
         {
-            CurrentHealth = MaxHealth;
+
         }
     }
 }

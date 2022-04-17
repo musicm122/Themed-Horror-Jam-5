@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=2]
@@ -8,12 +8,14 @@
 [ext_resource path="res://Entities/Key.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Entities/NPC.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scripts/ItemComponents/Examinable.cs" type="Script" id=8]
+[ext_resource path="res://Entities/Spikes.tscn" type="PackedScene" id=9]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
-position = Vector2( 496, 168 )
+position = Vector2( 576, 0 )
 collision/safe_margin = 0.001
+IsDebugging = true
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]
 position = Vector2( 448, -48 )
@@ -47,9 +49,9 @@ position = Vector2( -80, 96 )
 [node name="Label" type="Label" parent="."]
 show_behind_parent = true
 margin_left = -160.0
-margin_top = -96.0
+margin_top = -103.0
 margin_right = -24.0
-margin_bottom = -82.0
+margin_bottom = -89.0
 text = "Push Block mechanic"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -67,12 +69,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label6" type="Label" parent="."]
+show_behind_parent = true
+margin_left = 648.0
+margin_top = -103.0
+margin_right = 821.0
+margin_bottom = -89.0
+rect_pivot_offset = Vector2( 272, 88 )
+text = "Health and Damage Mechanic"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Label5" type="Label" parent="."]
 show_behind_parent = true
 margin_left = 424.0
-margin_top = -117.0
+margin_top = -104.0
 margin_right = 597.0
-margin_bottom = -103.0
+margin_bottom = -90.0
 rect_pivot_offset = Vector2( 272, 88 )
 text = "Talk to NPC "
 __meta__ = {
@@ -110,3 +124,7 @@ IsDebugging = true
 [node name="KeyA" parent="." instance=ExtResource( 6 )]
 position = Vector2( 160, 224 )
 Timeline = "/KeyAFound"
+
+[node name="Spikes" parent="." instance=ExtResource( 9 )]
+position = Vector2( 792, -32 )
+IsDebugging = true

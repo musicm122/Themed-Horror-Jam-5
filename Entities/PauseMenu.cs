@@ -7,6 +7,9 @@ namespace ThemedHorrorJam5.Entities
     public class PauseMenu : Control, IDebuggable<Node>
     {
         [Export]
+        public bool IsPauseOptionEnabled { get; set; } = true;
+
+        [Export]
         public bool IsDebugging { get; set; } = false;
 
         public bool IsDebugPrintEnabled() => IsDebugging;
@@ -46,6 +49,7 @@ namespace ThemedHorrorJam5.Entities
 
         public override void _Process(float delta)
         {
+            if (!IsPauseOptionEnabled) return;
             if (Input.IsActionPressed(InputAction.Pause))
             {
                 if (CanTogglePause)
