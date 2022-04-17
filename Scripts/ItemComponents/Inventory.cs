@@ -82,20 +82,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         public bool HasItemInInventory(string itemName)
             => Items.Any(i => i.Name.Trim().Equals(itemName.Trim()));
 
-        //private void RemoveItemIfExists(string itemName, int amt)
-        //{
-        //    while (amt > 0)
-        //    {
-        //        if (HasItemInInventory(itemName))
-        //        {
-        //            var item = Items.Find(i => i.Name == itemName);
-        //            RaiseRemovingItem(item);
-        //            Items.Remove(item);
-        //            amt--;
-        //        }
-        //    }
-        //}
-
         public Item GetItem(string itemName) =>
             Items.First(i => i.Name.Trim().Equals(itemName.Trim()));
 

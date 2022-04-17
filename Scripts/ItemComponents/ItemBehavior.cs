@@ -59,6 +59,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 this.Direction = "down";
             }
         }
+
         public virtual void OnExaminableAreaEntered(Node body)
         {
         }

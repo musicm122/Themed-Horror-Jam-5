@@ -35,7 +35,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public bool ShouldRemove { get; set; }
 
-
         public void DialogListener(System.Object value)
         {
             this.Print($"DialogListener called with arg {value}");
@@ -61,7 +60,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                     }
                     break;
             }
-            Task.Run(async () => await DialogComplete());
+            Task.Run(async () => await DialogComplete().ConfigureAwait(false));
         }
 
         private async Task DialogComplete()
@@ -69,7 +68,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             this.Print($"Examinable.{nameof(DialogComplete)} called");
             this.Print($"Examinable.ShouldRemove = {ShouldRemove}");
             EmitSignal(nameof(PlayerInteractingComplete), this);
-            await this.WaitForSeconds(0.2f);
+            await this.WaitForSeconds(0.2f).ConfigureAwait(false);
             this.Unpause();
             CanInteract = true;
 
@@ -161,7 +160,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 OnInteract();
             }
         }
-
 
         public override void _Process(float delta)
         {

@@ -1,6 +1,8 @@
 ﻿using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using ThemedHorrorJam5.Entities;
+using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
@@ -14,24 +16,24 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public event System.EventHandler<MissionManagerEventArgs> RemoveMissionEvent;
 
-        protected virtual void RaiseAddingMission(Mission mission)
+        protected virtual void RaiseAddingMission(MissionElement mission)
         {
             AddMissionEvent?.Invoke(this, new MissionManagerEventArgs(mission));
         }
 
-        protected virtual void RaiseRemovingMission(Mission mission)
+        protected virtual void RaiseRemovingMission(MissionElement mission)
         {
             RemoveMissionEvent?.Invoke(this, new MissionManagerEventArgs(mission));
         }
 
         [Signal]
-        public delegate void RemovingMission(Mission mission);
+        public delegate void RemovingMission(MissionElement mission);
 
-        private List<Mission> Missions { get; } = new List<Mission>();
+        private List<MissionElement> Missions { get; } = new List<MissionElement>();
 
         public bool HasMission(string name) => Missions.Any(item => item.Title == name);
 
-        public void AddIfDNE(Mission mission)
+        public void AddIfDNE(MissionElement mission)
         {
             if (!Missions.Contains(mission))
             {
@@ -40,7 +42,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             }
         }
 
-        public void Remove(Mission mission)
+        public void Remove(MissionElement mission)
         {
             if (Missions.Contains(mission))
             {
@@ -79,9 +81,9 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public IEnumerable<string> Details() => Missions.Select(m => m.Details);
 
-        public IEnumerable<Mission> Completed() => Missions.Where(m => m.IsComplete);
+        public IEnumerable<MissionElement> Completed() => Missions.Where(m => m.IsComplete);
 
-        public IEnumerable<Mission> Uncompleted() => Missions.Where(m => !m.IsComplete);
+        public IEnumerable<MissionElement> Uncompleted() => Missions.Where(m => !m.IsComplete);
 
         public int Count() => Missions.Count;
 

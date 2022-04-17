@@ -1,9 +1,11 @@
-﻿namespace ThemedHorrorJam5.Scripts.ItemComponents
+﻿using ThemedHorrorJam5.Scripts.Mission;
+
+namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
     public class MissionManagerEventArgs
     {
-        public Mission mission;
+        public MissionElement mission;
 
-        public MissionManagerEventArgs(Mission mission) => this.mission = mission;
+        public MissionManagerEventArgs(MissionElement mission) => this.mission = mission;
     }
 }

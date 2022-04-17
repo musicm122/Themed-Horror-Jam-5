@@ -3,10 +3,8 @@ using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
 {
-
     public class LockedDoor : Examinable
     {
-
         private const string OpeningDoorMessage = "Opening Door";
         private const string ClosingDoorMessage = "Closing Door";
         private const string DoorIsClosedMessage = "Door is now closed";
@@ -27,7 +25,6 @@ namespace ThemedHorrorJam5.Entities
 
         public CollisionShape2D Collider { get; set; }
 
-
         public void OpenDoor()
         {
             this.Print(OpeningDoorMessage);
@@ -40,7 +37,6 @@ namespace ThemedHorrorJam5.Entities
 
         public void CloseDoor()
         {
-
             this.Print(ClosingDoorMessage);
             StartDialog(LockedDoorTimelines.ClosingDoorTimeline);
             Sprite.Play(LockedDoorAnimations.ClosedAnimation);

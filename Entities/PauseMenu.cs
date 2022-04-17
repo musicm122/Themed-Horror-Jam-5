@@ -17,7 +17,6 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         private string MissionManagerDisplayPath { get; set; } = "./MissionPanel/MissionDisplay";
 
-
         [Export]
         private string TitleDisplayPath { get; set; } = "./TitlePanel/Title";
 
