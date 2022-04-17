@@ -4,7 +4,7 @@ using GC = Godot.Collections;
 
 public static class DialogicSharp
 {
-    private static Script _dialogic = GD.Load<Script>("res://addons/dialogic/Other/DialogicClass.gd");
+    private static readonly Script _dialogic = GD.Load<Script>("res://addons/dialogic/Other/DialogicClass.gd");
     private const String DEFAULT_DIALOG_RESOURCE = "res://addons/dialogic/Nodes/DialogNode.tscn";
 
     // Check the documentation of the DialogicClass for more information on how to use these functions!
