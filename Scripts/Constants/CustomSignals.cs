@@ -1,8 +1,11 @@
-﻿public static class CustomSignals
+﻿namespace ThemedHorrorJam5.Scripts.Constants
 {
-    public const string PlayerInteracting = "PlayerInteracting";
-    public const string PlayerInteractingAvailable = "PlayerInteractingAvailable";
-    public const string PlayerInteractingUnavailable = "PlayerInteractingUnavailable";
-    public const string PlayerInteractingComplete = "PlayerInteractingComplete";
-    public const string DoorInteraction = "DoorInteraction";
+    public static class CustomSignals
+    {
+        public const string PlayerInteracting = "PlayerInteracting";
+        public const string PlayerInteractingAvailable = "PlayerInteractingAvailable";
+        public const string PlayerInteractingUnavailable = "PlayerInteractingUnavailable";
+        public const string PlayerInteractingComplete = "PlayerInteractingComplete";
+        public const string DoorInteraction = "DoorInteraction";
+    }
 }

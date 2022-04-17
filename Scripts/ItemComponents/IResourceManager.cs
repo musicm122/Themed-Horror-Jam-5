@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
+using ThemedHorrorJam5.Scripts.Enum;
 
-public interface IResourceManager<T>
+namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    List<T> Items { get; set; }
+    public interface IResourceManager<T>
+    {
+        List<T> Items { get; set; }
 
-    bool HasResource(string name);
+        bool HasResource(string name);
 
-    bool HasKey(Key key);
+        bool HasKey(Key key);
 
-    string InventoryDisplay();
+        string InventoryDisplay();
 
-    void RemoveItem(string name, int amt = 1);
+        void RemoveItem(string name, int amt = 1);
+    }
 }

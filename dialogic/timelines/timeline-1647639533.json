@@ -15,13 +15,13 @@
 			"set_value": "1"
 		},
 		{
-			"emit_signal": "Keys",
+			"emit_signal": "KeyA",
 			"event_id": "dialogic_040"
 		}
 	],
 	"metadata": {
 		"dialogic-version": "1.4",
 		"file": "timeline-1647639533.json",
-		"name": "KeysFound"
+		"name": "KeyAFound"
 	}
 }

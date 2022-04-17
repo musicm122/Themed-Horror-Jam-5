@@ -1,12 +1,15 @@
 ﻿using Godot;
+using ThemedHorrorJam5.addons.dialogic.Other;
 using System.Threading.Tasks;
 using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
     public class Examinable : Node2D, IDebuggable<Node>
     {
+
         [Export]
         public bool IsDebugging { get; set; } = false;
 
@@ -43,21 +46,20 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             switch (val)
             {
                 case Flashlight:
-                    if (Name == Flashlight)
-                    {
-                        GetTree().AddItem(Flashlight.ToLower());
-                        ShouldRemove = true;
-                    }
+                    GetTree().AddItem(Flashlight);
+                    ShouldRemove = true;
                     break;
-
-                case "Keys":
+                case "KeyA":
                     this.Print("DialogListener: KEY switch");
-                    if (Name.Equals("Key"))
-                    {
-                        this.Print("DialogListener: KEY switch");
-                        GetTree().AddItem("KeyA");
-                        ShouldRemove = true;
-                    }
+                    GetTree().AddItem("KeyA");
+                    ShouldRemove = true;
+                    break;
+                case "Mission1":
+                    var mission = new MissionElement(
+                        "Find the glasses",
+                        "Find Foo's glasses.",
+                        (player) => player.HasItem("Glasses"));
+                    GetTree().AddMission(mission);
                     break;
             }
             Task.Run(async () => await DialogComplete().ConfigureAwait(false));
@@ -93,9 +95,6 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             {
                 this.PrintError(result, $"{nameof(Examinable)} StartDialog(${timeLine}) failed");
             }
-
-            //this.Print("dialog.IsConnected(\"dialogic_signal\",this, \"DialogListener\") = " + dialog.IsConnected("dialogic_signal", this, "DialogListener"));
-
         }
 
         protected virtual void OnInteract()
@@ -107,7 +106,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             }
             else
             {
-                GD.Print("No timeline assigned to Examinable");
+                this.Print("No timeline assigned to Examinable");
             }
         }
 
@@ -175,14 +174,17 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         public override void _Ready()
         {
             InteractableArea = this.GetNode<Area2D>("Area2D");
-            RegisterInteractable(InteractableArea);
+            if(InteractableArea!=null){
+                RegisterInteractable(InteractableArea);
+            }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            InteractableArea.DisconnectBodyEntered(nameof(OnExaminableAreaEntered));
-            InteractableArea.DisconnectBodyExited(nameof(OnExaminableAreaExited));
-        }
+        // protected override void Dispose(bool disposing)
+        // {
+        //     base.Dispose(disposing);
+            
+        //     InteractableArea.DisconnectBodyEntered(nameof(OnExaminableAreaEntered));
+        //     InteractableArea.DisconnectBodyExited(nameof(OnExaminableAreaExited));
+        // }
     }
 }

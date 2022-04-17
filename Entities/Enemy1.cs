@@ -1,4 +1,5 @@
 using Godot;
+using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
@@ -64,7 +65,6 @@ namespace ThemedHorrorJam5.Entities
             var target = PatrolPoints[PatrolIndex];
             if (Position.DistanceTo(target) <= 1)
             {
-                //patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
                 PatrolIndex = Mathf.Wrap(PatrolIndex + 1, 0, PatrolPoints.Length);
                 target = PatrolPoints[PatrolIndex];
             }

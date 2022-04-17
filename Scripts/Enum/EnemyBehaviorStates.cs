@@ -1,6 +1,9 @@
-﻿public enum EnemyBehaviorStates
+﻿namespace ThemedHorrorJam5.Scripts.Enum
 {
-    Idle,
-    Patrol,
-    ChasePlayer
+    public enum EnemyBehaviorStates
+    {
+        Idle,
+        Patrol,
+        ChasePlayer
+    }
 }

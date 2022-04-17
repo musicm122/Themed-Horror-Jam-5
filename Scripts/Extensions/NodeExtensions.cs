@@ -15,13 +15,29 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                 result = node.Connect(signal, target, methodName);
                 if (result != Error.Ok)
                 {
-                    GD.PrintErr(MethodBase.GetCurrentMethod().Name, new ApplicationException(result.ToString()), $"ConnectBodyEntered failed with {result}");
+                    var message =
+                    $@"-------------------------------------
+                    ConnectBodyEntered with args failed with 
+                        {result}
+                    TryConnectSignal args
+                    node:{node?.Name ?? "null"}
+                    signal:{signal ?? "null"}
+                    target:{target.ToString() ?? "null"}
+                    methodName :{methodName ?? "null"}
+                    -------------------------------------";
+
+                    GD.PrintErr(MethodBase.GetCurrentMethod().Name, new ApplicationException(result.ToString()), message);
                     GD.PrintStack();
                 }
             }
             catch (Exception ex)
             {
                 GD.PrintErr(ex);
+                GD.Print($@"TryConnectSignal args
+                    node:{node?.Name ?? "null"}
+                    signal:{signal ?? "null"}
+                    target:{target.ToString() ?? "null"}
+                    methodName :{methodName ?? "null"}");
                 throw;
             }
             return result == Error.Ok;
@@ -31,12 +47,29 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         {
             try
             {
-                node.Disconnect(signal, target, methodName);
-                return true;
+                if (node.HasSignal(signal))
+                {
+                    node.Disconnect(signal, target, methodName);
+                    return true;
+                }
+                else
+                {
+                    GD.Print($@"TryDisconnectSignal failed args
+                    node:{node?.Name ?? "null"}
+                    signal:{signal ?? "null"}
+                    target:{target.ToString() ?? "null"}
+                    methodName :{methodName ?? "null"}");
+                    return false;
+                }
             }
             catch (Exception ex)
             {
                 GD.Print(ex);
+                GD.Print($@"TryDisconnectSignal args
+                    node:{node?.Name ?? "null"}
+                    signal:{signal ?? "null"}
+                    target:{target.ToString() ?? "null"}
+                    methodName :{methodName ?? "null"}");
                 return false;
             }
         }

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using Godot;
 using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Mission;
+using static ThemedHorrorJam5.Entities.Components.Hurtbox;
 
 namespace ThemedHorrorJam5.Entities
 {
@@ -33,6 +35,8 @@ namespace ThemedHorrorJam5.Entities
         public Inventory Inventory { get; set; } = new Inventory();
 
         private Hurtbox HurtBox { get; set; }
+
+        public Status Status { get; set; }
 
         public bool IsHidden = false;
 
@@ -82,17 +86,20 @@ namespace ThemedHorrorJam5.Entities
         {
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
             {
-                this.Print("Attempt to register Hurtbox's signal area_entered to player failed");
+                var arg = $"TryConnectSignal('area_entered', {this.Name}, {nameof(OnHurtboxAreaEntered)})";
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
             }
 
-            if (!HurtBox.TryConnectSignal(nameof(HurtBox.OnHurtboxInvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted)))
+            if (!HurtBox.TryConnectSignal(nameof(InvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted)))
             {
-                this.Print($"Attempt to register Hurtbox's signal {nameof(HurtBox.OnHurtboxInvincibilityStarted)} to player failed");
+                var arg = $"TryConnectSignal({nameof(InvincibilityStarted)}, {this.Name}, {nameof(OnHurtboxInvincibilityStarted)})";
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
             }
 
-            if (!HurtBox.TryConnectSignal(nameof(HurtBox.OnHurtboxInvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded)))
+            if (!HurtBox.TryConnectSignal(nameof(InvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded)))
             {
-                this.Print($"Attempt to register Hurtbox's signal {nameof(HurtBox.OnHurtboxInvincibilityEnded)} to player failed");
+                var arg = $"TryConnectSignal({nameof(InvincibilityEnded)}, {this.Name}, {nameof(OnHurtboxInvincibilityEnded)})";
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
             }
         }
 
@@ -113,6 +120,7 @@ namespace ThemedHorrorJam5.Entities
         {
             ExaminableNotification = GetNode<Sprite>("ExaminableNotification");
             HurtBox = GetNode<Hurtbox>("Hurtbox");
+            Status = GetNode<Status>("PlayerStats");
             RegisterSignals();
             ExaminableNotification.Hide();
             MissionManager.AddMissionEvent += UpdateMissions;
@@ -252,6 +260,7 @@ namespace ThemedHorrorJam5.Entities
         }
 
         public bool HasKey(Key key) => Inventory.HasKey(key);
+        public bool HasItem(string itemName) => Inventory.HasItem(itemName);
 
         private void RefreshUI()
         {
@@ -261,6 +270,15 @@ namespace ThemedHorrorJam5.Entities
         public void OnHurtboxAreaEntered(Node body)
         {
             this.PrintCaller();
+            if (body.Name == "HitBox")
+            {
+                this.HurtBox.StartInvincibility(0.6f);
+                var hitBox = (HitBox)body;
+                Status.CurrentHealth -= hitBox.Damage;
+                //Hurtbox.create_hit_effect()
+                //var playerHurtSound = PlayerHurtSound.instance()
+                //get_tree().current_scene.add_child(playerHurtSound)
+            }
         }
 
         public void OnHurtboxInvincibilityStarted()

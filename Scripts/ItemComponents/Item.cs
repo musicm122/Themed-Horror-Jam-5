@@ -1,16 +1,25 @@
-﻿public class Item
+﻿using Godot;
+using ThemedHorrorJam5.Scripts.Constants;
+
+namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public Item(string name)
+    public class Item
     {
-        this.Name = name.ToLowerInvariant();
-        this.Description = name.ToLowerInvariant();
-        this.ImagePath = ImagePathLookup(name);
+        public Item() { }
+
+        public Item(string name)
+        {
+            var temp = MasterItemList.GetItemByName(name);
+            Name = name;
+            Description = temp.Description;
+            ImagePath = temp.ImagePath;
+        }
+
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImagePath { get; set; }
+
+        public string ImagePathLookup(string name) =>
+            ItemConstants.ItemImagePaths[name.ToLowerInvariant()];
     }
-
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string ImagePath { get; set; }
-
-    public string ImagePathLookup(string name) =>
-        ItemConstants.ItemImagePaths[name.ToLowerInvariant()];
 }

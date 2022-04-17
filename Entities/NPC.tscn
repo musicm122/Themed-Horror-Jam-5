@@ -37,6 +37,7 @@ scale = Vector2( 0.26, 0.26 )
 texture = ExtResource( 3 )
 
 [node name="Label" type="Label" parent="."]
+visible = false
 margin_left = -8.0
 margin_top = 24.0
 margin_right = 218.0

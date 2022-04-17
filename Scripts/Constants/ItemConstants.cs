@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 
-public static class ItemConstants
+namespace ThemedHorrorJam5.Scripts.Constants
 {
-    public const string PizzaImagePath = "res://Assets/Art/Food/pizzaslice.png";
-    public const string FlashlightImagePath = "res://Assets/Art/Item/Flashlight.png";
-    public const string KeyImagePath = "res://Assets/Art/Item/Keychain.png";
-
-    public static readonly Dictionary<string, string> ItemImagePaths = new Dictionary<string, string>
+    public static class ItemConstants
     {
-        ["pizza"] = PizzaImagePath,
-        ["flashlight"] = FlashlightImagePath,
-        ["keya"] = KeyImagePath,
-    };
+        public const string PizzaImagePath = "res://Assets/Art/Food/pizzaslice.png";
+        public const string FlashlightImagePath = "res://Assets/Art/Item/Flashlight.png";
+        public const string KeyImagePath = "res://Assets/Art/Item/Keychain.png";
+
+        public static readonly Dictionary<string, string> ItemImagePaths = new Dictionary<string, string>
+        {
+            ["Pizza"] = PizzaImagePath,
+            ["Flashlight"] = FlashlightImagePath,
+            ["KeyA"] = KeyImagePath,
+        };
+    }
 }

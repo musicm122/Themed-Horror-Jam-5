@@ -63,7 +63,7 @@ func dialog_listener(arg):
 				shouldRemove = true
 		"Flashlight":
 			if name == "Flashlight" :
-				get_tree().call_group("Player", "AddItem", "flashlight", 1)
+				get_tree().call_group("Player", "AddItem", "Flashlight", 1)
 				shouldRemove = true
 		"Keys":
 			if name == "Key" :

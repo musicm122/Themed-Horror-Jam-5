@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class SceneTreeExtensions
     {
         public static void AddItem(this SceneTree tree, string name, int amt = 1) => tree.CallGroup(Groups.Player, "AddItem", name, amt);
+
+        public static void AddMission(this SceneTree tree, MissionElement mission) => tree.CallGroup(Groups.Player, "AddMission", mission);
 
         public static List<Examinable> GetExaminableCollection(this SceneTree tree) => tree.GetNodesByType<Examinable>();
 

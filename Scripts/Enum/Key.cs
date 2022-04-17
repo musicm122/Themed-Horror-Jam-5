@@ -1,6 +1,9 @@
-﻿public enum Key
+﻿namespace ThemedHorrorJam5.Scripts.Enum
 {
-    KeyA,
-    KeyB,
-    KeyC
+    public enum Key
+    {
+        KeyA,
+        KeyB,
+        KeyC
+    }
 }

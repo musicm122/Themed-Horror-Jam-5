@@ -1,4 +1,5 @@
 using Godot;
+using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities

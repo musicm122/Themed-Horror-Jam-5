@@ -14,11 +14,11 @@ namespace ThemedHorrorJam5.Entities.Components
         [Signal]
         public delegate void MaxHealthChanged(float val);
 
-        private float maxHealth = 1f;
-        private float currentHealth = 1f;
+        private int maxHealth = 1;
+        private int currentHealth = 1;
 
         [Export]
-        public float MaxHealth
+        public int MaxHealth
         {
             get => maxHealth;
             set
@@ -30,14 +30,14 @@ namespace ThemedHorrorJam5.Entities.Components
         }
 
         [Export]
-        public float CurrentHealth
+        public int CurrentHealth
         {
             get => currentHealth;
             set
             {
                 currentHealth = value;
                 EmitSignal(nameof(HealthChanged), currentHealth);
-                if (currentHealth <= 0f)
+                if (currentHealth <= 0)
                 {
                     EmitSignal(nameof(NoHealth));
                 }

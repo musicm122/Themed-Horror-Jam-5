@@ -3,8 +3,25 @@ using ThemedHorrorJam5.Entities;
 
 namespace ThemedHorrorJam5.Scripts.Mission
 {
-    public abstract class MissionElement
+    public class MissionElement
     {
+        public MissionElement() { }
+
+        public MissionElement(string title, string details, bool isComplete = false)
+        {
+            this.Title = title;
+            this.Details = details;
+            IsComplete = isComplete;
+        }
+
+        public MissionElement(string title, string details, Func<Player, bool> evalCondition, bool isComplete = false)
+        {
+            this.Title = title;
+            this.Details = details;
+            IsComplete = isComplete;
+            EvaluateCompletionState = evalCondition;
+        }
+
         public bool IsComplete { get; set; } = false;
 
         public string Title { get; set; }

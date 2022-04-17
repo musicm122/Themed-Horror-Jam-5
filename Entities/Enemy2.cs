@@ -1,4 +1,5 @@
 ﻿using Godot;
+using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
@@ -188,7 +189,7 @@ namespace ThemedHorrorJam5.Entities
             {
                 //GD.Print($"RayDirection[{i}]:{RayDirections[i]} * Interest[{i}]:{Interest[i]}=", RayDirections[i] * Interest[i]);
                 ChosenDirection += RayDirections[i] * Interest[i];
-                GD.Print($"ChosenDirection ", ChosenDirection);
+                GD.Print("ChosenDirection ", ChosenDirection);
             }
 
             ChosenDirection = ChosenDirection.Normalized();

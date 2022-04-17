@@ -1,6 +1,9 @@
-﻿public class InventoryEventArgs
+﻿namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public Item Item { get; set; }
+    public class InventoryEventArgs
+    {
+        public Item Item { get; set; }
 
-    public InventoryEventArgs(Item item) => Item = item;
+        public InventoryEventArgs(Item item) => Item = item;
+    }
 }

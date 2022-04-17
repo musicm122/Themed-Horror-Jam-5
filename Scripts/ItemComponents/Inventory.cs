@@ -1,6 +1,7 @@
 ﻿using Godot;
 using System.Collections.Generic;
 using System.Linq;
+using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Extensions;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
