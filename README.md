@@ -37,3 +37,10 @@ Dario Manuel Muhafara
 
 - [Godot Engine 3.4 (C# version)](https://godotengine.org/)
 - [Visual Studio Code](https://code.visualstudio.com/)
+
+
+### Scripts
+Analyze and Fix Issues
+```
+roslynator fix "Themed Horror Jam 5.sln" -p CodeAnalysisRuleSet=".\ThemedHorrorJam5\roslynator.ruleset"
+```

@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Rules for Project" ToolsVersion="15.0">
  <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp.Features" RuleNamespace="Microsoft.CodeAnalysis.CSharp.Features">
+    <Rule Id="RCS1213" Action="None" />
+    <Rule Id="RCS1155" Action="None" />
+    <Rule Id="RCS1163" Action="None" />
+    <Rule Id="RCS1089" Action="None" />
     <Rule Id="IDE0060" Action="None" />
     <Rule Id="IDE0005" Action="Info" />
     <Rule Id="IDE0051" Action="None" />
     <Rule Id="IDE0004" Action="Info" />
     <Rule Id="RCS1129" Action="None" />
     <Rule Id="RCS1074" Action="Info" />
-  </Rules>  
+  </Rules>
   <Rules AnalyzerId="Roslynator.CSharp.Analyzers" RuleNamespace="Roslynator.CSharp.Analyzers">
+    <Rule Id="RCS1213" Action="None" />
+    <Rule Id="RCS1155" Action="None" />
+    <Rule Id="RCS1163" Action="None" />
+    <Rule Id="RCS1089" Action="None" />
     <Rule Id="RCS1090" Action="None" />
     <Rule Id="RCS1079" Action="None" />
     <Rule Id="RCS1171" Action="None" />
