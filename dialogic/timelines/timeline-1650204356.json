@@ -7,7 +7,7 @@
 			"text": "Find Foo's Glasses"
 		},
 		{
-			"emit_signal": "Mission1",
+			"emit_signal": "Find the glasses",
 			"event_id": "dialogic_040"
 		}
 	],

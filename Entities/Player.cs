@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Scripts.Constants;
 using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
@@ -157,16 +158,23 @@ namespace ThemedHorrorJam5.Entities
             this.CanMove = true;
         }
 
-        public void AddMission(MissionElement mission)
+        public void AddMission(string title)
         {
-            this.Print($"AddMission called with mission : {mission}");
-            MissionManager.AddIfDNE(mission);
+            var mission = MasterMissionList.GetMissionByTitle(title);
+            if (mission != null)
+            {
+                this.Print($"AddMission called with mission title: {title}");
+                MissionManager.AddIfDNE(mission);
+                RefreshUI();
+            }
+
         }
 
         public void RemoveMission(MissionElement mission)
         {
             this.Print($"RemoveMission called with mission : {mission}");
             MissionManager.Remove(mission);
+            RefreshUI();
         }
 
         public void EvaluateMissions()

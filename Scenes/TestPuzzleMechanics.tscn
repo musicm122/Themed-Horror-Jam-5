@@ -12,7 +12,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
-position = Vector2( 32, 64 )
+position = Vector2( 496, 168 )
 collision/safe_margin = 0.001
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]
@@ -20,6 +20,7 @@ position = Vector2( 448, -48 )
 
 [node name="NPC2" parent="." instance=ExtResource( 7 )]
 position = Vector2( 448, 144 )
+Timeline = "/NPCS/AddMission"
 
 [node name="Flashlight" parent="." instance=ExtResource( 4 )]
 position = Vector2( 168, -48 )

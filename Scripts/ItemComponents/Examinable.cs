@@ -54,12 +54,9 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                     GetTree().AddItem("KeyA");
                     ShouldRemove = true;
                     break;
-                case "Mission1":
-                    var mission = new MissionElement(
-                        "Find the glasses",
-                        "Find Foo's glasses.",
-                        (player) => player.HasItem("Glasses"));
-                    GetTree().AddMission(mission);
+                case "Find the glasses":
+                    this.Print("adding 'Find the glasses' mission");
+                    GetTree().AddMission(val);
                     break;
             }
             Task.Run(async () => await DialogComplete().ConfigureAwait(false));
@@ -174,7 +171,8 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         public override void _Ready()
         {
             InteractableArea = this.GetNode<Area2D>("Area2D");
-            if(InteractableArea!=null){
+            if (InteractableArea != null)
+            {
                 RegisterInteractable(InteractableArea);
             }
         }
@@ -182,7 +180,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         // protected override void Dispose(bool disposing)
         // {
         //     base.Dispose(disposing);
-            
+
         //     InteractableArea.DisconnectBodyEntered(nameof(OnExaminableAreaEntered));
         //     InteractableArea.DisconnectBodyExited(nameof(OnExaminableAreaExited));
         // }

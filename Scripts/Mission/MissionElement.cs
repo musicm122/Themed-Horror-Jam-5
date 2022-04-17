@@ -3,6 +3,7 @@ using ThemedHorrorJam5.Entities;
 
 namespace ThemedHorrorJam5.Scripts.Mission
 {
+    [Serializable]
     public class MissionElement
     {
         public MissionElement() { }

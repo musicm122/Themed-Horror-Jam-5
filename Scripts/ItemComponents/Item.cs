@@ -1,8 +1,10 @@
-﻿using Godot;
+﻿using System;
+using Godot;
 using ThemedHorrorJam5.Scripts.Constants;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
+    [Serializable]
     public class Item
     {
         public Item() { }
