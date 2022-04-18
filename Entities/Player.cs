@@ -16,6 +16,10 @@ namespace ThemedHorrorJam5.Entities
     public class Player : KinematicBody2D, IDebuggable<Node>
     {
         public bool IsDead = false;
+        public bool HasFlashlight = false;
+        public Light2D Flashlight { get; set; }
+
+
         [Export]
         public bool IsDebugging { get; set; } = false;
 
@@ -135,12 +139,37 @@ namespace ThemedHorrorJam5.Entities
             ExaminableNotification = GetNode<Sprite>("ExaminableNotification");
             HurtBox = GetNode<Hurtbox>("Hurtbox");
             Status = GetNode<Status>("PlayerStats");
+            Hud = GetNode<Hud>("./Camera2D/CanvasLayer/Hud");
+            PauseMenu = GetNode<PauseMenu>("./CanvasLayer/PauseMenu");
+            Flashlight = GetNode<Light2D>("Flashlight");
+
+            Flashlight.Enabled = false;
+            if (ExaminableNotification == null)
+            {
+                this.PrintSignalsList("ExaminableNotification is null");
+            }
+            if (HurtBox == null)
+            {
+                this.PrintSignalsList("HurtBox is null");
+            }
+            if (Status == null)
+            {
+                this.PrintSignalsList("Status is null");
+            }
+            if (Hud == null)
+            {
+                this.PrintSignalsList("Hud is null");
+            }
+            if (PauseMenu == null)
+            {
+                this.PrintSignalsList("PauseMenu is null");
+            }
+
             RegisterSignals();
             ExaminableNotification.Hide();
             MissionManager.AddMissionEvent += UpdateMissions;
             MissionManager.RemoveMissionEvent += UpdateMissions;
-            Hud = GetNode<Hud>("Camera2D/Hud");
-            PauseMenu = GetNode<PauseMenu>("PauseMenu");
+
             PauseMenu.Hide();
             RefreshUI();
         }
@@ -200,7 +229,9 @@ namespace ThemedHorrorJam5.Entities
         public void AddItem(string name, int amt = 1)
         {
             this.Print($"AddItem called with name:{name}, amt:{amt} ");
+
             Inventory.Add(name, amt);
+            HasFlashlight = Inventory.HasItemInInventory("Flashlight");
             RefreshUI();
         }
 
@@ -229,6 +260,12 @@ namespace ThemedHorrorJam5.Entities
             }
         }
 
+        private void ToggleFlashlight()
+        {
+            this.PrintCaller();
+            Flashlight.Enabled = !Flashlight.Enabled;
+        }
+
         public override void _PhysicsProcess(float delta)
         {
             if (CanMove && !IsDead)
@@ -240,8 +277,11 @@ namespace ThemedHorrorJam5.Entities
                 {
                     CheckBoxCollision(movement);
                 }
+                if (HasFlashlight && Input.IsActionJustPressed(InputAction.ToggleFlashlight))
+                {
+                    ToggleFlashlight();
+                }
             }
-
         }
 
         public void OnExaminablePlayerInteractionAvailable(Examinable examinable)

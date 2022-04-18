@@ -45,6 +45,18 @@ namespace ThemedHorrorJam5.Entities
             TitleDisplay = GetNode<Label>(TitleDisplayPath);
             InventoryDisplay = GetNode<Label>(InventoryDisplayPath);
             MissionDisplay = GetNode<Label>(MissionManagerDisplayPath);
+            if (TitleDisplay == null)
+            {
+                this.Print("TitleDisplay is null");
+            }
+            if (InventoryDisplay == null)
+            {
+                this.Print("InventoryDisplay is null");
+            }
+            if (MissionDisplay == null)
+            {
+                this.Print("MissionDisplay is null");
+            }
         }
 
         public override void _Process(float delta)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=2]
@@ -7,16 +7,20 @@
 [ext_resource path="res://Entities/LockedDoor.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Entities/Key.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Entities/NPC.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Assets/Art/Environment/Light/light_mask.png" type="Texture" id=8]
 [ext_resource path="res://Entities/Spikes.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Entities/HealthKit.tscn" type="PackedScene" id=10]
 
 [node name="Node2D" type="Node2D"]
 
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color( 0.0431373, 0.0156863, 0.105882, 0.74902 )
+
 [node name="HealthKit" parent="." instance=ExtResource( 10 )]
 position = Vector2( 736, 56 )
 
 [node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 1 )]
-position = Vector2( 576, 0 )
+position = Vector2( 192, -103 )
 collision/safe_margin = 0.001
 IsDebugging = true
 
@@ -29,6 +33,12 @@ Timeline = "/NPCS/AddMission"
 
 [node name="Flashlight" parent="." instance=ExtResource( 4 )]
 position = Vector2( 168, -48 )
+
+[node name="Light2D" type="Light2D" parent="Flashlight"]
+position = Vector2( 0, -69 )
+scale = Vector2( 0.273454, 0.180063 )
+texture = ExtResource( 8 )
+energy = 4.0
 
 [node name="Block" parent="." instance=ExtResource( 2 )]
 position = Vector2( -80, -40 )
@@ -128,4 +138,3 @@ Timeline = "/KeyAFound"
 
 [node name="Spikes" parent="." instance=ExtResource( 9 )]
 position = Vector2( 792, -32 )
-IsDebugging = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Entities/Player.cs" type="Script" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
@@ -6,16 +6,17 @@
 [ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Entities/Components/PlayerStats.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scripts/UI/Hud.cs" type="Script" id=6]
+[ext_resource path="res://Assets/Art/Environment/Light/light_mask.png" type="Texture" id=7]
 
 [sub_resource type="CapsuleShape2D" id=1]
-
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 0, 0, 0, 1 )
-corner_radius_bottom_left = 8
 
 [sub_resource type="CapsuleShape2D" id=4]
 radius = 9.0
 height = 0.0
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
+corner_radius_bottom_left = 8
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 1 )
@@ -32,49 +33,75 @@ position = Vector2( 0, -40 )
 scale = Vector2( 0.25, 0.375 )
 texture = ExtResource( 2 )
 
-[node name="PauseMenu" type="Control" parent="."]
-pause_mode = 2
+[node name="Hurtbox" parent="." instance=ExtResource( 4 )]
+
+[node name="CollisionShape" parent="Hurtbox" index="0"]
+shape = SubResource( 4 )
+
+[node name="PlayerStats" parent="." instance=ExtResource( 5 )]
+MaxHealth = 5
+
+[node name="Flashlight" type="Light2D" parent="."]
+position = Vector2( 0, 2.38419e-07 )
+scale = Vector2( 0.196242, 0.203549 )
+texture = ExtResource( 7 )
+energy = 1.2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Light2D" type="Light2D" parent="CanvasLayer"]
 visible = false
-margin_right = 40.0
-margin_bottom = 40.0
+light_mask = 2
+position = Vector2( 0, 3.5 )
+scale = Vector2( 0.534447, 0.310021 )
+texture = ExtResource( 7 )
+
+[node name="PauseMenu" type="Control" parent="CanvasLayer"]
+pause_mode = 2
+light_mask = 2
+margin_left = 256.0
+margin_top = 145.0
+margin_right = 761.0
+margin_bottom = 442.0
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+IsDebugging = true
 
-[node name="TitlePanel" type="PanelContainer" parent="PauseMenu"]
+[node name="TitlePanel" type="PanelContainer" parent="CanvasLayer/PauseMenu"]
 margin_left = -64.0
 margin_top = -152.0
-margin_right = 64.0
+margin_right = 36.0
 margin_bottom = -96.0
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Title" type="Label" parent="PauseMenu/TitlePanel"]
+[node name="Title" type="Label" parent="CanvasLayer/PauseMenu/TitlePanel"]
 margin_top = 21.0
-margin_right = 128.0
+margin_right = 100.0
 margin_bottom = 35.0
 text = "Pause Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MissionPanel" type="PanelContainer" parent="PauseMenu"]
+[node name="MissionPanel" type="PanelContainer" parent="CanvasLayer/PauseMenu"]
 show_behind_parent = true
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -40.0
-margin_top = -152.0
-margin_right = 216.0
-margin_bottom = 144.0
+margin_left = -216.0
+margin_top = -145.0
+margin_right = 40.0
+margin_bottom = 151.0
 custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MissionDisplay" type="Label" parent="PauseMenu/MissionPanel"]
+[node name="MissionDisplay" type="Label" parent="CanvasLayer/PauseMenu/MissionPanel"]
 margin_top = 132.0
 margin_right = 256.0
 margin_bottom = 163.0
@@ -85,7 +112,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InventoryPanel" type="PanelContainer" parent="PauseMenu"]
+[node name="InventoryPanel" type="PanelContainer" parent="CanvasLayer/PauseMenu"]
 show_behind_parent = true
 margin_left = -256.0
 margin_top = -152.0
@@ -95,7 +122,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InventoryDisplay" type="Label" parent="PauseMenu/InventoryPanel"]
+[node name="InventoryDisplay" type="Label" parent="CanvasLayer/PauseMenu/InventoryPanel"]
 margin_top = 132.0
 margin_right = 256.0
 margin_bottom = 163.0
@@ -105,36 +132,38 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Hurtbox" parent="." instance=ExtResource( 4 )]
-
-[node name="CollisionShape" parent="Hurtbox" index="0"]
-shape = SubResource( 4 )
-
-[node name="PlayerStats" parent="." instance=ExtResource( 5 )]
-MaxHealth = 5
-
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.5, 0.5 )
 
-[node name="Hud" type="Control" parent="Camera2D"]
-margin_left = -256.0
-margin_top = -152.0
-margin_right = 256.0
-margin_bottom = 152.0
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="Light2D" type="Light2D" parent="Camera2D/CanvasLayer"]
+visible = false
+light_mask = 2
+position = Vector2( 0, 3.5 )
+scale = Vector2( 0.534447, 0.310021 )
+texture = ExtResource( 7 )
+
+[node name="Hud" type="Control" parent="Camera2D/CanvasLayer"]
+light_mask = 2
+margin_top = 7.0
+margin_right = 512.0
+margin_bottom = 311.0
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+IsDebugging = true
 
-[node name="HealthPanel" type="PanelContainer" parent="Camera2D/Hud"]
+[node name="HealthPanel" type="PanelContainer" parent="Camera2D/CanvasLayer/Hud"]
 margin_right = 14.0
 margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HealthBar" type="Label" parent="Camera2D/Hud/HealthPanel"]
+[node name="HealthBar" type="Label" parent="Camera2D/CanvasLayer/Hud/HealthPanel"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 53.0
@@ -144,8 +173,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GameOverPanel" type="PanelContainer" parent="Camera2D/Hud"]
-visible = false
+[node name="GameOverPanel" type="PanelContainer" parent="Camera2D/CanvasLayer/Hud"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -158,7 +186,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DeathText" type="Label" parent="Camera2D/Hud/GameOverPanel"]
+[node name="DeathText" type="Label" parent="Camera2D/CanvasLayer/Hud/GameOverPanel"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 64.0
@@ -168,7 +196,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CanvasModulate" type="CanvasModulate" parent="Camera2D/Hud/GameOverPanel"]
+[node name="CanvasModulate" type="CanvasModulate" parent="Camera2D/CanvasLayer/Hud/GameOverPanel"]
 color = Color( 0.537255, 0, 0, 0.878431 )
 
 [editable path="Hurtbox"]
