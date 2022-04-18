@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.ItemComponents;
-using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {

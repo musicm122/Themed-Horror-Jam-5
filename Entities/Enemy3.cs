@@ -12,9 +12,18 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         public bool IsDebugging { get; set; } = false;
 
+        [Export]
+        public EnemyBehaviorStates AggroBehavior = EnemyBehaviorStates.RangeAttackBehavior;
+
+        //public Bullet Bullet { get; set; }
+
         public bool IsDebugPrintEnabled() => IsDebugging;
 
         public HitBox HitBox { get; set; }
+
+        [Export]
+        public float FireRange { get; set; }
+
 
         [Export]
         public bool Enable { get; set; }
@@ -63,6 +72,7 @@ namespace ThemedHorrorJam5.Entities
             Cooldown = GetNode<Label>("Cooldown");
             VisionRadius = GetNode<Area2D>("VisionRadius");
             this.HitBox = GetNode<HitBox>("HitBox");
+            //this.Bullet = GetNode<Bullet>("Bullet");
             VisionRadius.ConnectBodyEntered(this, nameof(OnVisionRadiusBodyEntered));
             VisionRadius.ConnectBodyExited(this, nameof(OnVisionRadiusBodyExit));
             if (PatrolPath != null)
@@ -92,7 +102,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void ChasePlayer(float delta)
         {
-            if (Player == null || !CanMove)
+            if (Player == null)
             {
                 CurrentState = EnemyBehaviorStates.Patrol;
             }
@@ -168,6 +178,10 @@ namespace ThemedHorrorJam5.Entities
             return false;
         }
 
+        private bool IsPlayerInShootingRange(Player player) =>
+             this.Position.DistanceTo(player.Position) >= this.FireRange;
+
+
         public override void _PhysicsProcess(float delta)
         {
             Velocity = Vector2.Zero;
@@ -179,15 +193,25 @@ namespace ThemedHorrorJam5.Entities
                     Patrol();
                     break;
 
+                case EnemyBehaviorStates.MeleeAttackBehavior:
                 case EnemyBehaviorStates.ChasePlayer:
                     ChasePlayer(delta);
                     break;
 
+                case EnemyBehaviorStates.RangeAttackBehavior:
+                    Shoot();
+                    break;
                 case EnemyBehaviorStates.Idle:
                 default:
                     Velocity = Vector2.Zero;
                     break;
             }
+        }
+
+        public void Shoot()
+        {
+            //todo: implement shooting
+            //var instance = this.Bullet.Instance
         }
 
         private void OnVisionRadiusBodyEntered(Node body)
@@ -196,7 +220,7 @@ namespace ThemedHorrorJam5.Entities
             {
                 this.PrintCaller();
                 Player = (Player)body;
-                CurrentState = EnemyBehaviorStates.ChasePlayer;
+                CurrentState = AggroBehavior;
                 CurrentCoolDownCounter = MaxCoolDownTime;
             }
         }
@@ -235,5 +259,7 @@ namespace ThemedHorrorJam5.Entities
             this.PrintCaller();
             CanMove = true;
         }
+
+
     }
 }

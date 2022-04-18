@@ -97,6 +97,7 @@ position = Vector2( -24, -72 )
 IsDebugging = true
 Enable = true
 PatrolPath = NodePath("../Enemy2_Path2D")
+AggroBehavior = 3
 
 [node name="Line2D" type="Line2D" parent="."]
 default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )

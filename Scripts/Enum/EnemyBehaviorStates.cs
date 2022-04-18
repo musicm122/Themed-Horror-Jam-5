@@ -4,6 +4,8 @@
     {
         Idle,
         Patrol,
-        ChasePlayer
+        ChasePlayer,
+        MeleeAttackBehavior,
+        RangeAttackBehavior
     }
 }

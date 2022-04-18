@@ -356,6 +356,7 @@ namespace ThemedHorrorJam5.Entities
                 Status.CurrentHealth -= hitBox.Damage;
                 this.Print("Current Health =", Status.CurrentHealth);
 
+                //TODO: Add Hit effect visual and sound
                 //Hurtbox.create_hit_effect()
                 //var playerHurtSound = PlayerHurtSound.instance()
                 //get_tree().current_scene.add_child(playerHurtSound)

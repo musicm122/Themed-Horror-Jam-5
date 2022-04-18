@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
