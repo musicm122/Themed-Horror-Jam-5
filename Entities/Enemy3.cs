@@ -1,7 +1,8 @@
 using Godot;
 using System.Collections.Generic;
+using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
@@ -12,6 +13,8 @@ namespace ThemedHorrorJam5.Entities
         public bool IsDebugging { get; set; } = false;
 
         public bool IsDebugPrintEnabled() => IsDebugging;
+
+        public HitBox HitBox { get; set; }
 
         [Export]
         public bool Enable { get; set; }
@@ -57,11 +60,14 @@ namespace ThemedHorrorJam5.Entities
 
         public override void _Ready()
         {
-            Cooldown = (Label)GetNode("Cooldown");
-            VisionRadius = (Area2D)GetNode("VisionRadius");
+            Cooldown = GetNode<Label>("Cooldown");
+            VisionRadius = GetNode<Area2D>("VisionRadius");
+            this.HitBox = GetNode<HitBox>("HitBox");
+            VisionRadius.ConnectBodyEntered(this, nameof(OnVisionRadiusBodyEntered));
+            VisionRadius.ConnectBodyExited(this, nameof(OnVisionRadiusBodyExit));
             if (PatrolPath != null)
             {
-                Path = (Path2D)GetNode(PatrolPath);
+                Path = GetNode<Path2D>(PatrolPath);
                 PatrolPoints = Path.Curve.GetBakedPoints();
                 CurrentState = EnemyBehaviorStates.Patrol;
             }
@@ -77,7 +83,6 @@ namespace ThemedHorrorJam5.Entities
             var target = PatrolPoints[PatrolIndex];
             if (Position.DistanceTo(target) <= 1)
             {
-                //patrol_index = wrapi(patrol_index + 1, 0, patrol_points.size())
                 PatrolIndex = Mathf.Wrap(PatrolIndex + 1, 0, PatrolPoints.Length);
                 target = PatrolPoints[PatrolIndex];
             }
@@ -124,7 +129,7 @@ namespace ThemedHorrorJam5.Entities
                 }
                 else
                 {
-                    GD.Print("Navigation2D not found");
+                    this.Print("Navigation2D not found");
                 }
                 if (CurrentCoolDownCounter > 0)
                 {
@@ -145,8 +150,6 @@ namespace ThemedHorrorJam5.Entities
                     CurrentCoolDownCounter = MaxCoolDownTime;
                 }
 
-                //Velocity = Position.DirectionTo(player.Position) * MoveSpeed;
-                //Velocity = MoveAndSlide(Velocity);
             }
         }
 
@@ -157,7 +160,7 @@ namespace ThemedHorrorJam5.Entities
             for (int i = 0; i < bodies.Count; i++)
             {
                 var body = (Node)bodies[i];
-                if (string.Equals(body.Name, "player", System.StringComparison.OrdinalIgnoreCase))
+                if (body.Name == "Player")
                 {
                     return true;
                 }
@@ -189,9 +192,9 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnVisionRadiusBodyEntered(Node body)
         {
-            if (body.Name.Equals("player"))
+            if (body.Name == "Player")
             {
-                GD.Print("OnVisionRadiusBodyEntered");
+                this.PrintCaller();
                 Player = (Player)body;
                 CurrentState = EnemyBehaviorStates.ChasePlayer;
                 CurrentCoolDownCounter = MaxCoolDownTime;
@@ -200,9 +203,9 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnVisionRadiusBodyExit(Node body)
         {
-            if (body.IsPlayer())
+            if (body.Name == "Player")
             {
-                GD.Print("OnVisionRadiusBodyExit");
+                this.PrintCaller();
                 CurrentCoolDownCounter = MaxCoolDownTime;
                 //this.player = null;
                 //this.CurrentState = EnemyBehaviorStates.Patrol;
@@ -211,25 +214,25 @@ namespace ThemedHorrorJam5.Entities
 
         public void OnExaminablePlayerInteracting()
         {
-            GD.Print($"OnExaminablePlayerInteracting called for {Name}");
+            this.PrintCaller();
             LockMovement();
         }
 
         public void OnExaminablePlayerInteractingComplete()
         {
-            GD.Print($"OnExaminablePlayerInteractingComplete called for {Name}");
+            this.PrintCaller();
             UnlockMovement();
         }
 
         private void LockMovement()
         {
-            GD.Print($"Locking Movement for {Name}");
+            this.PrintCaller();
             CanMove = false;
         }
 
         private void UnlockMovement()
         {
-            GD.Print($"Unlocking Movement for {Name}");
+            this.PrintCaller();
             CanMove = true;
         }
     }

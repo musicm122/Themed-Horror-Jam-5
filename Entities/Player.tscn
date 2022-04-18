@@ -21,6 +21,10 @@ corner_radius_bottom_left = 8
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 1 )
 
+[node name="PlayerStats" parent="." instance=ExtResource( 5 )]
+MaxHealth = 5
+CurrentHealth = 5
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
@@ -38,9 +42,6 @@ texture = ExtResource( 2 )
 [node name="CollisionShape" parent="Hurtbox" index="0"]
 shape = SubResource( 4 )
 
-[node name="PlayerStats" parent="." instance=ExtResource( 5 )]
-MaxHealth = 5
-
 [node name="Flashlight" type="Light2D" parent="."]
 position = Vector2( 0, 2.38419e-07 )
 scale = Vector2( 0.196242, 0.203549 )
@@ -48,13 +49,6 @@ texture = ExtResource( 7 )
 energy = 1.2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Light2D" type="Light2D" parent="CanvasLayer"]
-visible = false
-light_mask = 2
-position = Vector2( 0, 3.5 )
-scale = Vector2( 0.534447, 0.310021 )
-texture = ExtResource( 7 )
 
 [node name="PauseMenu" type="Control" parent="CanvasLayer"]
 pause_mode = 2
@@ -138,18 +132,10 @@ zoom = Vector2( 0.5, 0.5 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
-[node name="Light2D" type="Light2D" parent="Camera2D/CanvasLayer"]
-visible = false
-light_mask = 2
-position = Vector2( 0, 3.5 )
-scale = Vector2( 0.534447, 0.310021 )
-texture = ExtResource( 7 )
-
 [node name="Hud" type="Control" parent="Camera2D/CanvasLayer"]
 light_mask = 2
-margin_top = 7.0
-margin_right = 512.0
-margin_bottom = 311.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -157,8 +143,8 @@ __meta__ = {
 IsDebugging = true
 
 [node name="HealthPanel" type="PanelContainer" parent="Camera2D/CanvasLayer/Hud"]
-margin_right = 14.0
-margin_bottom = 14.0
+margin_right = 60.0
+margin_bottom = 28.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -174,24 +160,19 @@ __meta__ = {
 }
 
 [node name="GameOverPanel" type="PanelContainer" parent="Camera2D/CanvasLayer/Hud"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -35.5
-margin_top = -14.0
-margin_right = 35.5
-margin_bottom = 14.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="DeathText" type="Label" parent="Camera2D/CanvasLayer/Hud/GameOverPanel"]
 margin_left = 7.0
-margin_top = 7.0
-margin_right = 64.0
-margin_bottom = 21.0
+margin_top = 293.0
+margin_right = 1017.0
+margin_bottom = 307.0
 text = "You Died"
+align = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
