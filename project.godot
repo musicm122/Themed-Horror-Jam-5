@@ -81,7 +81,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Themed Horror Jam 5"
-run/main_scene="res://Scenes/Level1.tscn"
+run/main_scene="res://Scenes/LevelSelector.tscn"
 config/icon="res://icon.png"
 
 [display]
@@ -99,6 +99,8 @@ enabled=PoolStringArray( "res://addons/dialogic/plugin.cfg" )
 
 font=false
 gui=false
+start=false
+scene=false
 
 [input]
 
