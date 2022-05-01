@@ -26,8 +26,6 @@ jobs:
       - run: |
           [ -d "/github/home/" ] && echo "Directory /github/home/ exists."
       - run: |
-          [ ! -d "/github/home/" ] && echo "Directory /github/home/ DOES NOT exists."
-      - run: |
           ls -a /github/home/
       - run: |
           mv /github/home/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
