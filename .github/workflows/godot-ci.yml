@@ -19,16 +19,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
+        
       - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/templates
-          ls -a /.local/share/godot/templates
-          [ -d "/root/" ] && echo "Directory /root/ exists."
-          [ ! -d "/root/" ] && echo "Directory /root/ DOES NOT exists."
-          ls -a /root/
-          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-          apt-get update && apt-get install -y rsync
+        run: mkdir -v -p ~/.local/share/godot/templates
+        run: ls -a /.local/share/godot/templates
+        run: [ -d "/root/" ] && echo "Directory /root/ exists."
+        run: [ ! -d "/root/" ] && echo "Directory /root/ DOES NOT exists."
+        run: ls -a /root/
+        run: mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+        run: apt-get update && apt-get install -y rsync
 
       - name: Web Build
         run: |
