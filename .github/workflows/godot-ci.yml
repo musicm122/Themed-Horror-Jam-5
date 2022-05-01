@@ -22,11 +22,11 @@ jobs:
 
       - name: Setup
         run: mkdir -v -p ~/.local/share/godot/templates
-      - run: ls -a /.local/share/godot/templates
+      - run: ls -a /github/home/.local/share/godot/templates
       - run: |
-          [ -d "/github/home/" ] && echo "Directory /root/ exists."
+          [ -d "/github/home/" ] && echo "Directory /github/home/ exists."
       - run: |
-          [ ! -d "/github/home/" ] && echo "Directory /root/ DOES NOT exists."
+          [ ! -d "/github/home/" ] && echo "Directory /github/home/ DOES NOT exists."
       - run: |
           ls -a /github/home/
       - run: |
