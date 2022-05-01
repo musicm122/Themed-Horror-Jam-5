@@ -4,7 +4,7 @@ using ThemedHorrorJam5.Scripts.Extensions;
 
 namespace ThemedHorrorJam5.Scenes
 {
-    public class LevelSelector : Node2D
+    public class LevelSelector : Node
     {
         [Export(PropertyHint.File, "*.tscn")]
         public string PlayerInteractionMechanicScene { get; set; } = "res://Scenes/TestPuzzleMechanics.tscn";
@@ -14,13 +14,13 @@ namespace ThemedHorrorJam5.Scenes
 
         public override void _Ready()
         {
-            Button interaction = GetNode<Button>("VBoxContainer/PlayerInteractionMechanics");
+            Button interaction = GetNode<Button>("RootControl/VBoxContainer/PlayerInteractionMechanics");
             interaction.ConnectButtonPressed(this, nameof(OnInteractionButtonPressed));
 
-            Button ai = GetNode<Button>("VBoxContainer/EnemyAI");
+            Button ai = GetNode<Button>("RootControl/VBoxContainer/EnemyAI");
             ai.ConnectButtonPressed(this, nameof(OnEnemyAIButtonPressed));
 
-            Button quit = GetNode<Button>("VBoxContainer/Quit");
+            Button quit = GetNode<Button>("RootControl/VBoxContainer/Quit");
             quit.ConnectButtonPressed(this, nameof(OnQuitButtonPressed));
 
             interaction.GrabFocus();
