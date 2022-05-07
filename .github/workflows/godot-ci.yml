@@ -28,18 +28,25 @@ jobs:
           ls /root/.local/share/godot/
           ls /root/.local/share/godot/templates/
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
+      - run: |
+          # install rsync
           apt-get update && apt-get install -y rsync
-
-
+      - run: |
+          # make file runnable
+          chmod +x $GITHUB_WORKSPACE/.github/rsync_wrapper.sh
       - name: Web Build
         run: |
-          # make file runnable, might not be necessary
-          chmod +x "${GITHUB_WORKSPACE}/.github/rsync_wrapper.sh"
-          ${GITHUB_WORKSPACE}/.github/rsync_wrapper.sh
+          # add the export directory
           mkdir ./$EXPORT_NAME
-          rsync -Rr . ./$EXPORT_NAME
+      - run: |
+          #run rsync wrapper script
+          $GITHUB_WORKSPACE/.github/rsync_wrapper.sh -Rr . ./$EXPORT_NAME
+      - run: |
+          # navigate to export dir
           cd $EXPORT_NAME
           mkdir -v -p export
+      - run: |
+          #run godot export
           godot -v --export "HTML5" export/index.html
 
       - name: Upload Artifacts
