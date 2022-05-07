@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-        
+
       - name: Print variables
         run : echo $GODOT_VERSION
       - name: Setup
@@ -47,7 +47,8 @@ jobs:
           mkdir -v -p export
       - run: |
           #run godot export
-          godot -v --export "HTML5" export/index.html
+          #godot -v --export "HTML5" export/index.html
+          godot -v --export "HTML5" "./export/index.html" --verbose
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
