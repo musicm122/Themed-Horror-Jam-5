@@ -30,12 +30,14 @@ jobs:
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
           apt-get update && apt-get install -y rsync
 
+
       - name: Web Build
-      - run: mkdir ./$EXPORT_NAME
-      - run: rsync -Rr . ./$EXPORT_NAME
-      - run: cd $EXPORT_NAME
-      - run: mkdir -v -p export
-      - run: godot -v --export "HTML5" export/index.html
+        run: |
+          mkdir ./$EXPORT_NAME
+          rsync -Rr . ./$EXPORT_NAME
+          cd $EXPORT_NAME
+          mkdir -v -p export
+          godot -v --export "HTML5" export/index.html
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
