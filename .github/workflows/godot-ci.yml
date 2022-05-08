@@ -46,9 +46,11 @@ jobs:
           cd $EXPORT_NAME
           mkdir -v -p export
       - run: |
+          # make export script runnable
+          chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
+      - run: |
           #run godot export
-          #godot -v --export "HTML5" export/index.html
-          godot -v --export "HTML5" export/index.html --verbose
+          $GITHUB_WORKSPACE/.github/export_godot.sh
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
