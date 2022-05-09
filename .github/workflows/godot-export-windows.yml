@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: WindowsDesktop.zip
-          path: ${{ env.EXPORT_NAME }}/export/WindowsDesktop
+          path: $GITHUB_WORKSPACE/export/WindowsDesktop
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -63,5 +63,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ env.EXPORT_NAME }}/export/WindowsDesktop/WindowsDesktop.zip
+          PACKAGE: $GITHUB_WORKSPACE/export/WindowsDesktop/WindowsDesktop.zip
     
