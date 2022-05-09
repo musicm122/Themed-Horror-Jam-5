@@ -49,12 +49,17 @@ jobs:
       - run: |
           #run godot export
           $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop" $GITHUB_WORKSPACE
+      - run: |
+          # list dir
+          ls $GITHUB_WORKSPACE/export/WindowsDesktop/
+          # exporting ...
+          $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop" $GITHUB_WORKSPACE
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: WindowsDesktop.zip
-          path: ${{ env.GITHUB_WORKSPACE }}/export/WindowsDesktop/WindowsDesktop.zip
+          path: ./export/WindowsDesktop/WindowsDesktop.zip
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -63,5 +68,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ env.GITHUB_WORKSPACE }}/export/WindowsDesktop/WindowsDesktop.zip
+          PACKAGE: ./export/WindowsDesktop/WindowsDesktop.zip
     
