@@ -1,6 +1,6 @@
   # Adapted from https://raw.githubusercontent.com/RudyMis/Bubbles/master/.github/workflows/godot-ci.yml
 
-name: godot-ci
+name: godot-export-linux
 
 on:
   push:
@@ -11,8 +11,8 @@ env:
   GODOT_VERSION: 3.4.4
 
 jobs:
-  export-web:
-    name: Web Export
+  export-macos:
+    name: Linux Export
     runs-on: ubuntu-latest
     container:
       image: barichello/godot-ci:mono-3.4.4
@@ -32,7 +32,7 @@ jobs:
       - run: |
           # make file runnable
           chmod +x $GITHUB_WORKSPACE/.github/rsync_wrapper.sh
-      - name: Web Build
+      - name: Build
         run: |
           # add the export directory
           mkdir ./$EXPORT_NAME
@@ -48,20 +48,20 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
       - run: |
           #run godot export
-          $GITHUB_WORKSPACE/.github/export_godot.sh "HTML5" $GITHUB_WORKSPACE
+          $GITHUB_WORKSPACE/.github/export_godot.sh "Linux" $GITHUB_WORKSPACE
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: web
-          path: ${{ env.EXPORT_NAME }}/export
+          name: Linux.zip
+          path: ${{ env.EXPORT_NAME }}/export/Linux
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-          CHANNEL: web
+          CHANNEL: linux
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ env.EXPORT_NAME }}/export/HTML5/HTML5.zip
+          PACKAGE: ${{ env.EXPORT_NAME }}/export/Linux/Linux.zip
     
