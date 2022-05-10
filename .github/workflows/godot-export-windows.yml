@@ -19,32 +19,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - name: Print variables
-        run : |
+      - run : |
           echo GODOT_VERSION: $GODOT_VERSION
           echo GITHUB_WORKSPACE: $GITHUB_WORKSPACE
-      - name: Setup
-        run: |
+      - run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
-
       - run: |
           #run godot export
           godot -v --export WindowsDesktop --no-window --quiet || true
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        run : |
+      - run : |
           echo GODOT_VERSION: $GODOT_VERSION
           echo GITHUB_WORKSPACE: $GITHUB_WORKSPACE
           pwd
           ls
           ls $GITHUB_WORKSPACE
           ls $GITHUB_WORKSPACE/export
+          echo ${{ github.workspace }}
+      - uses: actions/upload-artifact@v2
         with:
           name: uhp.exe
-          path: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/export/Windows/uhp.exe
+          path: $GITHUB_WORKSPACE/Themed-Horror-Jam-5/export/Windows/uhp.exe
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -53,4 +48,4 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/export/Windows/uhp.exe
+          PACKAGE: ${{ github.workspace }}/export/Windows/uhp.exe
