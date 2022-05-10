@@ -48,7 +48,7 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
       - run: |
           #run godot export
-          $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop"
+          godot -v --export WindowsDesktop --no-window --quiet || true
       - run: |
           # list dir
           ls $GITHUB_WORKSPACE/export/WindowsDesktop/
