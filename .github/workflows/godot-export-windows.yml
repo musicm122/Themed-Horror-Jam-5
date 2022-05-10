@@ -32,14 +32,18 @@ jobs:
           echo GODOT_VERSION: $GODOT_VERSION
           echo GITHUB_WORKSPACE: $GITHUB_WORKSPACE
           pwd
-          ls
-          ls $GITHUB_WORKSPACE
+          echo "------------------"
           ls $GITHUB_WORKSPACE/Export
-          echo ${{ github.workspace }}
+          echo "------------------"
+          ls
+          echo "------------------"
+          echo github.workspace: ${{ github.workspace }}
+          echo "------------------"
+          
       - uses: actions/upload-artifact@v2
         with:
           name: uhp.exe
-          path: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/Export/Windows/uhp.exe
+          path: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/Export/WindowsDesktop/uhp.exe
       
 
       - name: Publish to itch.io
@@ -49,4 +53,4 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ github.workspace }}/Export/Windows/uhp.exe
+          PACKAGE: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/Export/WindowsDesktop/uhp.exe
