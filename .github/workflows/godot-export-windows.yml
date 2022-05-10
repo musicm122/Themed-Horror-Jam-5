@@ -39,7 +39,8 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: uhp.exe
-          path: $GITHUB_WORKSPACE/Themed-Horror-Jam-5/Export/Windows/uhp.exe
+          path: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/Export/Windows/uhp.exe
+      
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
