@@ -53,4 +53,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/Export/WindowsDesktop/uhp.exe
+          PACKAGE: ${{ github.workspace }}/Export/Windows/uhp.exe
+
