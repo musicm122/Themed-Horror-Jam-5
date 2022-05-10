@@ -48,13 +48,10 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
       - run: |
           #run godot export
-          $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop" $GITHUB_WORKSPACE
+          $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop"
       - run: |
           # list dir
           ls $GITHUB_WORKSPACE/export/WindowsDesktop/
-          # exporting ...
-          $GITHUB_WORKSPACE/.github/export_godot.sh "WindowsDesktop" $GITHUB_WORKSPACE
-
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:

@@ -12,7 +12,7 @@ echo "argument:2 = $2"
 
 #if [ -z ${var+x} ]; then echo "var is unset"; else echo "var is set to '$var'"; fi
 
-if ! [ -n "$1" ]; then 
+if ! [ -n "$1" ]; then
     echo "Godot export missing required 'exportType' argument"
     exit 1
 fi
@@ -20,7 +20,7 @@ fi
 exportType=$1
 projectRootPath=$(pwd)
 
-if [ -n "$2" ]; then 
+if [ -n "$2" ]; then
     projectRootPath=$2
 fi
 
@@ -43,7 +43,7 @@ echo "Current Directory: "
 echo "=============================================================="
 pwd
 echo "=============================================================="
-echo "godot -v --export-pack $exportType "$ExportPath/$exportType.zip" --no-window --quiet || true"
+echo "godot -v --export $exportType --no-window --quiet || true"
 echo "=============================================================="
 echo "="
 echo "="
@@ -51,10 +51,10 @@ echo "="
 godot -v --export $exportType --no-window --quiet || true
 
 #if we have an index.html then huzah we have a successful export.
-if test -f "$ExportPath/$exportType.zip"; then
+if test -f "$ExportPath/$exportType"; then
     echo "Godot export: $exportType successfully export to $ExportPath/$exportType.zip"
 else
-    echo "Godot export: $exportType did not successfully export to $ExportPath/$exportType.zip"
+    echo "Godot export: $exportType did not successfully export to $ExportPath/$exportType"
     echo "godot -v --export $exportType --no-window --quiet || true"
     exit 1
 fi
