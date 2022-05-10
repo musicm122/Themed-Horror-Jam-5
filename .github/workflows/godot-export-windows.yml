@@ -26,10 +26,7 @@ jobs:
         run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
-      - run: |
-          # navigate to export dir
-          cd $EXPORT_NAME
-          mkdir -v -p $GITHUB_WORKSPACE/export/Windows/
+          
       - run: |
           #run godot export
           godot -v --export WindowsDesktop --no-window --quiet || true
