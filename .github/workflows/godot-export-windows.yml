@@ -18,20 +18,30 @@ jobs:
       image: barichello/godot-ci:mono-3.4.4
     steps:
       - name: Checkout
-      - uses: actions/upload-artifact@v3
-      - uses: actions/checkout@v1
-      - uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        uses: actions/checkout@v1
+
+      - name: Print variables
+        run : echo $GODOT_VERSION
+      - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
+
+      - run: |
+          #run godot export
           godot -v --export WindowsDesktop --no-window --quiet || true
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: uhp.exe
-          path: ${{ github.workspace }}/export/Windows/uhp.exe
+          path: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/export/Windows/uhp.exe
+
       - name: Publish to itch.io
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ github.workspace }}/export/Windows/uhp.exe
+          PACKAGE: /__w/Themed-Horror-Jam-5/Themed-Horror-Jam-5/export/Windows/uhp.exe
