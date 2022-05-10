@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
-          
+
       - run: |
           #run godot export
           godot -v --export WindowsDesktop --no-window --quiet || true
@@ -44,5 +44,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ./export/Windows/uhp.exe
+          PACKAGE: ${{ github.GITHUB_WORKSPACE }}/export/Windows/uhp.exe
     
