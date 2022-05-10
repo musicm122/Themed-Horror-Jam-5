@@ -48,13 +48,15 @@ echo "=============================================================="
 echo "="
 echo "="
 # Run the build but, ignore the error code
-godot -v --export-pack $exportType "$ExportPath/$exportType.zip" --no-window --quiet || true
+godot -v --export $exportType --no-window --quiet || true
 
 #if we have an index.html then huzah we have a successful export.
 if test -f "$ExportPath/$exportType.zip"; then
     echo "Godot export: $exportType successfully export to $ExportPath/$exportType.zip"
 else
     echo "Godot export: $exportType did not successfully export to $ExportPath/$exportType.zip"
-    echo "godot -v --export-pack $exportType "$ExportPath/$exportType.zip" --no-window --quiet || true"
+    echo "godot -v --export $exportType --no-window --quiet || true"
     exit 1
 fi
+
+ls $ExportPath/
