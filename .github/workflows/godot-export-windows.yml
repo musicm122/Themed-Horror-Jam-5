@@ -27,37 +27,18 @@ jobs:
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
       - run: |
-          # install rsync
-          apt-get update && apt-get install -y rsync
-      - run: |
-          # make file runnable
-          chmod +x $GITHUB_WORKSPACE/.github/rsync_wrapper.sh
-      - name: Web Build
-        run: |
-          # add the export directory
-          mkdir ./$EXPORT_NAME
-      - run: |
-          #run rsync wrapper script
-          $GITHUB_WORKSPACE/.github/rsync_wrapper.sh -Rr . ./$EXPORT_NAME
-      - run: |
           # navigate to export dir
           cd $EXPORT_NAME
-          mkdir -v -p export
-      - run: |
-          # make export script runnable
-          chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
+          mkdir -v -p $GITHUB_WORKSPACE/export/Windows/
       - run: |
           #run godot export
-          mkdir -p $GITHUB_WORKSPACE/export/Windows/
           godot -v --export WindowsDesktop --no-window --quiet || true
-      - run: |
-          # list dir
-          ls $GITHUB_WORKSPACE/export/Windows/uhp.exe
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: WindowsDesktop.zip
-          path: ./export/WindowsDesktop/WindowsDesktop.zip
+          name: uhp.exe
+          path: ./export/Windows/uhp.exe
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -66,5 +47,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ./export/WindowsDesktop/WindowsDesktop.zip
+          PACKAGE: ./export/Windows/uhp.exe
     
