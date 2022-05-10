@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: uhp.exe
-          path: ./export/Windows/uhp.exe
+          path: ${{ GITHUB_WORKSPACE }}/export/Windows/uhp.exe
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -44,5 +44,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ github.GITHUB_WORKSPACE }}/export/Windows/uhp.exe
+          PACKAGE: ${{ GITHUB_WORKSPACE }}/export/Windows/uhp.exe
     
