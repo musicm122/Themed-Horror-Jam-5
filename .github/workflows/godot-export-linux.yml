@@ -11,7 +11,7 @@ env:
   GODOT_VERSION: 3.4.4
 
 jobs:
-  export-macos:
+  export-windows:
     name: Linux Export
     runs-on: ubuntu-latest
     container:
@@ -19,42 +19,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - name: Print variables
-        run : echo $GODOT_VERSION
-      - name: Setup
-        run: |
+      - run : |
+          echo GODOT_VERSION: $GODOT_VERSION
+          echo GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+      - run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
       - run: |
-          # install rsync
-          apt-get update && apt-get install -y rsync
-      - run: |
-          # make file runnable
-          chmod +x $GITHUB_WORKSPACE/.github/rsync_wrapper.sh
-      - name: Build
-        run: |
-          # add the export directory
-          mkdir ./$EXPORT_NAME
-      - run: |
-          #run rsync wrapper script
-          $GITHUB_WORKSPACE/.github/rsync_wrapper.sh -Rr . ./$EXPORT_NAME
-      - run: |
-          # navigate to export dir
-          cd $EXPORT_NAME
-          mkdir -v -p export
-      - run: |
-          # make export script runnable
-          chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
-      - run: |
           #run godot export
-          $GITHUB_WORKSPACE/.github/export_godot.sh "Linux" $GITHUB_WORKSPACE
+          godot -v --export Linux --no-window --quiet || true
+      - run : |
+          echo "GODOT_VERSION: $GODOT_VERSION"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo $(pwd)
+          echo "------------------"
+          echo "----ls GITHUB_WORKSPACE/Export------------"
+          ls $GITHUB_WORKSPACE/Export
+          echo "----ls------------"
+          ls
+          echo "------------------"
+          echo "github.workspace: ${{ github.workspace }}"
+          echo "------------------"
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2
         with:
-          name: Linux.zip
-          path: ${{ env.EXPORT_NAME }}/export/Linux
+          name: uhp.x86_64
+          path: ${{ github.workspace }}/Export/Linux/uhp.x86_64
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
@@ -63,5 +53,5 @@ jobs:
           CHANNEL: linux
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ env.EXPORT_NAME }}/export/Linux/Linux.zip
-    
+          PACKAGE: ${{ github.workspace }}/Export/Linux/uhp.x86_64
+

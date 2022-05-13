@@ -1,6 +1,6 @@
   # Adapted from https://raw.githubusercontent.com/RudyMis/Bubbles/master/.github/workflows/godot-ci.yml
 
-name: godot-export-macos
+name: godot-export-macosx
 
 on:
   push:
@@ -19,49 +19,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - name: Print variables
-        run : echo $GODOT_VERSION
-      - name: Setup
-        run: |
+      - run : |
+          echo GODOT_VERSION: $GODOT_VERSION
+          echo GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+      - run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/$GODOT_VERSION.stable.mono ~/.local/share/godot/templates/$GODOT_VERSION.stable.mono
       - run: |
-          # install rsync
-          apt-get update && apt-get install -y rsync
-      - run: |
-          # make file runnable
-          chmod +x $GITHUB_WORKSPACE/.github/rsync_wrapper.sh
-      - name: Build
-        run: |
-          # add the export directory
-          mkdir ./$EXPORT_NAME
-      - run: |
-          #run rsync wrapper script
-          $GITHUB_WORKSPACE/.github/rsync_wrapper.sh -Rr . ./$EXPORT_NAME
-      - run: |
-          # navigate to export dir
-          cd $EXPORT_NAME
-          mkdir -v -p export
-      - run: |
-          # make export script runnable
-          chmod +x $GITHUB_WORKSPACE/.github/export_godot.sh
-      - run: |
           #run godot export
-          $GITHUB_WORKSPACE/.github/export_godot.sh "MacOSX" $GITHUB_WORKSPACE
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+          godot -v --export MacOSX --no-window --quiet || true
+      - run : |
+          echo "GODOT_VERSION: $GODOT_VERSION"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo $(pwd)
+          echo "------------------"
+          echo "----ls GITHUB_WORKSPACE/Export------------"
+          ls $GITHUB_WORKSPACE/Export
+          echo "----ls------------"
+          ls
+          echo "------------------"
+          echo "github.workspace: ${{ github.workspace }}"
+          echo "------------------"
+            - uses: actions/upload-artifact@v2
         with:
-          name: MacOSX.zip
-          path: ${{ env.EXPORT_NAME }}/export/MacOSX
+          name: uhp.zip
+          path: ${{ github.workspace }}/Export/MacOSX/uhp.zip
 
       - name: Publish to itch.io
         uses: josephbmanley/butler-publish-itchio-action@v1.0.3
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-          CHANNEL: osx
+          CHANNEL: mac
           ITCH_GAME: utp
           ITCH_USER: hackerferret
-          PACKAGE: ${{ env.EXPORT_NAME }}/export/MacOSX/MacOSX.zip
-    
+          PACKAGE: ${{ github.workspace }}/Export/MacOSX/uhp.zip
+
