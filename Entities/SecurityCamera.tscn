@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Entities/SecurityCamera.cs" type="Script" id=2]
+[ext_resource path="res://Entities/Components/RaycastVision.tscn" type="PackedScene" id=3]
+
+[node name="SecurityCamera" type="Node2D"]
+rotation = -3.14159
+script = ExtResource( 2 )
+RotationSpeed = 3.0
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+rotation = -3.14159
+color = Color( 0.54902, 0.54902, 0.54902, 1 )
+polygon = PoolVector2Array( -15, -8, 10.3241, -12, 15, 0, 12.0895, 12, -14, 6, -19.6875, -1 )
+
+[node name="Pivot" type="Node2D" parent="."]
+rotation = -1.5708
+
+[node name="RayCast2D" parent="Pivot" instance=ExtResource( 3 )]
+enabled = true
+cast_to = Vector2( 0, 50 )
+
+[node name="DebugLabel" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
