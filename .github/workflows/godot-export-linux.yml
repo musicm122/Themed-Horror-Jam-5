@@ -4,7 +4,7 @@ name: godot-export-linux
 
 on:
   push:
-    branches: [ main ]
+    branches: [ release-linux ]
 
 env:
   EXPORT_NAME: UHP

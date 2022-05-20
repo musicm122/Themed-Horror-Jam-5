@@ -4,7 +4,7 @@ name: godot-ci
 
 on:
   push:
-    branches: [ main ]
+    branches: [ release ]
 
 env:
   EXPORT_NAME: UHP

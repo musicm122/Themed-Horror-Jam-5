@@ -4,7 +4,7 @@ name: godot-export-html5
 
 on:
   push:
-    branches: [ main ]
+    branches: [ release-html5 ]
 
 env:
   EXPORT_NAME: UHP
