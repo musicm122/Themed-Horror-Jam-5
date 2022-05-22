@@ -66,14 +66,14 @@ namespace ThemedHorrorJam5.Entities
             {
                 if (CanTogglePause)
                 {
-                    GD.Print("Can toggle pause yet, time left ");
+                    this.Print("Can toggle pause yet, time left ");
                     CanTogglePause = false;
                     TogglePauseMenu();
                     AccumulatorPauseToggleCooldown = PauseToggleCooldownWaitTime;
                 }
                 else
                 {
-                    GD.Print("Cannot toggle pause yet, time left ", AccumulatorPauseToggleCooldown);
+                    this.Print("Cannot toggle pause yet, time left ", AccumulatorPauseToggleCooldown);
                 }
             }
             if (AccumulatorPauseToggleCooldown > 0)
@@ -102,10 +102,10 @@ namespace ThemedHorrorJam5.Entities
             }
         }
 
-        public void RefreshUI(Player player)
+        public void RefreshUI(Inventory inventory, MissionManager missionManager)
         {
-            InventoryDisplay.Text = player.Inventory.Display();
-            MissionDisplay.Text = player.MissionManager.Display();
+            InventoryDisplay.Text = inventory.Display();
+            MissionDisplay.Text = missionManager.Display();
         }
     }
 }

@@ -75,7 +75,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Themed Horror Jam 5"
-run/main_scene="res://Scenes/LevelSelector.tscn"
+run/main_scene="res://Scenes/PlayerV2_Test.tscn"
 config/icon="res://icon.png"
 
 [display]

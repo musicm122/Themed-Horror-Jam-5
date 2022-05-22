@@ -13,9 +13,11 @@ using static ThemedHorrorJam5.Entities.Components.Status;
 
 namespace ThemedHorrorJam5.Entities
 {
+
     public class Player : KinematicBody2D, IDebuggable<Node>
     {
         public bool IsDead = false;
+
         public bool HasFlashlight = false;
         public Light2D Flashlight { get; set; }
 
@@ -58,6 +60,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void RegisterExaminable(List<Examinable> examinableCollection)
         {
+            
             try
             {
                 this.Print("Examinable count = ", examinableCollection.Count);
@@ -339,8 +342,8 @@ namespace ThemedHorrorJam5.Entities
 
         private void RefreshUI()
         {
-            Hud.RefreshUI(this);
-            this.PauseMenu.RefreshUI(this);
+            Hud.RefreshUI(this.Status);
+            PauseMenu.RefreshUI(Inventory,MissionManager);
         }
 
         public void OnHurtboxAreaEntered(Node body)
@@ -391,5 +394,7 @@ namespace ThemedHorrorJam5.Entities
             RefreshUI();
         }
 
+        public Vector2 GetAimAtPoint() =>
+                (GlobalTransform.origin + Vector2.Up) * 1.5f;
     }
 }

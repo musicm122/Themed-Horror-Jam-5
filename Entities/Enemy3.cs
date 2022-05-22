@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
@@ -7,8 +8,15 @@ using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
 {
+    
     public class Enemy3 : KinematicBody2D, IDebuggable<Node>
     {
+        public bool LineOfSight = false;
+        public bool CheckThisFrame = false;
+        
+        [Export]
+        public float PushSpeed { get; set; } = 40f;
+
         [Export]
         public bool IsDebugging { get; set; } = false;
 
@@ -97,17 +105,37 @@ namespace ThemedHorrorJam5.Entities
                 target = PatrolPoints[PatrolIndex];
             }
             Velocity = (target - Position).Normalized() * MoveSpeed;
+            if (GetSlideCount() > 0)
+            {
+                CheckBoxCollision(Velocity);
+            }
             Velocity = MoveAndSlide(Velocity);
+            UpdateVisionConeLocation(Velocity);
+            
+
+        }
+
+        void UpdateVisionConeLocation(Vector2 newVelocity) 
+        {
+            if (newVelocity.x < 0) 
+            {
+                VisionRadius.Scale = new Vector2(-1, VisionRadius.Scale.y);
+            }
+            else 
+            {
+                VisionRadius.Scale = new Vector2(1, VisionRadius.Scale.y);
+            }
         }
 
         private void ChasePlayer(float delta)
         {
-            if (Player == null)
+            if (!LineOfSight)
             {
                 CurrentState = EnemyBehaviorStates.Patrol;
             }
             else
             {
+                
                 if (Owner.HasNode("Line2D"))
                 {
                     Line = (Line2D)Owner.GetNode("Line2D");
@@ -128,11 +156,21 @@ namespace ThemedHorrorJam5.Entities
                         var distance_to_next_point = Position.DistanceTo(NavPath.Peek());
                         if (distance_to_walk <= distance_to_next_point)
                         {
-                            Position += Position.DirectionTo(NavPath.Peek()) * distance_to_walk;
+                            var newPosition = Position.DirectionTo(NavPath.Peek()) * distance_to_walk;
+                            UpdateVisionConeLocation(newPosition.Normalized());
+                            Position += newPosition;
                         }
                         else
                         {
-                            Position = NavPath.Pop();
+                            var newPosition = NavPath.Pop(); 
+                            UpdateVisionConeLocation(newPosition.Normalized());
+                            if (GetSlideCount() > 0)
+                            {
+                                CheckBoxCollision(newPosition);
+                            }
+                            Position = newPosition;
+
+                            
                         }
                         distance_to_walk -= distance_to_next_point;
                     }
@@ -155,11 +193,10 @@ namespace ThemedHorrorJam5.Entities
                 {
                     Cooldown.Text = $"Cooling Down in {CurrentCoolDownCounter} seconds";
                 }
-                if (IsPlayerInSight())
-                {
-                    CurrentCoolDownCounter = MaxCoolDownTime;
-                }
-
+                //if (IsPlayerInSight())
+                //{
+                //    CurrentCoolDownCounter = MaxCoolDownTime;
+                //}
             }
         }
 
@@ -186,7 +223,7 @@ namespace ThemedHorrorJam5.Entities
         {
             Velocity = Vector2.Zero;
             if (!Enable) return;
-
+            
             switch (CurrentState)
             {
                 case EnemyBehaviorStates.Patrol:
@@ -220,17 +257,44 @@ namespace ThemedHorrorJam5.Entities
             {
                 this.PrintCaller();
                 Player = (Player)body;
-                CurrentState = AggroBehavior;
-                CurrentCoolDownCounter = MaxCoolDownTime;
+                if (HasLineOfSight(Player.Position))
+                {
+                    CurrentState = AggroBehavior;
+                    CurrentCoolDownCounter = MaxCoolDownTime;
+                }
             }
+        }
+
+        public bool HasLineOfSight(Vector2 point)
+        {
+            //if (!CanCheckFrame()) return LineOfSight;
+            var spaceState = GetWorld2d().DirectSpaceState;
+            var result = spaceState.IntersectRay(GlobalTransform.origin, point, null, CollisionMask);
+            LineOfSight = result?.Count > 0;
+            return LineOfSight;
+        }
+        private bool CanCheckFrame(int interval = 2)
+        {
+            Random random = new Random();
+            return random.Next() % interval == 0;
         }
 
         private void OnVisionRadiusBodyExit(Node body)
         {
             if (body.Name == "Player")
             {
+                Player = (Player)body;
                 this.PrintCaller();
                 CurrentCoolDownCounter = MaxCoolDownTime;
+                if (!HasLineOfSight(Player.Position))
+                {
+                    CurrentState = EnemyBehaviorStates.Patrol;
+                    CurrentCoolDownCounter = MaxCoolDownTime;
+                }
+                else
+                {
+                    CurrentCoolDownCounter = MaxCoolDownTime;
+                }
                 //this.player = null;
                 //this.CurrentState = EnemyBehaviorStates.Patrol;
             }
@@ -260,6 +324,15 @@ namespace ThemedHorrorJam5.Entities
             CanMove = true;
         }
 
+        private void CheckBoxCollision(Vector2 motion)
+        {
+            this.PrintCaller();
+            motion = motion.Normalized();
+            if (GetSlideCollision(0).Collider is PushBlock box)
+            {
+                box.Push(PushSpeed * motion);
+            }
+        }
 
     }
 }

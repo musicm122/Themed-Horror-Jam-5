@@ -5,6 +5,9 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public class Status : Node, IDebuggable<Node>
     {
+
+        public bool IsDead() => currentHealth<=0;
+        
         [Signal]
         public delegate void NoHealth();
 
@@ -49,9 +52,5 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        public override void _Ready()
-        {
-
-        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Godot.NET.Sdk/3.3.0">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+	  <LangVersion>8.0</LangVersion>
     <RootNamespace>ThemedHorrorJam5</RootNamespace>
     <CodeAnalysisRuleSet>roslynator.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -16,5 +17,5 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>  
+  </ItemGroup>
 </Project>

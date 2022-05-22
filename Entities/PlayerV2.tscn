@@ -1,0 +1,205 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Entities/Components/PlayerStats.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/Components/Target.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/Art/Environment/Light/light_mask.png" type="Texture" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Scripts/UI/Hud.cs" type="Script" id=6]
+[ext_resource path="res://Entities/PauseMenu.cs" type="Script" id=7]
+[ext_resource path="res://Entities/Behaviors/InteractableBehavior.cs" type="Script" id=8]
+[ext_resource path="res://Entities/Behaviors/DamagableBehavior.cs" type="Script" id=9]
+[ext_resource path="res://Entities/Behaviors/MovableBehavior.cs" type="Script" id=10]
+[ext_resource path="res://Entities/Behaviors/FlashlightBehavior.cs" type="Script" id=11]
+[ext_resource path="res://Entities/Behaviors/UiBehavior.cs" type="Script" id=12]
+[ext_resource path="res://Entities/PlayerV2.cs" type="Script" id=13]
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0, 0, 0, 1 )
+corner_radius_bottom_left = 8
+
+[sub_resource type="CapsuleShape2D" id=1]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 9.0
+height = 0.0
+
+[node name="PlayerRoot" type="KinematicBody2D"]
+script = ExtResource( 13 )
+
+[node name="UI" type="Node2D" parent="."]
+script = ExtResource( 12 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="UI"]
+
+[node name="PauseMenu" type="Control" parent="UI/CanvasLayer"]
+pause_mode = 2
+visible = false
+light_mask = 2
+margin_left = 256.0
+margin_top = 145.0
+margin_right = 761.0
+margin_bottom = 442.0
+script = ExtResource( 7 )
+PauseToggleCooldownWaitTime = 0.2
+
+[node name="TitlePanel" type="PanelContainer" parent="UI/CanvasLayer/PauseMenu"]
+margin_left = -64.0
+margin_top = -152.0
+margin_right = 36.0
+margin_bottom = -96.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="UI/CanvasLayer/PauseMenu/TitlePanel"]
+margin_top = 21.0
+margin_right = 100.0
+margin_bottom = 35.0
+text = "Pause Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MissionPanel" type="PanelContainer" parent="UI/CanvasLayer/PauseMenu"]
+show_behind_parent = true
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -216.0
+margin_top = -145.0
+margin_right = 40.0
+margin_bottom = 151.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MissionDisplay" type="Label" parent="UI/CanvasLayer/PauseMenu/MissionPanel"]
+margin_top = 132.0
+margin_right = 256.0
+margin_bottom = 163.0
+rect_pivot_offset = Vector2( 10, 20 )
+text = " Points of Interest: 
+================"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InventoryPanel" type="PanelContainer" parent="UI/CanvasLayer/PauseMenu"]
+show_behind_parent = true
+margin_left = -256.0
+margin_top = -152.0
+margin_bottom = 144.0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InventoryDisplay" type="Label" parent="UI/CanvasLayer/PauseMenu/InventoryPanel"]
+margin_top = 132.0
+margin_right = 256.0
+margin_bottom = 163.0
+text = "  Items:
+======="
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Camera2D" type="Camera2D" parent="UI"]
+current = true
+zoom = Vector2( 0.5, 0.5 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="UI/Camera2D"]
+
+[node name="Hud" type="Control" parent="UI/Camera2D/CanvasLayer"]
+light_mask = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 6 )
+
+[node name="HealthPanel" type="PanelContainer" parent="UI/Camera2D/CanvasLayer/Hud"]
+margin_right = 60.0
+margin_bottom = 28.0
+
+[node name="HealthBar" type="Label" parent="UI/Camera2D/CanvasLayer/Hud/HealthPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 53.0
+margin_bottom = 21.0
+text = "Health:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOverPanel" type="PanelContainer" parent="UI/Camera2D/CanvasLayer/Hud"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeathText" type="Label" parent="UI/Camera2D/CanvasLayer/Hud/GameOverPanel"]
+margin_left = 7.0
+margin_top = 293.0
+margin_right = 1017.0
+margin_bottom = 307.0
+text = "You Died"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CanvasModulate" type="CanvasModulate" parent="UI/Camera2D/CanvasLayer/Hud/GameOverPanel"]
+color = Color( 0.537255, 0, 0, 0.878431 )
+
+[node name="PlayerStatus" parent="." instance=ExtResource( 1 )]
+MaxHealth = 5
+CurrentHealth = 5
+IsDebugging = true
+
+[node name="Target" parent="." instance=ExtResource( 3 )]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0, 1, 0.505882, 1 )
+polygon = PoolVector2Array( -8, -16, -8, 16, 8, 16, 8, -16 )
+
+[node name="Behaviors" type="Node2D" parent="."]
+
+[node name="Flashlight" type="Node2D" parent="Behaviors"]
+position = Vector2( 0, 2.38419e-07 )
+scale = Vector2( 0.196242, 0.203549 )
+script = ExtResource( 11 )
+
+[node name="Flashlight" type="Light2D" parent="Behaviors/Flashlight"]
+texture = ExtResource( 4 )
+energy = 1.2
+
+[node name="Interactable" type="Node2D" parent="Behaviors"]
+script = ExtResource( 8 )
+
+[node name="ExaminableNotification" type="Sprite" parent="Behaviors/Interactable"]
+position = Vector2( 0, -40 )
+scale = Vector2( 0.25, 0.375 )
+texture = ExtResource( 5 )
+
+[node name="Damagable" type="Node2D" parent="Behaviors"]
+script = ExtResource( 9 )
+
+[node name="Hurtbox" parent="Behaviors/Damagable" instance=ExtResource( 2 )]
+
+[node name="CollisionShape" parent="Behaviors/Damagable/Hurtbox" index="0"]
+shape = SubResource( 2 )
+
+[node name="PlayerStats" parent="Behaviors/Damagable" instance=ExtResource( 1 )]
+MaxHealth = 5
+CurrentHealth = 5
+
+[node name="Movable" type="Node2D" parent="Behaviors"]
+script = ExtResource( 10 )
+MoveSpeed = 100.0
+
+[editable path="Behaviors/Damagable/Hurtbox"]

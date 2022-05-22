@@ -6,15 +6,24 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public class RaycastVision : RayCast2D, IDebuggable<Node2D>
     {
-        public Action<Player> OnPlayerSeen;
-        public Action<Player> OnPlayerOutOfSight;
+        public Action<Node2D> OnTargetSeen;
+        public Action<Node2D> OnTargetOutOfSight;
 
         [Export]
         public float ConeAngle { get; set; } = Mathf.Deg2Rad(30);
+        public bool CheckThisFrame = false;
+
+       
+
         public float MaxViewDistance { get; set; } = 100;
 
         [Export]
         public float AngleBetweenRays { get; set; } = Mathf.Deg2Rad(5);
+
+        public override void _Ready()
+        {
+            CheckThisFrame = CanCheckFrame();
+        }
 
         public void GenerateRaycasts()
         {
@@ -34,27 +43,36 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        public Player Target { get; set; }
+        public Node2D Target { get; set; }
 
         public bool CanSeePlayer() => Target != null;
 
         public override void _PhysicsProcess(float delta)
         {
+            if(!CanCheckFrame()){ 
+                return;
+            }
+
             if (IsColliding())
             {
-                if (GetCollider() is Player player)
+                if (GetCollider()!=null)
                 {
                     this.Print("Player found");
-                    Target = player;
-                    OnPlayerSeen?.Invoke(player);
+                    Target = (Node2D)GetCollider();
+                    OnTargetSeen?.Invoke(Target);
                 }
                 if (Target != null)
                 {
                     this.Print("Player lost");
-                    OnPlayerOutOfSight(Target);
+                    OnTargetOutOfSight(Target);
                     Target = null;
                 }
             }
+        }
+        private bool CanCheckFrame(int interval = 2)
+        {
+            Random random = new Random();
+            return random.Next() % interval == 0;
         }
     }
 }

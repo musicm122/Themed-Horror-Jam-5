@@ -8,10 +8,10 @@ namespace ThemedHorrorJam5.Entities
 {
     public enum CameraState { Idle, Warning, Aggro, Damaged, Stun }
 
-
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
         private bool IsStartMovement = true;
+        private bool IsPausing = false;
 
         private float Elapsed = 0f;
 
@@ -21,7 +21,7 @@ namespace ThemedHorrorJam5.Entities
 
         public RaycastVision VisionManager { get; set; }
 
-        public Player PlayerRef { get; set; }
+        public Node2D PlayerRef { get; set; }
 
         [Export]
         public float MaxRotationMovementTime = 2f;
@@ -32,7 +32,7 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         public float RotationSpeed { get; set; } = 80f;
 
-        public Player Target { get; set; }
+        public Node2D Target { get; set; }
 
         public Polygon2D CameraSprite { get; set; }
 
@@ -46,19 +46,19 @@ namespace ThemedHorrorJam5.Entities
             CameraSprite = GetNode<Polygon2D>("Polygon2D");
             if (VisionManager != null)
             {
-                VisionManager.OnPlayerSeen += OnTargetDetection;
-                VisionManager.OnPlayerOutOfSight += OnTargetLost;
+                VisionManager.OnTargetSeen += OnTargetDetection;
+                VisionManager.OnTargetOutOfSight += OnTargetLost;
             }
         }
 
-        private void OnTargetLost(Player player)
+        private void OnTargetLost(Node2D player)
         {
             this.Print($"Player lost. Player last known position at {player.GlobalPosition}");
             CameraSprite.Color = CommonColors.AggroColor;
             this.Target = null;
         }
 
-        public void OnTargetDetection(Player player)
+        public void OnTargetDetection(Node2D player)
         {
             PlayerRef = player;
             CurrentState = CameraState.Aggro;
@@ -68,19 +68,29 @@ namespace ThemedHorrorJam5.Entities
         {
             var maxTime = 2f;
             this.CameraSprite.Color = CommonColors.IdleColor;
-            if (Elapsed > maxTime)
+            if (Elapsed > maxTime && !IsPausing)
             {
                 IsStartMovement = !IsStartMovement;
+                IsPausing = true;
                 Elapsed = 0f;
             }
 
-            if (IsStartMovement)
+            if (Elapsed > maxTime && IsPausing)
             {
-                this.Rotation += RotationSpeed * delta;
+                IsPausing = false;
+                Elapsed = 0f;
             }
-            else
+
+            if (!IsPausing)
             {
-                this.Rotation -= RotationSpeed * delta;
+                if (IsStartMovement)
+                {
+                    this.Rotation += RotationSpeed * delta;
+                }
+                else
+                {
+                    this.Rotation -= RotationSpeed * delta;
+                }
             }
 
             //var minRad = Mathf.Deg2Rad(90f);

@@ -7,6 +7,23 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class NodeExtensions
     {
+        public static void DrawCircleArc(this Node2D node , Vector2 center, float radius, float angleFrom, float angleTo, Color color)
+        {
+            int nbPoints = 32;
+            var pointsArc = new Vector2[nbPoints + 1];
+
+            for (int i = 0; i <= nbPoints; i++)
+            {
+                float anglePoint = Mathf.Deg2Rad(angleFrom + i * (angleTo - angleFrom) / nbPoints - 90f);
+                pointsArc[i] = center + new Vector2(Mathf.Cos(anglePoint), Mathf.Sin(anglePoint)) * radius;
+            }
+
+            for (int i = 0; i < nbPoints - 1; i++)
+            {
+                node.DrawLine(pointsArc[i], pointsArc[i + 1], color);
+            }
+        }
+
         public static bool TryConnectSignal(this Node node, string signal, Godot.Object target, string methodName)
         {
             Error result;

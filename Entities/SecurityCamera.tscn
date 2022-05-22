@@ -16,6 +16,11 @@ polygon = PoolVector2Array( -15, -8, 10.3241, -12, 15, 0, 12.0895, 12, -14, 6, -
 [node name="Pivot" type="Node2D" parent="."]
 rotation = -1.5708
 
+[node name="VisionCone" type="Polygon2D" parent="Pivot"]
+rotation = 0.689756
+color = Color( 0.85098, 0.807843, 0.137255, 0.32549 )
+polygon = PoolVector2Array( 5.55316, 16.1605, 22.0204, 51.8373, 40.225, 47.1906, 44.5261, 31.9754, 12.6308, 9.02563, 11.3192, 15.293 )
+
 [node name="RayCast2D" parent="Pivot" instance=ExtResource( 3 )]
 enabled = true
 cast_to = Vector2( 0, 50 )
