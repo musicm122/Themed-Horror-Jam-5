@@ -9,9 +9,12 @@ using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
 {
-    
     public class Enemy3 : KinematicBody2D, IDebuggable<Node>
     {
+        public DamagableBehavior Damagable { get; private set; }
+        
+        public Status EnemyStatus { get; set; }
+
         public bool LineOfSight = false;
         public bool CheckThisFrame = false;
         
@@ -216,7 +219,7 @@ namespace ThemedHorrorJam5.Entities
             return false;
         }
 
-        private bool IsPlayerInShootingRange(Player player) =>
+        private bool IsPlayerInShootingRange(PlayerV2 player) =>
              this.Position.DistanceTo(player.Position) >= this.FireRange;
 
 
@@ -274,6 +277,7 @@ namespace ThemedHorrorJam5.Entities
             LineOfSight = result?.Count > 0;
             return LineOfSight;
         }
+
         private bool CanCheckFrame(int interval = 2)
         {
             Random random = new Random();

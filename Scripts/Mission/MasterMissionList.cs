@@ -11,7 +11,7 @@ namespace ThemedHorrorJam5.Scripts.Constants
                 new MissionElement(
                                 "Find the glasses",
                                 "Find Foo's missing specs.",
-                                (player) => player.HasItem("Foo's Glasses"))
+                                (playerState) => playerState.Inventory.HasItem("Foo's Glasses"))
                 };
 
         public static MissionElement GetMissionByTitle(string title)

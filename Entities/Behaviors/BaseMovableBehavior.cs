@@ -1,10 +1,11 @@
+using System;
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class MovableBehavior : Node2D, IDebuggable<Node>
+    public abstract class BaseMovableBehavior : Node2D, IDebuggable<Node>, IMovableBehavior
     {
         [Export]
         public float MoveSpeed { get; set; } = 50f;
@@ -18,16 +19,18 @@ namespace ThemedHorrorJam5.Entities.Components
         [Export]
         public float MoveMultiplier { get; set; } = 1.5f;
 
+        public Vector2 Velocity { get; set;}
+
         public bool CanMove = true;
 
         public bool IsRunning = false;
-        
+
         [Export]
         public KinematicBody2D MovableTarget { get; set; }
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        private void HandleMovableObstacleCollision(Vector2 motion)
+        public void HandleMovableObstacleCollision(Vector2 motion)
         {
             this.PrintCaller();
             motion = motion.Normalized();
@@ -38,22 +41,14 @@ namespace ThemedHorrorJam5.Entities.Components
             }
         }
 
-        public override void _Ready()
-        {
-
-        }
-
-        public virtual Vector2 GetMovementSpeed(bool isRunning = false) =>
-                isRunning ?
-                    InputUtils.GetTopDownWithDiagMovementInput(MoveSpeed * MoveMultiplier) :
-                    InputUtils.GetTopDownWithDiagMovementInput(MoveSpeed);
+        public virtual Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
+                isRunning ? direction.Normalized() * MoveSpeed * MoveMultiplier : direction.Normalized() * MoveSpeed;
 
         public override void _PhysicsProcess(float delta)
         {
             if (CanMove)
             {
-                IsRunning = Input.IsActionPressed(InputAction.Run);
-                var movement = GetMovementSpeed(IsRunning);
+                var movement = GetMovementSpeed(IsRunning, Velocity);
                 MovableTarget.MoveAndSlide(movement);
                 if (MovableTarget.GetSlideCount() > 0)
                 {

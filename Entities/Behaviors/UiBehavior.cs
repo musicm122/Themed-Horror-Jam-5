@@ -57,9 +57,9 @@ namespace ThemedHorrorJam5.Entities.Components
             RefreshUI();
         }
 
-        public void EvaluateMissions(Player player)
+        public void EvaluateMissions(PlayerState playerState)
         {
-            State.MissionManager.EvaluateMissionsState(player);
+            State.MissionManager.EvaluateMissionsState(playerState);
             RefreshUI();
         }
 

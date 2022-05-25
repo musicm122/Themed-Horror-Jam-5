@@ -11,6 +11,7 @@ namespace ThemedHorrorJam5.Entities
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
         private bool IsStartMovement = true;
+
         private bool IsPausing = false;
 
         private float Elapsed = 0f;
@@ -66,16 +67,15 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnIdle(float delta)
         {
-            var maxTime = 2f;
             this.CameraSprite.Color = CommonColors.IdleColor;
-            if (Elapsed > maxTime && !IsPausing)
+            if (Elapsed > MaxRotationMovementTime && !IsPausing)
             {
                 IsStartMovement = !IsStartMovement;
                 IsPausing = true;
                 Elapsed = 0f;
             }
 
-            if (Elapsed > maxTime && IsPausing)
+            if (Elapsed > MaxRotationMovementTime && IsPausing)
             {
                 IsPausing = false;
                 Elapsed = 0f;
@@ -92,37 +92,7 @@ namespace ThemedHorrorJam5.Entities
                     this.Rotation -= RotationSpeed * delta;
                 }
             }
-
-            //var minRad = Mathf.Deg2Rad(90f);
-            //var maxRad = Mathf.Deg2Rad(120f);
-            //this.Rotation = minRad;
-            //var startDegree = Mathf.Deg2Rad(StartRotationAngle);
-            //var endDegree = Mathf.Deg2Rad(EndRotationAngle);
-            //this.Rotation += RotationSpeed * delta;
-
-
-            //this.Rotation = this.Rotation > maxDegree ? minDegree : this.Rotation;
-            //this.Rotation = Mathf.LerpAngle(minDegree, maxDegree, Elapsed);
-            //this.Rotation = Mathf.Clamp(Mathf.LerpAngle(minDegree, maxDegree, elapsed), startDegree, endDegree) * delta;
-            //if (this.Rotation < StartRotationAngle)
-            //{
-            //    this.Rotation = Mathf.Clamp(Mathf.LerpAngle(startDegree, endDegree, elapsed), startDegree, endDegree) * delta;
-            //    //this.Rotation += Mathf.LerpAngle(startDegree, endDegree, 0.2f);
-            //    this.CameraSprite.Color = WarningColor;
-            //}
-            //else
-            //{
-            //    this.Rotation = Mathf.Clamp(Mathf.LerpAngle(endDegree, startDegree, elapsed), endDegree, startDegree) * delta;
-            //    //this.Rotation += Mathf.LerpAngle(endDegree, startDegree, 0.2f);
-            //    this.CameraSprite.Color = IdleColor;
-            //}
             Elapsed += delta;
-
-            // this.Rotation += RotationSpeed * delta;
-            //var minAngle = 
-            //var maxAngle = Mathf.Deg2Rad(RotationArc);
-            //while(this.Transform.Rotation)
-
         }
 
         private void OnWarning(float delta)

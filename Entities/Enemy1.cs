@@ -34,7 +34,7 @@ namespace ThemedHorrorJam5.Entities
 
         public Path2D Path { get; set; }
 
-        public Player Player { get; set; }
+        public PlayerV2 Player { get; set; }
 
         public bool CanMove = true;
 
@@ -111,7 +111,7 @@ namespace ThemedHorrorJam5.Entities
             if (string.Equals(body.Name, "player", System.StringComparison.OrdinalIgnoreCase))
             {
                 GD.Print("OnVisionRadiusBodyEntered");
-                Player = (Player)body;
+                Player = (PlayerV2)body;
                 CurrentState = EnemyBehaviorStates.ChasePlayer;
             }
         }

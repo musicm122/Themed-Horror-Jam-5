@@ -8,9 +8,6 @@ namespace ThemedHorrorJam5.Scenes
     {
         public List<Node2D> Enemies { get; set; }
         
-        public Player Player { get; set; }
-        
-
         
         public void AlertEnemies() 
         {

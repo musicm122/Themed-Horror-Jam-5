@@ -58,7 +58,7 @@ namespace ThemedHorrorJam5.Entities
 
         public EnemyBehaviorStates CurrentState { get; set; } = EnemyBehaviorStates.Idle;
 
-        public Player Player { get; set; }
+        public PlayerV2 Player { get; set; }
 
         public bool CanMove = true;
 
@@ -235,7 +235,7 @@ namespace ThemedHorrorJam5.Entities
         {
             if (body.IsPlayer())
             {
-                Player = (Player)body;
+                Player = (PlayerV2)body;
                 CurrentState = EnemyBehaviorStates.ChasePlayer;
             }
         }

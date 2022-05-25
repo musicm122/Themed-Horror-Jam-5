@@ -11,7 +11,7 @@ namespace ThemedHorrorJam5.Entities
 
         public DamagableBehavior Damagable { get; private set; }
 
-        public MovableBehavior Movable { get; private set; }
+        public PlayerMovableBehavior Movable { get; private set; }
 
         public InteractableBehavior Interactable { get; private set; }
 
@@ -37,7 +37,7 @@ namespace ThemedHorrorJam5.Entities
                 MissionManager = new MissionManager()
             };
 
-            Movable = GetNode<MovableBehavior>("Behaviors/Movable");
+            Movable = GetNode<PlayerMovableBehavior>("Behaviors/Movable");
             Movable.Init(this);
 
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
