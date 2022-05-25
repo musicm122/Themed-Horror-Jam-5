@@ -107,6 +107,11 @@ namespace ThemedHorrorJam5.Entities.Components
         public void Init(PlayerState state)
         {
             State = state;
+
+            State.PlayerStatus.MaxHealthChangedCallback += (amt) => RefreshUI();
+            State.PlayerStatus.HealthChangedCallback += (amt) => RefreshUI();
+            State.PlayerStatus.EmptyHealthBarCallback += () => this.Print("Player Dead");
+
             State.MissionManager.AddMissionEvent += UpdateMissions;
             State.MissionManager.RemoveMissionEvent += UpdateMissions;
             RefreshUI();

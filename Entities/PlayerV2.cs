@@ -41,16 +41,26 @@ namespace ThemedHorrorJam5.Entities
             Movable.Init(this);
 
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
-            Damagable.OnTakeDamage += (obj, force) => Movable.MoveAndSlide(force);
+            Damagable.Init(State);
 
             Interactable = GetNode<InteractableBehavior>("Behaviors/Interactable");
             Interactable.Init(State);
+
 
             Flashlight = GetNode<FlashlightBehavior>("Behaviors/Flashlight");
             Flashlight.Init(State);
 
             Ui = GetNode<UiBehavior>("UI");
             Ui.Init(State);
+
+
+            Interactable.InteractingCallback += (e) => Movable.CanMove = false;
+            Interactable.InteractingCompleteCallback += (e) => Movable.CanMove = true;
+
+            Damagable.OnTakeDamage += (obj, force) => {
+                Movable.MoveAndSlide(force);
+                Ui.RefreshUI();
+            };
         }
 
         public void AddItem(string name, int amt){

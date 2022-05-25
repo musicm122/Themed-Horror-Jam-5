@@ -8,7 +8,8 @@ namespace ThemedHorrorJam5.Entities.Components
     public class DamagableBehavior : Node2D, IDebuggable<Node>
     {
         public bool IsDead = false;
-        public Status Status { get; set; }
+        
+        private PlayerState State { get; set; }
 
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -24,22 +25,18 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        
         public void OnHurtboxAreaEntered(Node body)
         {
             this.Print($"OnHurtboxAreaEntered({body.Name})");
-            if (body.Name == "HitBox" || body.Name == "Spikes")
+            if (body.Name.ToLower() == "hitbox" || body.Name.ToLower() == "spikes")
             {
-                
                 this.HurtBox.StartInvincibility(0.6f);
 
                 var hitBox = (HitBox)body;
                 var force = (this.Position - hitBox.Position) * hitBox.EffectForce;
                 OnTakeDamage?.Invoke(body, force);
-                //this.MoveAndSlide(force);
-                Status.CurrentHealth -= hitBox.Damage;
-                
-                this.Print("Current Health =", Status.CurrentHealth);
+                State.PlayerStatus.CurrentHealth -= hitBox.Damage;
+                this.Print("Current Health =", State.PlayerStatus.CurrentHealth);
                 //TODO: Add Hit effect visual and sound
                 //Hurtbox.create_hit_effect()
                 //var playerHurtSound = PlayerHurtSound.instance()
@@ -59,7 +56,7 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void OnHurtboxInvincibilityStarted()
         {
-            //this.PrintCaller();
+            this.PrintCaller();
             HurtboxInvincibilityStartedCallback?.Invoke();
         }
 
@@ -71,25 +68,29 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void OnHealthChanged(int health)
         {
+            this.PrintCaller();
             //RefreshUI();
             HealthChangedCallback?.Invoke(health);
         }
 
         public void OnMaxHealthChanged(int health)
         {
+            this.PrintCaller();
             //RefreshUI();
             MaxHealthChangedCallback?.Invoke(health);
         }
 
         private void RegisterHealthSignals()
         {
-            Status.Connect(nameof(Status.NoHealth), this, nameof(OnEmptyHealthBar));
-            Status.Connect(nameof(Status.HealthChanged), this, nameof(OnHealthChanged));
-            Status.Connect(nameof(Status.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
+            this.PrintCaller();
+            State.PlayerStatus.Connect(nameof(Status.NoHealth), this, nameof(OnEmptyHealthBar));
+            State.PlayerStatus.Connect(nameof(Status.HealthChanged), this, nameof(OnHealthChanged));
+            State.PlayerStatus.Connect(nameof(Status.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
         }
 
         private void RegisterHurtBoxSignals()
         {
+            this.PrintCaller();
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
             {
                 var arg = $"TryConnectSignal('area_entered', {this.Name}, {nameof(OnHurtboxAreaEntered)})";
@@ -109,12 +110,20 @@ namespace ThemedHorrorJam5.Entities.Components
             }
         }
 
+        public void Init(PlayerState state){
+            State = state;
+            HurtBox = GetNode<Hurtbox>("Hurtbox");
+            //Status = GetNode<Status>("PlayerStats");
+            RegisterHealthSignals();
+            RegisterHurtBoxSignals();
+        }
+
         public override void _Ready()
         {
             HurtBox = GetNode<Hurtbox>("Hurtbox");
-            Status = GetNode<Status>("PlayerStats");
-            RegisterHealthSignals();
-            RegisterHurtBoxSignals();
+            //Status = GetNode<Status>("PlayerStats");
+            //RegisterHealthSignals();
+            //RegisterHurtBoxSignals();
         }
     }
 }

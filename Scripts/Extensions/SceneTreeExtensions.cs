@@ -27,7 +27,6 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             }
             playerTuple.Item2.RemoveItems(name, amt);
         }
-            
 
         public static void AddMission(this SceneTree tree, string title) =>
             tree.CallGroup(Groups.Player, "AddMission", title);

@@ -55,8 +55,10 @@ namespace ThemedHorrorJam5.Entities.Components
                 this.Print("lockedDoorCollection count = ", lockedDoorCollection.Count);
                 if (!lockedDoorCollection.IsNullOrEmpty())
                 {
-                    lockedDoorCollection.ForEach(e =>
-                        e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction)));
+                    lockedDoorCollection.ForEach(e =>{
+                        e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction));
+                        e.Connect(nameof(LockedDoor.DoorInteractionComplete), this, nameof(OnDoorInteractionComplete));
+                    });
                 }
             }
             catch (System.Exception)
@@ -124,6 +126,12 @@ namespace ThemedHorrorJam5.Entities.Components
             {
                 lockedDoor.CurrentDoorState = DoorState.Closed;
             }
+            this.InteractingCallback?.Invoke(lockedDoor);
+        }
+        
+        public void OnDoorInteractionComplete(LockedDoor lockedDoor)
+        {
+            this.InteractingCompleteCallback?.Invoke(lockedDoor);
         }
 
         public void Init(PlayerState state)

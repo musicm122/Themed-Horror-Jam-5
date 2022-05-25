@@ -190,6 +190,7 @@ texture = ExtResource( 5 )
 
 [node name="Damagable" type="Node2D" parent="Behaviors"]
 script = ExtResource( 9 )
+IsDebugging = true
 
 [node name="Hurtbox" parent="Behaviors/Damagable" instance=ExtResource( 2 )]
 

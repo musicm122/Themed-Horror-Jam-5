@@ -104,6 +104,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void RegisterHurtBoxSignals()
         {
+            this.PrintCaller();
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
             {
                 var arg = $"TryConnectSignal('area_entered', {this.Name}, {nameof(OnHurtboxAreaEntered)})";
@@ -348,9 +349,8 @@ namespace ThemedHorrorJam5.Entities
 
         public void OnHurtboxAreaEntered(Node body)
         {
-
             this.Print($"OnHurtboxAreaEntered({body.Name})");
-            if (body.Name == "HitBox" || body.Name == "Spikes")
+            if (body.Name.ToLower() == "hitbox" || body.Name.ToLower() == "spikes")
             {
                 this.HurtBox.StartInvincibility(0.6f);
                 var hitBox = (HitBox)body;

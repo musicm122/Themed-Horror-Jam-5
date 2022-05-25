@@ -16,6 +16,9 @@ namespace ThemedHorrorJam5.Entities
         [Signal]
         public delegate void DoorInteraction(LockedDoor lockedDoor);
 
+        [Signal]
+        public delegate void DoorInteractionComplete(LockedDoor lockedDoor);
+
         [Export]
         public Key RequiredKey { get; set; }
 
@@ -111,6 +114,7 @@ namespace ThemedHorrorJam5.Entities
                     break;
             }
             SetColliderState(CurrentDoorState);
+            EmitSignal(nameof(DoorInteractionComplete), this);
         }
     }
 }
