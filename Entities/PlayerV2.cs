@@ -27,7 +27,6 @@ namespace ThemedHorrorJam5.Entities
         public bool IsDebugPrintEnabled() => IsDebugging;
 
 
-
         public override void _Ready()
         {
             PlayerStatus = GetNode<Status>("PlayerStatus");
@@ -38,7 +37,6 @@ namespace ThemedHorrorJam5.Entities
                 MissionManager = new MissionManager()
             };
 
-            
             Movable = GetNode<MovableBehavior>("Behaviors/Movable");
             Movable.Init(this);
 
@@ -53,6 +51,19 @@ namespace ThemedHorrorJam5.Entities
 
             Ui = GetNode<UiBehavior>("UI");
             Ui.Init(State);
+        }
+
+        public void AddItem(string name, int amt){
+            Ui.AddItem(name, amt);
+        }
+
+        public void RemoveItems(string name, int amt) {
+            Ui.RemoveItems(name, amt);
+        }
+
+        public void AddMission(string title)
+        {
+            Ui.AddMission(title);
         }
     }
 }

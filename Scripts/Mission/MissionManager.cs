@@ -51,6 +51,13 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             }
         }
 
+        public void RemoveByTitle(string missionTitle)
+        {
+            var missionToRemove = Missions.Find(m => m.Title == missionTitle);
+            RaiseRemovingMission(missionToRemove);
+            Missions.Remove(missionToRemove);
+        }
+
         public string Display()
         {
             var retval = "Points of Interest:\r\n================\r\n";

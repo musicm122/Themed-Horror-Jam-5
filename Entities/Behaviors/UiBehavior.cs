@@ -50,6 +50,13 @@ namespace ThemedHorrorJam5.Entities.Components
             RefreshUI();
         }
 
+        public void RemoveMissionByTitle(string missionTitle)
+        {
+            this.Print($"RemoveMission called with mission : {missionTitle}");
+            State.MissionManager.RemoveByTitle(missionTitle);
+            RefreshUI();
+        }
+
         public void EvaluateMissions(Player player)
         {
             State.MissionManager.EvaluateMissionsState(player);
@@ -68,6 +75,13 @@ namespace ThemedHorrorJam5.Entities.Components
         {
             this.Print($"RemoveItem called with name:{name}");
             State.Inventory.Remove(name);
+            RefreshUI();
+        }
+
+        public void RemoveItems(string name, int amt)
+        {
+            this.Print($"RemoveItem called with name:{name}");
+            State.Inventory.RemoveAmount(name, amt);
             RefreshUI();
         }
 

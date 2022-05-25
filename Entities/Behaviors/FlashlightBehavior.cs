@@ -8,17 +8,19 @@ namespace ThemedHorrorJam5.Entities.Components
     public class FlashlightBehavior : Node2D, IDebuggable<Node>
     {
         public PlayerState State { get; set; }
-        
+
         public void Init(PlayerState state)
         {
             State = state;
         }
 
         [Export]
-        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugging { get; set; }
+
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        public bool HasFlashlight => State.Inventory.HasItemInInventory("Flashlight");
+        public bool HasFlashlight =>
+            State.Inventory.HasItemInInventory("Flashlight");
 
         public Light2D Flashlight { get; set; }
         private void ToggleFlashlight()
@@ -35,7 +37,7 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public override void _PhysicsProcess(float delta)
         {
-            if (HasFlashlight && Input.IsActionJustPressed(InputAction.ToggleFlashlight))
+            if (Input.IsActionJustPressed(InputAction.ToggleFlashlight) && HasFlashlight)
             {
                 ToggleFlashlight();
             }

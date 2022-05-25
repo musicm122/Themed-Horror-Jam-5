@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using System.Linq;
+using Godot;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,8 +15,8 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 
             for (int i = 0; i <= nbPoints; i++)
             {
-                float anglePoint = Mathf.Deg2Rad(angleFrom + i * (angleTo - angleFrom) / nbPoints - 90f);
-                pointsArc[i] = center + new Vector2(Mathf.Cos(anglePoint), Mathf.Sin(anglePoint)) * radius;
+                float anglePoint = Mathf.Deg2Rad(angleFrom + (i * (angleTo - angleFrom) / nbPoints) - 90f);
+                pointsArc[i] = center + (new Vector2(Mathf.Cos(anglePoint), Mathf.Sin(anglePoint)) * radius);
             }
 
             for (int i = 0; i < nbPoints - 1; i++)
@@ -91,11 +92,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             }
         }
 
-        public static bool IsPlayer(this Node node)
-        {
-            var result = StringExtensions.Equals(node.Name, "player");
-            return result;
-        }
+        public static bool IsPlayer(this Node node) => node.Name.ToLower().Contains("player");
 
         public static void Pause(this Node node)
         {

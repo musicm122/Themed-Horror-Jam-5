@@ -7,8 +7,27 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class SceneTreeExtensions
     {
-        public static void AddItem(this SceneTree tree, string name, int amt = 1) =>
-            tree.CallGroup(Groups.Player, "AddItem", name, amt);
+        public static void AddItem(this SceneTree tree, string name, int amt = 1) {
+            var playerTuple = tree.GetPlayerNode();
+            if(!playerTuple.Item1)
+            {
+                GD.PushWarning("Player node not found");
+                return;
+            }
+            playerTuple.Item2.AddItem(name, amt);
+        }
+
+        public static void RemoveItem(this SceneTree tree, string name, int amt = 1) {
+            tree.CallGroup(Groups.Player, "RemoveItem", name, amt);
+            var playerTuple = tree.GetPlayerNode();
+            if (!playerTuple.Item1)
+            {
+                GD.PushWarning("Player node not found");
+                return;
+            }
+            playerTuple.Item2.RemoveItems(name, amt);
+        }
+            
 
         public static void AddMission(this SceneTree tree, string title) =>
             tree.CallGroup(Groups.Player, "AddMission", title);
@@ -33,7 +52,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         public static bool HasPlayerNode(this SceneTree tree) =>
             tree.CurrentScene.FindNode("Player") != null;
 
-        public static (bool, Player) GetPlayerNode(this SceneTree tree) =>
-            tree.HasPlayerNode() ? (true, tree.CurrentScene.FindNode("Player") as Player) : (false, null);
+        public static (bool, PlayerV2) GetPlayerNode(this SceneTree tree) =>
+            tree.HasPlayerNode() ? (true, tree.CurrentScene.FindNode("Player") as PlayerV2) : (false, null);
     }
 }

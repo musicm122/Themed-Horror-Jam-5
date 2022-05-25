@@ -25,6 +25,10 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         {
             RemoveItemEvent?.Invoke(this, new InventoryEventArgs(item));
         }
+        protected virtual void RaiseRemovingItem(Item item, int amt)
+        {
+            RemoveItemEvent?.Invoke(this, new InventoryEventArgs(item, amt));
+        }
 
         private List<Item> Items { get; } = new List<Item>();
 
@@ -40,6 +44,12 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
                 RaiseAddingItem(item);
                 Items.Add(item);
             }
+        }
+
+        public void RemoveAmount(string name, int amt = 1)
+        {
+            Items.RemoveAmt(i => i.Name == name, amt);
+            RaiseRemovingItem(new Item(name), amt);
         }
 
         public void Remove(string name)
@@ -79,6 +89,9 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
             }
             return retval;
         }
+
+        public bool HasItemWithAtLeast(string itemName, int amt)
+            => Items.Count(i => i.Name.Trim().Equals(itemName.Trim())) >= amt;
 
         public bool HasItemInInventory(string itemName)
             => Items.Any(i => i.Name.Trim().Equals(itemName.Trim()));

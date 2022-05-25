@@ -36,10 +36,10 @@ namespace ThemedHorrorJam5.Entities.Components
                 this.Print("Examinable count = ", examinableCollection.Count);
                 if (!examinableCollection.IsNullOrEmpty())
                 {
-                    examinableCollection.ForEach(e => e.Connect(nameof(OnInteractionBegin), this, nameof(OnInteractionBegin)));
-                    examinableCollection.ForEach(e => e.Connect(nameof(OnInteractingComplete), this, nameof(OnInteractingComplete)));
-                    examinableCollection.ForEach(e => e.Connect(nameof(OnInteractionAvailable), this, nameof(OnInteractionAvailable)));
-                    examinableCollection.ForEach(e => e.Connect(nameof(OnInteractionUnavailable), this, nameof(OnInteractionUnavailable)));
+                    examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteracting), this, nameof(OnInteractionBegin)));
+                    examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingComplete), this, nameof(OnInteractingComplete)));
+                    examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingAvailable), this, nameof(OnInteractionAvailable)));
+                    examinableCollection.ForEach(e => e.Connect(nameof(Examinable.PlayerInteractingUnavailable), this, nameof(OnInteractionUnavailable)));
                 }
             }
             catch (System.Exception)
@@ -87,6 +87,7 @@ namespace ThemedHorrorJam5.Entities.Components
         {
             this.PrintCaller();
             CanInteract = true;
+            examinable.CanInteract = true;
             ShowExamineNotification();
         }
 
@@ -94,17 +95,21 @@ namespace ThemedHorrorJam5.Entities.Components
         {
             this.PrintCaller();
             CanInteract = false;
+            examinable.CanInteract = false;
             HideExamineNotification();
         }
 
         public void OnInteractionBegin(Examinable examinable)
         {
+            this.PrintCaller();
+            examinable.CanInteract = false;
             CanInteract = false;
             this.InteractingCallback?.Invoke(examinable);
         }
 
         public void OnInteractingComplete(Examinable examinable)
         {
+            examinable.CanInteract = true;
             CanInteract = true;
             this.InteractingCompleteCallback?.Invoke(examinable);
         }
