@@ -29,6 +29,7 @@ script = ExtResource( 13 )
 
 [node name="UI" type="Node2D" parent="."]
 script = ExtResource( 12 )
+IsDebugging = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="UI"]
 
@@ -173,6 +174,7 @@ polygon = PoolVector2Array( -8, -16, -8, 16, 8, 16, 8, -16 )
 position = Vector2( 0, 2.38419e-07 )
 scale = Vector2( 0.196242, 0.203549 )
 script = ExtResource( 11 )
+IsDebugging = true
 
 [node name="Flashlight" type="Light2D" parent="Behaviors/Flashlight"]
 texture = ExtResource( 4 )

@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace ThemedHorrorJam5.Entities
 
         public Path2D Path { get; set; }
 
-        public Player Player { get; set; }
+        public Node2D Target { get; set; }
 
         public Line2D Line { get; set; }
 
@@ -143,7 +144,7 @@ namespace ThemedHorrorJam5.Entities
                 if (Owner.HasNode("Navigation2D"))
                 {
                     Navigation2D = (Navigation2D)Owner.GetNode("Navigation2D");
-                    NavPath = new Stack<Vector2>(Navigation2D.GetSimplePath(Position, Player.Position));
+                    NavPath = new Stack<Vector2>(Navigation2D.GetSimplePath(Position, Target.Position));
 
                     if (Line != null)
                     {
@@ -186,7 +187,7 @@ namespace ThemedHorrorJam5.Entities
                 if (CurrentCoolDownCounter <= 0f)
                 {
                     CurrentState = EnemyBehaviorStates.Patrol;
-                    Player = null;
+                    Target = null;
                     Cooldown.Text = "";
                 }
                 else
@@ -207,7 +208,7 @@ namespace ThemedHorrorJam5.Entities
             for (int i = 0; i < bodies.Count; i++)
             {
                 var body = (Node)bodies[i];
-                if (body.Name == "Player")
+                if (body.Name.ToLower().Contains("player"))
                 {
                     return true;
                 }
@@ -253,11 +254,11 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnVisionRadiusBodyEntered(Node body)
         {
-            if (body.Name == "Player")
+            if (body.Name.ToLower().Contains("player"))
             {
                 this.PrintCaller();
-                Player = (Player)body;
-                if (HasLineOfSight(Player.Position))
+                Target = (Node2D)body;
+                if (HasLineOfSight(Target.Position))
                 {
                     CurrentState = AggroBehavior;
                     CurrentCoolDownCounter = MaxCoolDownTime;
@@ -281,12 +282,12 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnVisionRadiusBodyExit(Node body)
         {
-            if (body.Name == "Player")
+            if (body.Name.ToLower().Contains("player"))
             {
-                Player = (Player)body;
+                Target = (Node2D)body;
                 this.PrintCaller();
                 CurrentCoolDownCounter = MaxCoolDownTime;
-                if (!HasLineOfSight(Player.Position))
+                if (!HasLineOfSight(Target.Position))
                 {
                     CurrentState = EnemyBehaviorStates.Patrol;
                     CurrentCoolDownCounter = MaxCoolDownTime;
