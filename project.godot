@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "DTS",
+"language": "GDScript",
+"path": "res://addons/dialogic/Localization/translation_service.gd"
+}, {
 "base": "Node",
 "class": "Dialogic",
 "language": "GDScript",
@@ -60,6 +65,7 @@ _global_script_classes=[ {
 "path": "res://addons/dialogic/Example Assets/History/HistoryRow.gd"
 } ]
 _global_script_class_icons={
+"DTS": "",
 "Dialogic": "",
 "DialogicAnimaPropertiesHelper": "",
 "DialogicAnimaResources": "",
@@ -75,7 +81,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Themed Horror Jam 5"
-run/main_scene="res://Scenes/PlayerV2_Test.tscn"
+run/main_scene="res://Scenes/EnemyAi.tscn"
 config/icon="res://icon.png"
 
 [display]
