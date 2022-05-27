@@ -1,6 +1,6 @@
 using System;
 using Godot;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {

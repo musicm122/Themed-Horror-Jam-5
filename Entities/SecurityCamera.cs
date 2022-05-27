@@ -2,7 +2,7 @@
 using Godot;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Constants;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {

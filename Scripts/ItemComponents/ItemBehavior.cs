@@ -1,4 +1,5 @@
 ﻿using Godot;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {

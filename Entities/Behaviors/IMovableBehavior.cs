@@ -19,8 +19,11 @@ namespace ThemedHorrorJam5.Entities.Components
         Vector2 GetMovementSpeed(bool isRunning, Vector2 direction);
         void Init(KinematicBody2D movableTarget);
         bool IsDebugPrintEnabled();
-        void MoveAndCollide(Vector2 force);
-        void MoveAndSlide(Vector2 force);
+        KinematicCollision2D MoveAndCollide(Vector2 force);
+        Vector2 MoveAndSlide(Vector2 force);
+        
+        int GetSlideCount();
+
         void _PhysicsProcess(float delta);
     }
 }

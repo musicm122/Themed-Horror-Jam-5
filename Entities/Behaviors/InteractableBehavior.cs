@@ -5,6 +5,7 @@ using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {

@@ -99,9 +99,6 @@ margin_right = 597.0
 margin_bottom = -90.0
 rect_pivot_offset = Vector2( 272, 88 )
 text = "Talk to NPC "
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label4" type="Label" parent="."]
 show_behind_parent = true

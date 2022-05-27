@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Godot;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
@@ -10,8 +11,8 @@ namespace ThemedHorrorJam5.Entities.Components
         public Action<int> HealthChangedCallback { get; set; }
         public Action<int> MaxHealthChangedCallback { get; set; }
 
-        public bool IsDead() => currentHealth<=0;
-        
+        public bool IsDead() => currentHealth <= 0;
+
         [Signal]
         public delegate void NoHealth();
 

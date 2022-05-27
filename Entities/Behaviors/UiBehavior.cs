@@ -3,6 +3,7 @@ using ThemedHorrorJam5.Scripts.Constants;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Mission;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 using ThemedHorrorJam5.Scripts.UI;
 
 namespace ThemedHorrorJam5.Entities.Components

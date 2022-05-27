@@ -1,5 +1,10 @@
-﻿namespace ThemedHorrorJam5.Scripts.GDUtils
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
+
+namespace ThemedHorrorJam5.Scripts.GDUtils
 {
+    
     public static class StringExtensions
     {
         public static bool IsNullOrEmpty(this string val) => string.IsNullOrEmpty(val);

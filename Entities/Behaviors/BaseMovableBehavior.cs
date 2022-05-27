@@ -1,7 +1,7 @@
 using System;
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
@@ -40,6 +40,7 @@ namespace ThemedHorrorJam5.Entities.Components
                 box.Push(PushSpeed * motion);
             }
         }
+        
 
         public virtual Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
                 isRunning ? direction.Normalized() * MoveSpeed * MoveMultiplier : direction.Normalized() * MoveSpeed;
@@ -57,9 +58,11 @@ namespace ThemedHorrorJam5.Entities.Components
             }
         }
 
-        public void MoveAndSlide(Vector2 force) => MovableTarget.MoveAndSlide(force);
+        public Vector2 MoveAndSlide(Vector2 force) => MovableTarget.MoveAndSlide(force);
 
-        public void MoveAndCollide(Vector2 force) => MovableTarget.MoveAndCollide(force);
+        public KinematicCollision2D MoveAndCollide(Vector2 force) => MovableTarget.MoveAndCollide(force);
+
+        public int GetSlideCount() => GetSlideCount();
 
         public void Init(KinematicBody2D movableTarget)
         {

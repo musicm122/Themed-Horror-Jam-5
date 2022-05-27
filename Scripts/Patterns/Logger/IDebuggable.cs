@@ -2,8 +2,9 @@ using Godot;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ThemedHorrorJam5.Scripts.ItemComponents
+namespace ThemedHorrorJam5.Scripts.Patterns.Logger
 {
+
     public interface IDebuggable<T> where T : Node
     {
         bool IsDebugPrintEnabled();
@@ -59,7 +60,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         {
             if (node.IsDebugPrintEnabled())
             {
-                GD.Print($"{node.OwnerName<T>()}:", messages);
+                GD.Print($"{node.OwnerName()}:", messages);
             }
         }
 
