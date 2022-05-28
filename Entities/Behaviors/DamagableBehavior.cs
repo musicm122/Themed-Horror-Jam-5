@@ -8,8 +8,8 @@ namespace ThemedHorrorJam5.Entities.Components
     public class DamagableBehavior : Node2D, IDebuggable<Node>
     {
         public bool IsDead = false;
-        
-        private PlayerState State { get; set; }
+
+        private Status Status { get; set; }
 
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -35,12 +35,8 @@ namespace ThemedHorrorJam5.Entities.Components
                 var hitBox = (HitBox)body;
                 var force = (this.Position - hitBox.Position) * hitBox.EffectForce;
                 OnTakeDamage?.Invoke(body, force);
-                State.PlayerStatus.CurrentHealth -= hitBox.Damage;
-                this.Print("Current Health =", State.PlayerStatus.CurrentHealth);
-                //TODO: Add Hit effect visual and sound
-                //Hurtbox.create_hit_effect()
-                //var playerHurtSound = PlayerHurtSound.instance()
-                //get_tree().current_scene.add_child(playerHurtSound)
+                Status.CurrentHealth -= hitBox.Damage;
+                this.Print("Current Health =", Status.CurrentHealth);
             }
         }
 
@@ -48,9 +44,6 @@ namespace ThemedHorrorJam5.Entities.Components
         {
             this.PrintCaller();
             this.IsDead = true;
-            //RefreshUI();
-            //IsDead = true;
-            //LockMovement();
             EmptyHealthBarCallback?.Invoke();
         }
 
@@ -76,16 +69,15 @@ namespace ThemedHorrorJam5.Entities.Components
         public void OnMaxHealthChanged(int health)
         {
             this.PrintCaller();
-            //RefreshUI();
             MaxHealthChangedCallback?.Invoke(health);
         }
 
         private void RegisterHealthSignals()
         {
             this.PrintCaller();
-            State.PlayerStatus.Connect(nameof(Status.NoHealth), this, nameof(OnEmptyHealthBar));
-            State.PlayerStatus.Connect(nameof(Status.HealthChanged), this, nameof(OnHealthChanged));
-            State.PlayerStatus.Connect(nameof(Status.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
+            Status.Connect(nameof(Components.Status.NoHealth), this, nameof(OnEmptyHealthBar));
+            Status.Connect(nameof(Components.Status.HealthChanged), this, nameof(OnHealthChanged));
+            Status.Connect(nameof(Components.Status.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
         }
 
         private void RegisterHurtBoxSignals()
@@ -94,26 +86,25 @@ namespace ThemedHorrorJam5.Entities.Components
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
             {
                 var arg = $"TryConnectSignal('area_entered', {this.Name}, {nameof(OnHurtboxAreaEntered)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
 
             if (!HurtBox.TryConnectSignal(nameof(Hurtbox.InvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted)))
             {
                 var arg = $"TryConnectSignal({nameof(Hurtbox.InvincibilityStarted)}, {this.Name}, {nameof(OnHurtboxInvincibilityStarted)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
 
             if (!HurtBox.TryConnectSignal(nameof(Hurtbox.InvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded)))
             {
                 var arg = $"TryConnectSignal({nameof(Hurtbox.InvincibilityEnded)}, {this.Name}, {nameof(OnHurtboxInvincibilityEnded)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} to player failed");
+                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
         }
 
-        public void Init(PlayerState state){
-            State = state;
+        public void Init(Status status){
+            Status = status;
             HurtBox = GetNode<Hurtbox>("Hurtbox");
-            //Status = GetNode<Status>("PlayerStats");
             RegisterHealthSignals();
             RegisterHurtBoxSignals();
         }
@@ -121,9 +112,6 @@ namespace ThemedHorrorJam5.Entities.Components
         public override void _Ready()
         {
             HurtBox = GetNode<Hurtbox>("Hurtbox");
-            //Status = GetNode<Status>("PlayerStats");
-            //RegisterHealthSignals();
-            //RegisterHurtBoxSignals();
         }
     }
 }
