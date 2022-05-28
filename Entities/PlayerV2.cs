@@ -41,7 +41,7 @@ namespace ThemedHorrorJam5.Entities
             Movable.Init(this);
 
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
-            Damagable.Init(State);
+            Damagable.Init(PlayerStatus);
 
             Interactable = GetNode<InteractableBehavior>("Behaviors/Interactable");
             Interactable.Init(State);

@@ -4,7 +4,6 @@
 [ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Entities/Components/Target.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Art/Environment/Light/light_mask.png" type="Texture" id=4]
-[ext_resource path="res://icon.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/UI/Hud.cs" type="Script" id=6]
 [ext_resource path="res://Entities/PauseMenu.cs" type="Script" id=7]
 [ext_resource path="res://Entities/Behaviors/InteractableBehavior.cs" type="Script" id=8]
@@ -13,16 +12,17 @@
 [ext_resource path="res://Entities/Behaviors/FlashlightBehavior.cs" type="Script" id=11]
 [ext_resource path="res://Entities/Behaviors/UiBehavior.cs" type="Script" id=12]
 [ext_resource path="res://Entities/PlayerV2.cs" type="Script" id=13]
+[ext_resource path="res://Assets/Art/UI/exclamation.png" type="Texture" id=14]
 
 [sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0, 0, 0, 1 )
 corner_radius_bottom_left = 8
 
 [sub_resource type="CapsuleShape2D" id=1]
+radius = 6.0
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 9.0
-height = 0.0
+radius = 6.0
 
 [node name="PlayerRoot" type="KinematicBody2D"]
 script = ExtResource( 13 )
@@ -184,9 +184,9 @@ energy = 1.2
 script = ExtResource( 8 )
 
 [node name="ExaminableNotification" type="Sprite" parent="Behaviors/Interactable"]
-position = Vector2( 0, -40 )
-scale = Vector2( 0.25, 0.375 )
-texture = ExtResource( 5 )
+position = Vector2( -4.76837e-07, -35 )
+scale = Vector2( 0.23, 0.43 )
+texture = ExtResource( 14 )
 
 [node name="Damagable" type="Node2D" parent="Behaviors"]
 script = ExtResource( 9 )
@@ -196,10 +196,6 @@ IsDebugging = true
 
 [node name="CollisionShape" parent="Behaviors/Damagable/Hurtbox" index="0"]
 shape = SubResource( 2 )
-
-[node name="PlayerStats" parent="Behaviors/Damagable" instance=ExtResource( 1 )]
-MaxHealth = 5
-CurrentHealth = 5
 
 [node name="Movable" type="Node2D" parent="Behaviors"]
 script = ExtResource( 10 )

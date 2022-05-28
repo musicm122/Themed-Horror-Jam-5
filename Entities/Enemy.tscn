@@ -1,0 +1,72 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Entities/Components/HitBox.cs" type="Script" id=1]
+[ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=2]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 6, 18.5 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 6, 18.5 )
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 0.911734
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 7.0
+height = 24.0
+
+[node name="Enemy" type="KinematicBody2D"]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="HitBox" type="Area2D" parent="."]
+script = ExtResource( 1 )
+EffectForce = 10.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2( 0, 2.5 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 2.5 )
+shape = SubResource( 1 )
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+color = Color( 0.462745, 0.47451, 0.678431, 1 )
+polygon = PoolVector2Array( -8, -16, -8, 24, 0, 24, 8, 24, 7.99999, -6.26688, 8, -16, 0, -24 )
+
+[node name="VisionRadius" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VisionRadius"]
+position = Vector2( 99, -11 )
+rotation = -0.0284629
+scale = Vector2( 95.0705, -46.3314 )
+shape = SubResource( 2 )
+
+[node name="Polygon2D2" type="Polygon2D" parent="VisionRadius"]
+position = Vector2( 14.2657, 2 )
+scale = Vector2( 1.03321, 1 )
+color = Color( 1, 0.913725, 0, 0.486275 )
+polygon = PoolVector2Array( -8, -16, -8, -12, 109.111, 34, 149.761, 18, 162.634, -6.25381, 166.215, -13, 146.858, -46, 110.079, -61 )
+
+[node name="Cooldown" type="Label" parent="."]
+margin_left = -24.0
+margin_top = -32.0
+margin_right = 24.0
+margin_bottom = -18.0
+
+[node name="Behaviors" type="Node2D" parent="."]
+
+[node name="Damagable" type="Node2D" parent="Behaviors"]
+
+[node name="Hurtbox" parent="Behaviors/Damagable" instance=ExtResource( 2 )]
+
+[node name="CollisionShape" parent="Behaviors/Damagable/Hurtbox" index="0"]
+position = Vector2( 0, 1 )
+shape = SubResource( 4 )
+
+[node name="Movable" type="Node2D" parent="Behaviors"]
+
+[editable path="Behaviors/Damagable/Hurtbox"]

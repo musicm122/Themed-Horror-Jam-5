@@ -30,10 +30,10 @@ namespace ThemedHorrorJam5.Entities
 
         public Label Cooldown { get; set; }
 
-
-
         public void Init()
         {
+            Damagable.Init(Status);
+            
             stateMachine.AddState(new IdleEnemyState(this));
             stateMachine.AddState(new PatrolEnemyState(this));
             stateMachine.AddState(new ChaseEnemyState(this));
