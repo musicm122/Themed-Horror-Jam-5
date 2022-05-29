@@ -2,6 +2,7 @@ using Godot;
 using System;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
@@ -58,6 +59,7 @@ namespace ThemedHorrorJam5.Entities
         {
             Status = GetNode<EnemyStatus>("Status");
             Status.VisionRadius = GetNode<Area2D>("VisionRadius");
+            
             Status.Cooldown = GetNode<Label>("Cooldown");
             Status.DebugLabel = this.GetNode<Label>("DebugLabel");
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");

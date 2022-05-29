@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ThemedHorrorJam5.Scripts.Extensions;
 using Godot;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
@@ -7,6 +8,8 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public class EnemyStatus : Status
     {
+        public Action TargetVisibleCallback {get;set;}
+
         public Area2D VisionRadius { get; set; }
 
         public NodePath PatrolPath { get; set; }
@@ -61,6 +64,33 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void Init(NodePath patrolPath){
             PatrolPath = patrolPath;
+            // VisionRadius.ConnectBodyEntered(this, nameof(VisionRadius.OnVisionRadiusBodyEntered));
+            // VisionRadius.ConnectBodyExited(this, nameof(OnVisionRadiusBodyExit));
         }
+
+        // private void OnVisionRadiusBodyEntered(Node body)
+        // {
+        //     if (body.Name.ToLower().Contains("player"))
+        //     {
+        //         TargetVisibleCallback?.Invoke();
+        //         this.PrintCaller();
+        //         Target = (Node2D)body;
+        //         if (HasLineOfSight(Target.Position))
+        //         {
+                    
+        //             CurrentState = AggroBehavior;
+        //             CurrentCoolDownCounter = MaxCoolDownTime;
+        //         }
+        //     }
+        // }
+
+        // public bool HasLineOfSight(Vector2 point)
+        // {
+        //     //if (!CanCheckFrame()) return LineOfSight;
+        //     var spaceState = GetWorld2d().DirectSpaceState;
+        //     var result = spaceState.IntersectRay(GlobalTransform.origin, point, null, CollisionMask);
+        //     LineOfSight = result?.Count > 0;
+        //     return LineOfSight;
+        // }
     }
 }

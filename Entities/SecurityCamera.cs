@@ -1,6 +1,5 @@
-﻿using System.Globalization;
-using Godot;
-using ThemedHorrorJam5.Entities.Components;
+﻿using Godot;
+using ThemedHorrorJam5.Entities.Behaviors;
 using ThemedHorrorJam5.Scripts.Constants;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
