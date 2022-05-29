@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Entities/Enemy.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/Level1.cs" type="Script" id=8]
+[ext_resource path="res://Entities/PlayerV2.tscn" type="PackedScene" id=10]
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -354.896, 74.1996, 0, 0, 0, 0, -333.167, -20.2363, 0, 0, 0, 0, -405.595, -26.9817, 0, 0, 0, 0, -340.41, -87.6905, 0, 0, 0, 0, -202.798, -47.2179, 0, 0, 0, 0, -40, -112, 0, 0, 0, 0, -86.9132, -33.7271, 0, 0, 0, 0, -86.9132, 26.9817, 0, 0, 0, 0, -43.4566, 20.2363, 0, 0, 0, 0, -101.399, 80.945, 0, 0, 0, 0, -224.526, 33.7271, 0, 0, 0, 0, -354.896, 74.1996 )
+}
+
+[node name="Level1" type="Node2D"]
+position = Vector2( -200, 48 )
+script = ExtResource( 8 )
+PatrolPath = NodePath("Enemy2_Path2D")
+PatrolPathFollow2D = NodePath("Enemy2_Path2D/Enemy2_PathFollow2D")
+
+[node name="Player" parent="." groups=["Movable", "Player", "targets"] instance=ExtResource( 10 )]
+position = Vector2( -568, -49 )
+
+[node name="Enemy2_Path2D" type="Path2D" parent="."]
+scale = Vector2( 1.10455, 1.18599 )
+curve = SubResource( 2 )
+
+[node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Enemy2_Path2D"]
+position = Vector2( -354.896, 74.1996 )
+rotation = -1.34464
+
+[node name="Enemy" parent="." groups=["Movable"] instance=ExtResource( 5 )]
+position = Vector2( -344, -40 )
+PatrolPath = NodePath("../Enemy2_Path2D")
+
+[node name="Line2D" type="Line2D" parent="."]
+visible = false
+default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )

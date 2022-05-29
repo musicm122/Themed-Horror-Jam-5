@@ -160,6 +160,6 @@ RotationSpeed = 1.1
 MaxRotationMovementTime = 1.0
 PauseRotationTime = 1.0
 
-[node name="Enemy" parent="." instance=ExtResource( 5 )]
+[node name="Enemy" parent="." groups=["Movable"] instance=ExtResource( 5 )]
 position = Vector2( -200, -34 )
 PatrolPath = NodePath("../Enemy2_Path2D")
