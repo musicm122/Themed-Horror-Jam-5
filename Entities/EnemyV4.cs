@@ -1,10 +1,7 @@
-using System.Linq;
 using Godot;
 using System;
-using System.Collections.Generic;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
@@ -16,6 +13,10 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         public bool IsDebugging { get; set; }
 
+        [Export]
+        public NodePath PatrolPath { get; set; }
+
+        [Export]
         public EnemyBehaviorStates DefaultState = EnemyBehaviorStates.Idle;
 
         public bool IsDebugPrintEnabled() => IsDebugging;
@@ -32,8 +33,6 @@ namespace ThemedHorrorJam5.Entities
 
         public void Init()
         {
-            Damagable.Init(Status);
-            
             stateMachine.AddState(new IdleEnemyState(this));
             stateMachine.AddState(new PatrolEnemyState(this));
             stateMachine.AddState(new ChaseEnemyState(this));
@@ -57,9 +56,29 @@ namespace ThemedHorrorJam5.Entities
 
         public override void _Ready()
         {
-            base._Ready();
+            Status = GetNode<EnemyStatus>("Status");
             Status.VisionRadius = GetNode<Area2D>("VisionRadius");
             Status.Cooldown = GetNode<Label>("Cooldown");
+            Status.DebugLabel = this.GetNode<Label>("DebugLabel");
+            Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
+            Movable = GetNode<EnemyMovableBehavior>("Behaviors/Movable");
+            Cooldown = GetNode<Label>("Cooldown");
+            
+
+            if (this.PatrolPath != null)
+            {
+                Status.Init(this.PatrolPath);
+            }else{
+                Status.DebugLabel.Text = "this.PatrolPath is null";
+            }
+            Damagable.Init(Status);
+            Movable.Init(this);
+            Init();
+        }
+
+        public override void _PhysicsProcess(float delta)
+        {
+            stateMachine.Update(delta);
         }
     }
 

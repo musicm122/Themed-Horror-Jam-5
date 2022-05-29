@@ -81,7 +81,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Themed Horror Jam 5"
-run/main_scene="res://Scenes/TestPuzzleMechanics.tscn"
+run/main_scene="res://Scenes/EnemyAi.tscn"
 config/icon="res://icon.png"
 
 [display]

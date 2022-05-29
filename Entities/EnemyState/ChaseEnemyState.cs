@@ -12,10 +12,10 @@ namespace ThemedHorrorJam5.Entities
 
         public ChaseEnemyState(EnemyV4 enemy)
         {
-            this.Name = EnemyBehaviorStates.Idle.GetDescription();
+            this.Name = EnemyBehaviorStates.ChasePlayer.GetDescription();
             Enemy = enemy;
-            this.OnEnter += () => this.Logger.Debug("IdleEnemyState OnEnter called");
-            this.OnExit += () => this.Logger.Debug("IdleEnemyState Exit called");
+            this.OnEnter += () => this.Logger.Debug("ChaseEnemyState OnEnter called");
+            this.OnExit += () => this.Logger.Debug("ChaseEnemyState Exit called");
             this.OnFrame += ChasePlayer;
         }
 

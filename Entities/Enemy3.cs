@@ -115,13 +115,11 @@ namespace ThemedHorrorJam5.Entities
             }
             Velocity = MoveAndSlide(Velocity);
             UpdateVisionConeLocation(Velocity);
-            
-
         }
 
-        void UpdateVisionConeLocation(Vector2 newVelocity) 
+        void UpdateVisionConeLocation(Vector2 newVelocity)
         {
-            if (newVelocity.x < 0) 
+            if (newVelocity.x < 0)
             {
                 VisionRadius.Scale = new Vector2(-1, VisionRadius.Scale.y);
             }

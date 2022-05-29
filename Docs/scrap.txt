@@ -1,0 +1,58 @@
+Enemy shoot mechanic
+Player hiding mechanic
+Title screen
+- Nav to Level 1
+- Quit Game
+- Audio
+
+Walls
+
+Doors
+- Open\Close
+- Unlockable With Key
+
+Fences
+
+------------------
+Backlog:
+
+Enemy animation (Pig)
+- Idle
+- Walk
+- Shoot
+
+Ending screen
+Win condition
+
+Player animation
+- Walk
+- Idle
+- Hop\Scale obstacles
+- Death
+- Duck
+
+
+Opening sequence
+Player fence hopping mechanic
+Ending sequence
+Music
+- Death Song
+- Enemy Aggro Song
+- Ambient Env
+- Title Song
+- Ending Song
+
+Dynamic horror audio
+Level Lighting
+- Environment lights
+- Player Flashlight
+- Enemy Flashlight
+
+Dog\Drone Enemy Animation
+- Idle
+- Walk
+
+City art design
+Sound effect
+
+

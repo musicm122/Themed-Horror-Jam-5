@@ -6,11 +6,11 @@ namespace ThemedHorrorJam5.Scripts.Patterns.Logger
     {
         public LogLevelOutput Level {get;set;}
         
-        void Info(params object[] messages);
-        void Debug(params object[] messages);
-        void Warning(params object[] messages);
-        void Error(params object[] messages);
+        void Info(params string[] messages);
+        void Debug(params string[] messages);
+        void Warning(params string[] messages);
+        void Error(params string[] messages);
         void Error(Exception ex);
-        void Error(Exception ex, params object[] messages);
+        void Error(Exception ex, params string[] messages);
     }
 }

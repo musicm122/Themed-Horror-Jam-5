@@ -8,21 +8,29 @@ namespace ThemedHorrorJam5.Scripts.Patterns.Logger
     {
         public GDLogger(LogLevelOutput level = LogLevelOutput.Warning) => Level = level;
 
+        [Export]
         public LogLevelOutput Level { get; set; }
 
-        public void Debug(params object[] messages)
+        public void Debug(params string[] messages)
         {
             if (Level <= LogLevelOutput.Debug)
             {
-                GD.Print("Debug:", messages);
+                foreach (string message in messages)
+                {
+                    GD.Print("Debug:", message);
+                }
+
             }
         }
 
-        public void Error(params object[] messages)
+        public void Error(params string[] messages)
         {
             if (Level <= LogLevelOutput.Error)
             {
-                GD.PrintErr("Error:", messages);
+                foreach (string message in messages)
+                {
+                    GD.PrintErr("Error:", message);
+                }
             }
 
         }
@@ -35,27 +43,37 @@ namespace ThemedHorrorJam5.Scripts.Patterns.Logger
             }
         }
 
-        public void Error(Exception ex, params object[] messages)
+        public void Error(Exception ex, params string[] messages)
         {
             if (Level <= LogLevelOutput.Error)
             {
-                GD.PrintErr("Error:", messages);
+                foreach (string message in messages)
+                {
+                    GD.PrintErr("Error:", message);
+                }
             }
         }
 
-        public void Info(params object[] messages)
+        public void Info(params string[] messages)
         {
             if (Level <= LogLevelOutput.Info)
             {
-                GD.Print("Info:", messages);
+                foreach (string message in messages)
+                {
+                    GD.Print("Info:", message);
+                }
             }
         }
 
-        public void Warning(params object[] messages)
+        public void Warning(params string[] messages)
         {
             if (Level <= LogLevelOutput.Warning)
             {
-                GD.Print("Warning:", messages);
+
+                foreach (string message in messages)
+                {
+                    GD.Print("Warning:", message);
+                }
             }
         }
     }

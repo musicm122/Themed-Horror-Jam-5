@@ -74,6 +74,7 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
             // state.
             if (CurrentState == null)
             {
+                Logger.Warning("Current state is null. Transitioning to initial state");
                 TransitionTo(InitialState);
             }
 

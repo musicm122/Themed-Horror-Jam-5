@@ -2,6 +2,7 @@ using Godot;
 using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Entities.Components;
 
 namespace ThemedHorrorJam5.Entities
 {
@@ -9,33 +10,52 @@ namespace ThemedHorrorJam5.Entities
     {
         private EnemyV4 Enemy { get; set; }
 
+        private EnemyStatus Status => this.Enemy.Status;
+
+        private EnemyMovableBehavior Movable => this.Enemy.Movable;
+
         public PatrolEnemyState(EnemyV4 enemy)
         {
-            this.Name = EnemyBehaviorStates.Idle.GetDescription();
+            this.Logger.Level = Scripts.Patterns.Logger.LogLevelOutput.Debug;
+            this.Name = EnemyBehaviorStates.Patrol.GetDescription();
             Enemy = enemy;
-            this.OnEnter += () => this.Logger.Debug("IdleEnemyState OnEnter called");
-            this.OnExit += () => this.Logger.Debug("IdleEnemyState Exit called");
+
+            this.OnEnter += () => this.Logger.Debug("PatrolEnemyState OnEnter called");
+            this.OnExit += () => this.Logger.Debug("PatrolEnemyState Exit called");
             this.OnFrame += Patrol;
+
+            if (Status.PatrolPath != null)
+            {
+                Status.Path = Enemy.GetNode<Path2D>(Status.PatrolPath);
+                Status.PatrolPoints = Status.Path.Curve.GetBakedPoints();
+            }
+            else
+            {
+                Status.DebugLabel.Text += "Status.PatrolPath is null";
+            }
         }
-        
+
         private void Patrol(float delta)
         {
-            if (Enemy.Status.PatrolPath == null || !Enemy.Movable.CanMove) return;
-            var target = Enemy.Status.PatrolPoints[Enemy.Status.PatrolIndex];
-            if (Enemy.Movable.Position.DistanceTo(target) <= 1)
+            if (Status.PatrolPath == null || !Movable.CanMove) return;
+
+            var target = Status.PatrolPoints[Status.PatrolIndex];
+
+            if (Enemy.Position.DistanceTo(target) <= 1)
             {
-                Enemy.Status.PatrolIndex = Mathf.Wrap(Enemy.Status.PatrolIndex + 1, 0, Enemy.Status.PatrolPoints.Length);
-                target = Enemy.Status.PatrolPoints[Enemy.Status.PatrolIndex];
-            }
-            Enemy.Movable.Velocity = (target - Enemy.Movable.Position).Normalized() * Enemy.Movable.MoveSpeed;
-            if (Enemy.Movable.GetSlideCount() > 0)
-            {
-                Enemy.Movable.HandleMovableObstacleCollision(Enemy.Movable.Velocity);
+                Status.PatrolIndex = Mathf.Wrap(Status.PatrolIndex + 1, 0, Status.PatrolPoints.Length);
+                target = Status.PatrolPoints[Status.PatrolIndex];
             }
 
-            Enemy.Movable.Velocity = Enemy.Movable.MoveAndSlide(Enemy.Movable.Velocity);
+            Movable.Velocity = (target - Enemy.Position).Normalized() * Movable.MoveSpeed;
 
-            Enemy.Status.UpdateVisionConeLocation(Enemy.Movable.Velocity);
+            if (Movable.GetSlideCount() > 0)
+            {
+                Movable.HandleMovableObstacleCollision(Movable.Velocity);
+            }
+
+            Movable.Velocity = Movable.MoveAndSlide(Movable.Velocity);
+            Status.UpdateVisionConeLocation(Movable.Velocity);
         }
     }
 }

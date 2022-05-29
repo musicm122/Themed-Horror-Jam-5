@@ -9,10 +9,11 @@ namespace ThemedHorrorJam5.Entities.Components
     {
         public Area2D VisionRadius { get; set; }
 
-        [Export]
         public NodePath PatrolPath { get; set; }
         
         public Label Cooldown { get; set; }
+
+        public Label DebugLabel { get; set; }
 
         public Stack<Vector2> NavPath { get; set; }
 
@@ -58,5 +59,8 @@ namespace ThemedHorrorJam5.Entities.Components
             return false;
         }
 
+        public void Init(NodePath patrolPath){
+            PatrolPath = patrolPath;
+        }
     }
 }

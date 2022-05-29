@@ -20,7 +20,7 @@ color = Color( 0.0431373, 0.0156863, 0.105882, 0.74902 )
 [node name="HealthKit" parent="." instance=ExtResource( 10 )]
 position = Vector2( 736, 56 )
 
-[node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 11 )]
+[node name="Player" parent="." groups=["Player"] instance=ExtResource( 11 )]
 position = Vector2( 648, -40 )
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]

@@ -40,7 +40,6 @@ namespace ThemedHorrorJam5.Entities.Components
                 box.Push(PushSpeed * motion);
             }
         }
-        
 
         public virtual Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
                 isRunning ? direction.Normalized() * MoveSpeed * MoveMultiplier : direction.Normalized() * MoveSpeed;
@@ -62,7 +61,7 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public KinematicCollision2D MoveAndCollide(Vector2 force) => MovableTarget.MoveAndCollide(force);
 
-        public int GetSlideCount() => GetSlideCount();
+        public int GetSlideCount() => MovableTarget.GetSlideCount();
 
         public void Init(KinematicBody2D movableTarget)
         {
