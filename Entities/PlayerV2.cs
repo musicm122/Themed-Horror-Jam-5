@@ -3,11 +3,11 @@ using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities
+namespace ThemedHorrorJam5.Entities.GSAI
 {
     public class PlayerV2 : KinematicBody2D, IDebuggable<Node>
     {
-        public PlayerState State {get;set;}
+        public PlayerState State { get; set; }
 
         public DamagableBehavior Damagable { get; private set; }
 
@@ -26,12 +26,13 @@ namespace ThemedHorrorJam5.Entities
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-
         public override void _Ready()
         {
+
             PlayerStatus = GetNode<Status>("PlayerStatus");
 
-            State = new PlayerState {
+            State = new PlayerState
+            {
                 PlayerStatus = PlayerStatus,
                 Inventory = new Inventory(),
                 MissionManager = new MissionManager()
@@ -57,17 +58,20 @@ namespace ThemedHorrorJam5.Entities
             Interactable.InteractingCallback += (e) => Movable.CanMove = false;
             Interactable.InteractingCompleteCallback += (e) => Movable.CanMove = true;
 
-            Damagable.OnTakeDamage += (obj, force) => {
+            Damagable.OnTakeDamage += (obj, force) =>
+            {
                 Movable.MoveAndSlide(force);
                 Ui.RefreshUI();
             };
         }
 
-        public void AddItem(string name, int amt){
+        public void AddItem(string name, int amt)
+        {
             Ui.AddItem(name, amt);
         }
 
-        public void RemoveItems(string name, int amt) {
+        public void RemoveItems(string name, int amt)
+        {
             Ui.RemoveItems(name, amt);
         }
 
