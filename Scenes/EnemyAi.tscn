@@ -36,7 +36,6 @@ PatrolPathFollow2D = NodePath("Enemy2_Path2D/Enemy2_PathFollow2D")
 position = Vector2( -568, -49 )
 
 [node name="Item_Flashlight" parent="." instance=ExtResource( 1 )]
-visible = false
 position = Vector2( -192, -64 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
@@ -114,13 +113,7 @@ position = Vector2( -104, 48 )
 [node name="Enemy1_Path" type="Path2D" parent="."]
 curve = SubResource( 1 )
 
-[node name="Enemy1" parent="." groups=["Movable"] instance=ExtResource( 2 )]
-visible = false
-Enable = true
-PatrolPath = NodePath("../Enemy1_Path")
-
 [node name="Enemy2_Path2D" type="Path2D" parent="."]
-visible = false
 scale = Vector2( 1.10455, 1.18599 )
 curve = SubResource( 2 )
 
@@ -128,24 +121,15 @@ curve = SubResource( 2 )
 position = Vector2( -336, 88 )
 rotation = -2.61153
 
+[node name="Enemy1" parent="." groups=["Movable"] instance=ExtResource( 2 )]
+Enable = true
+PatrolPath = NodePath("../Enemy1_Path")
+
 [node name="Enemy3" parent="." groups=["Movable"] instance=ExtResource( 3 )]
 position = Vector2( 88, -69 )
 Enable = true
 PatrolPath = NodePath("../Enemy2_Path2D")
 AggroBehavior = 3
-
-[node name="Line2D" type="Line2D" parent="."]
-default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )
-
-[node name="Flashlight" parent="." instance=ExtResource( 1 )]
-position = Vector2( -440, 184 )
-IsDebugging = true
-
-[node name="Light2D" type="Light2D" parent="Flashlight"]
-position = Vector2( -2, -48 )
-scale = Vector2( 0.106986, 0.0992954 )
-texture = ExtResource( 7 )
-energy = 4.0
 
 [node name="SecurityCamera" parent="." groups=["Movable"] instance=ExtResource( 4 )]
 position = Vector2( -752, -171 )
@@ -163,3 +147,25 @@ PauseRotationTime = 1.0
 [node name="Enemy" parent="." groups=["Movable"] instance=ExtResource( 5 )]
 position = Vector2( -200, -34 )
 PatrolPath = NodePath("../Enemy2_Path2D")
+
+[node name="Flashlight" parent="." instance=ExtResource( 1 )]
+position = Vector2( -440, 184 )
+IsDebugging = true
+
+[node name="Light2D" type="Light2D" parent="Flashlight"]
+position = Vector2( -2, -48 )
+scale = Vector2( 0.106986, 0.0992954 )
+texture = ExtResource( 7 )
+energy = 4.0
+
+[node name="Line2D" type="Line2D" parent="."]
+default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MousePosition" type="Label" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -216.0
+margin_right = 496.0
+text = "G"

@@ -4,7 +4,7 @@ using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Scenes
 {
-    public class Level1 : Node2D
+    public class EnemyAILevel : Node2D
     {
         public PlayerV2 Player { get; set; }
 
@@ -28,9 +28,9 @@ namespace ThemedHorrorJam5.Scenes
         public override void _Ready()
         {
             MousePosition = GetNode<Label>("CanvasLayer/MousePosition");
-            Enemy = GetNode<EnemyV4>("Enemy");
-            Enemy3 = GetNode<Enemy3>("Enemy3");
-
+            Enemy = GetNode<EnemyV4>("Enemies/Enemy");
+            Enemy3 = GetNode<Enemy3>("Enemies/Enemy3");
+            
             Player = this.GetTree().GetPlayerNode().Item2;
 
             if (PatrolPath != null)

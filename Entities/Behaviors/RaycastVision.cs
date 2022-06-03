@@ -20,7 +20,7 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         public bool CheckThisFrame = false;
 
         public float MaxViewDistance { get; set; } = 100;
-        
+
         public override void _Ready()
         {
             CheckThisFrame = CanCheckFrame();
@@ -42,7 +42,7 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         public bool IsDebugPrintEnabled() => IsDebugging;
 
         public Node2D? Target { get; set; }
-        public Action<Node2D> OnTargetSeen {get;set;}
+        public Action<Node2D> OnTargetSeen { get; set; }
         public Action<Node2D> OnTargetOutOfSight { get; set; }
 
         public bool CanSeeTarget() => Target != null;
@@ -73,5 +73,10 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         }
 
         public bool CanCheckFrame(int interval = 2) => new Random().Next() % interval == 0;
+
+        public void UpdateFacingDirection(Vector2 newVelocity)
+        {
+            this.Rotation = this.Position.AngleToPoint(newVelocity);
+        }
     }
 }

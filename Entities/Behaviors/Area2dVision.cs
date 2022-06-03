@@ -1,6 +1,7 @@
 using System;
 using Godot;
 using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Behaviors
@@ -16,6 +17,12 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         public bool IsDebugging { get; set; }
 
         public bool LineOfSight = false;
+
+        public override void _Ready()
+        {
+            this.ConnectBodyEntered(this, nameof(OnVisionRadiusBodyEntered));
+            this.ConnectBodyExited(this, nameof(OnVisionRadiusBodyExit));
+        }
 
         private void OnVisionRadiusBodyEntered(Node body)
         {
@@ -77,6 +84,40 @@ namespace ThemedHorrorJam5.Entities.Behaviors
             var result = spaceState.IntersectRay(GlobalTransform.origin, point, null, CollisionMask);
             LineOfSight = result?.Count > 0;
             return LineOfSight;
+        }
+
+        public void UpdateFacingDirection(Vector2 newVelocity)
+        {
+            this.Rotation = this.Position.AngleToPoint(newVelocity);
+
+            // if (newVelocity.x < 0)
+            // {
+            //     Scale = new Vector2(-1, Scale.y);
+            // }
+            // else
+            // {
+            //     Scale = new Vector2(1, Scale.y);
+            // }
+            // if (newVelocity.y < 0)
+            // {
+            //     Scale = new Vector2(1, Scale.y);
+            // }
+        }
+
+
+        public bool IsPlayerInSight()
+        {
+            var bodies = GetOverlappingBodies();
+            if (bodies == null || bodies.Count == 0) return false;
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                var body = (Node)bodies[i];
+                if (body.Name.ToLower().Contains("player"))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

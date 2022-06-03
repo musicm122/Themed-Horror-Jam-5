@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ThemedHorrorJam5.Entities.Behaviors;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
 using ThemedHorrorJam5.Scripts.Extensions;
@@ -28,9 +29,9 @@ namespace ThemedHorrorJam5.Entities
 
         public EnemyMovableBehavior Movable { get; set; }
 
-        private readonly StateMachine stateMachine = new StateMachine();
-
         public Label Cooldown { get; set; }
+
+        private readonly StateMachine stateMachine = new();
 
         public void Init()
         {
@@ -58,19 +59,26 @@ namespace ThemedHorrorJam5.Entities
         public override void _Ready()
         {
             Status = GetNode<EnemyStatus>("Status");
-            Status.VisionRadius = GetNode<Area2D>("VisionRadius");
-            
+            Status.VisionManager = GetNode<Area2dVision>("Vision");
+
+            if (Status.VisionManager != null)
+            {
+                Status.VisionManager.OnTargetSeen += OnTargetDetection;
+                Status.VisionManager.OnTargetOutOfSight += OnTargetLost;
+            }
+
             Status.Cooldown = GetNode<Label>("Cooldown");
             Status.DebugLabel = this.GetNode<Label>("DebugLabel");
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
             Movable = GetNode<EnemyMovableBehavior>("Behaviors/Movable");
             Cooldown = GetNode<Label>("Cooldown");
-            
 
             if (this.PatrolPath != null)
             {
                 Status.Init(this.PatrolPath);
-            }else{
+            }
+            else
+            {
                 Status.DebugLabel.Text = "this.PatrolPath is null";
             }
             Damagable.Init(Status);
@@ -78,10 +86,23 @@ namespace ThemedHorrorJam5.Entities
             Init();
         }
 
+        private void OnTargetLost(Node2D target)
+        {
+            Status.Target = null;
+            Status.CurrentCoolDownCounter = Status.MaxCoolDownTime;
+        }
+
+        private void OnTargetDetection(Node2D target)
+        {
+            Status.Target = target;
+            Status.CurrentCoolDownCounter = Status.MaxCoolDownTime;
+            this.stateMachine.TransitionTo(EnemyBehaviorStates.ChasePlayer);
+            
+        }
+
         public override void _PhysicsProcess(float delta)
         {
             stateMachine.Update(delta);
         }
     }
-
 }

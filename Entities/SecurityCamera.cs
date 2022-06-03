@@ -1,12 +1,11 @@
 ﻿using Godot;
 using ThemedHorrorJam5.Entities.Behaviors;
+using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 using ThemedHorrorJam5.Scripts.Constants;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public enum CameraState { Idle, Warning, Aggro, Damaged, Stun }
-
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
         private bool IsStartMovement = true;
@@ -19,7 +18,7 @@ namespace ThemedHorrorJam5.Entities
 
         public CameraState CurrentState = CameraState.Idle;
 
-        public RaycastVision VisionManager { get; set; }
+        public IVision VisionManager { get; set; }
 
         public Node2D PlayerRef { get; set; }
 
@@ -32,7 +31,7 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         public float RotationSpeed { get; set; } = 80f;
 
-        public Node2D Target { get; set; }
+        public Node2D? Target { get; set; }
 
         public Polygon2D CameraSprite { get; set; }
 

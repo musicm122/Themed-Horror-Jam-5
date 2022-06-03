@@ -1,5 +1,6 @@
 ﻿using Godot;
 using System.Collections.Generic;
+using System.Linq;
 using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 
@@ -53,5 +54,19 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 
         public static (bool, PlayerV2) GetPlayerNode(this SceneTree tree) =>
             tree.HasPlayerNode() ? (true, tree.CurrentScene.FindNode("Player") as PlayerV2) : (false, null);
+
+
+        public static (bool, List<Navigation2D>?) GetNavigation2dNodes(this SceneTree tree)
+        {
+            var navNodes = tree.GetNodesByType<Navigation2D>();
+            if (navNodes.Count > 0)
+            {
+                return (true, navNodes);
+            }
+            else
+            {
+                return (false, default(List<Navigation2D>));
+            }
+        }
     }
 }

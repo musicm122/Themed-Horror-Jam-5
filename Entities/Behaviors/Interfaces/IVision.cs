@@ -12,6 +12,8 @@ namespace ThemedHorrorJam5.Entities.Behaviors.Interfaces
         Node2D Target { get; set; }
 
         public bool CanCheckFrame(int interval = 2) => new Random().Next() % interval == 0;
+
+        void UpdateFacingDirection(Vector2 newVelocity);
         
         bool CanSeeTarget();
     }

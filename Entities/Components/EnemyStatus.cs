@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using ThemedHorrorJam5.Scripts.Extensions;
 using Godot;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
+using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
     public class EnemyStatus : Status
     {
-        public Action TargetVisibleCallback {get;set;}
+        public IVision VisionManager { get; set; }
 
-        public Area2D VisionRadius { get; set; }
+        public Action TargetVisibleCallback {get;set;}
 
         public NodePath PatrolPath { get; set; }
         
@@ -22,75 +23,25 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public Navigation2D Navigation2D { get; set; }
 
-        public Path2D Path { get; set; }
+        public Path2D? Path { get; set; }
 
-        public Node2D Target { get; set; }
+        public Node2D? Target { get; set; }
 
         public Line2D Line { get; set; }
 
         public Vector2[] PatrolPoints { get; set; }
+
         public bool LineOfSight = false;
 
         public int PatrolIndex { get; set; } = 0;
         
         public float CurrentCoolDownCounter { get; set; } = 0;
-
-        public void UpdateVisionConeLocation(Vector2 newVelocity)
-        {
-            if (newVelocity.x < 0)
-            {
-                VisionRadius.Scale = new Vector2(-1, VisionRadius.Scale.y);
-            }
-            else
-            {
-                VisionRadius.Scale = new Vector2(1, VisionRadius.Scale.y);
-            }
-        }
-
-        public bool IsPlayerInSight()
-        {
-            var bodies = VisionRadius.GetOverlappingBodies();
-            if (bodies == null || bodies.Count == 0) return false;
-            for (int i = 0; i < bodies.Count; i++)
-            {
-                var body = (Node)bodies[i];
-                if (body.Name.ToLower().Contains("player"))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        public float MaxCoolDownTime { get; set; } = 10f;
 
         public void Init(NodePath patrolPath){
             PatrolPath = patrolPath;
             // VisionRadius.ConnectBodyEntered(this, nameof(VisionRadius.OnVisionRadiusBodyEntered));
             // VisionRadius.ConnectBodyExited(this, nameof(OnVisionRadiusBodyExit));
         }
-
-        // private void OnVisionRadiusBodyEntered(Node body)
-        // {
-        //     if (body.Name.ToLower().Contains("player"))
-        //     {
-        //         TargetVisibleCallback?.Invoke();
-        //         this.PrintCaller();
-        //         Target = (Node2D)body;
-        //         if (HasLineOfSight(Target.Position))
-        //         {
-                    
-        //             CurrentState = AggroBehavior;
-        //             CurrentCoolDownCounter = MaxCoolDownTime;
-        //         }
-        //     }
-        // }
-
-        // public bool HasLineOfSight(Vector2 point)
-        // {
-        //     //if (!CanCheckFrame()) return LineOfSight;
-        //     var spaceState = GetWorld2d().DirectSpaceState;
-        //     var result = spaceState.IntersectRay(GlobalTransform.origin, point, null, CollisionMask);
-        //     LineOfSight = result?.Count > 0;
-        //     return LineOfSight;
-        // }
     }
 }

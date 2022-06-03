@@ -55,7 +55,7 @@ namespace ThemedHorrorJam5.Entities
             }
 
             Movable.Velocity = Movable.MoveAndSlide(Movable.Velocity);
-            Status.UpdateVisionConeLocation(Movable.Velocity);
+            Status.VisionManager.UpdateFacingDirection(Movable.Velocity);
         }
     }
 }

@@ -1,8 +1,16 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
+[ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Entities/SecurityCamera.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/Enemy3.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/EnemyAILevel.cs" type="Script" id=4]
 [ext_resource path="res://Entities/Enemy.tscn" type="PackedScene" id=5]
-[ext_resource path="res://Scenes/Level1.cs" type="Script" id=8]
 [ext_resource path="res://Entities/PlayerV2.tscn" type="PackedScene" id=10]
+
+[sub_resource type="NavigationPolygon" id=3]
+vertices = PoolVector2Array( -728, -267, -40, -403, 816, -307, 800, 397, 88, 429, -544, 429, -728, 53 )
+polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5, 6 ) ]
+outlines = [ PoolVector2Array( -728, -267, -40, -403, 816, -307, 800, 397, 88, 429, -544, 429, -728, 53 ) ]
 
 [sub_resource type="Curve2D" id=2]
 _data = {
@@ -11,25 +19,74 @@ _data = {
 
 [node name="Level1" type="Node2D"]
 position = Vector2( -200, 48 )
-script = ExtResource( 8 )
-PatrolPath = NodePath("Enemy2_Path2D")
-PatrolPathFollow2D = NodePath("Enemy2_Path2D/Enemy2_PathFollow2D")
+script = ExtResource( 4 )
+PatrolPath = NodePath("Paths/Enemy2_Path2D")
+PatrolPathFollow2D = NodePath("Paths/Enemy2_Path2D/Enemy2_PathFollow2D")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MousePosition" type="Label" parent="CanvasLayer"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -216.0
+margin_right = 496.0
+text = "G"
+
+[node name="Navigation2D" type="Navigation2D" parent="."]
+position = Vector2( -232, -37 )
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
+navpoly = SubResource( 3 )
 
 [node name="Player" parent="." groups=["Movable", "Player", "targets"] instance=ExtResource( 10 )]
-position = Vector2( -568, -49 )
+position = Vector2( -544, -48 )
 
-[node name="Enemy2_Path2D" type="Path2D" parent="."]
+[node name="Paths" type="Node" parent="."]
+
+[node name="Enemy2_Path2D" type="Path2D" parent="Paths"]
+position = Vector2( -200, 48 )
 scale = Vector2( 1.10455, 1.18599 )
 curve = SubResource( 2 )
 
-[node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Enemy2_Path2D"]
+[node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Paths/Enemy2_Path2D"]
 position = Vector2( -354.896, 74.1996 )
 rotation = -1.34464
 
-[node name="Enemy" parent="." groups=["Movable"] instance=ExtResource( 5 )]
-position = Vector2( -344, -40 )
-PatrolPath = NodePath("../Enemy2_Path2D")
+[node name="Environment" type="Node" parent="."]
 
-[node name="Line2D" type="Line2D" parent="."]
+[node name="Block" parent="Environment" instance=ExtResource( 1 )]
+position = Vector2( -664, -67 )
+
+[node name="Block3" parent="Environment" instance=ExtResource( 1 )]
+position = Vector2( -624, 152 )
+
+[node name="Block4" parent="Environment" instance=ExtResource( 1 )]
+position = Vector2( -240, -56 )
+
+[node name="Block2" parent="Environment" instance=ExtResource( 1 )]
+position = Vector2( -256, 120 )
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="SecurityCamera" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
 visible = false
+position = Vector2( -664, 156 )
+rotation = -2.09439
+
+[node name="SecurityCamera2" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
+visible = false
+position = Vector2( -200, -67 )
+rotation = 1.04721
+
+[node name="Enemy" parent="Enemies" groups=["Movable"] instance=ExtResource( 5 )]
+position = Vector2( -544, 8 )
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+
+[node name="Line2D" type="Line2D" parent="Enemies/Enemy"]
+position = Vector2( 344, 40 )
 default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )
+
+[node name="Enemy3" parent="Enemies" groups=["Movable"] instance=ExtResource( 3 )]
+Enable = true
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+AggroBehavior = 4
