@@ -21,7 +21,7 @@ namespace ThemedHorrorJam5.Entities
             Enemy = enemy;
             this.OnEnter += () => this.Logger.Debug("IdleEnemyState OnEnter called");
             this.OnExit += () => this.Logger.Debug("IdleEnemyState Exit called");
-            this.OnFrame += (delta) => Enemy.Movable.Velocity = Vector2.Zero;
+            this.OnFrame += (delta) => Enemy.Velocity = Vector2.Zero;
         }
     }
 }

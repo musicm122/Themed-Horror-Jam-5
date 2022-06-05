@@ -12,8 +12,6 @@ namespace ThemedHorrorJam5.Entities
 
         private EnemyStatus Status => this.Enemy.Status;
 
-        private EnemyMovableBehavior Movable => this.Enemy.Movable;
-
         public PatrolEnemyState(EnemyV4 enemy)
         {
             this.Logger.Level = Scripts.Patterns.Logger.LogLevelOutput.Debug;
@@ -37,7 +35,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void Patrol(float delta)
         {
-            if (Status.PatrolPath == null || !Movable.CanMove) return;
+            if (Status.PatrolPath == null || !Enemy.CanMove) return;
 
             var target = Status.PatrolPoints[Status.PatrolIndex];
 
@@ -47,15 +45,15 @@ namespace ThemedHorrorJam5.Entities
                 target = Status.PatrolPoints[Status.PatrolIndex];
             }
 
-            Movable.Velocity = (target - Enemy.Position).Normalized() * Movable.MoveSpeed;
+            Enemy.Velocity = (target - Enemy.Position).Normalized() * Enemy.MoveSpeed;
 
-            if (Movable.GetSlideCount() > 0)
+            if (Enemy.GetSlideCount() > 0)
             {
-                Movable.HandleMovableObstacleCollision(Movable.Velocity);
+                Enemy.HandleMovableObstacleCollision(Enemy.Velocity);
             }
 
-            Movable.Velocity = Movable.MoveAndSlide(Movable.Velocity);
-            Status.VisionManager.UpdateFacingDirection(Movable.Velocity);
+            Enemy.Velocity = Enemy.MoveAndSlide(Enemy.Velocity);
+            Status.VisionManager.UpdateFacingDirection(Enemy.Velocity);
         }
     }
 }

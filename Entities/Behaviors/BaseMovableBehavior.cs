@@ -5,10 +5,10 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public abstract class BaseMovableBehavior : Node2D, IDebuggable<Node>, IMovableBehavior
+    public abstract class BaseMovableBehavior : KinematicBody2D, IDebuggable<Node>, IMovableBehavior
     {
         [Export]
-        public float MoveSpeed { get; set; } = 50f;
+        public float MoveSpeed { get; set; } = 10f;
 
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -19,14 +19,15 @@ namespace ThemedHorrorJam5.Entities.Components
         [Export]
         public float MoveMultiplier { get; set; } = 1.5f;
 
-        public Vector2 Velocity { get; set;}
+        public Vector2 Velocity { get; set; }
 
         public bool CanMove = true;
 
         public bool IsRunning = false;
 
         [Export]
-        public KinematicBody2D MovableTarget { get; set; }
+        public float MaxSpeed { get; set; } = 10f;
+
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
@@ -35,7 +36,7 @@ namespace ThemedHorrorJam5.Entities.Components
             this.PrintCaller();
             motion = motion.Normalized();
 
-            if (MovableTarget.GetSlideCollision(0).Collider is PushBlock box && box.CanBePushed)
+            if (GetSlideCollision(0).Collider is PushBlock box && box.CanBePushed)
             {
                 box.Push(PushSpeed * motion);
             }
@@ -49,23 +50,12 @@ namespace ThemedHorrorJam5.Entities.Components
             if (CanMove)
             {
                 var movement = GetMovementSpeed(IsRunning, Velocity);
-                MovableTarget.MoveAndSlide(movement);
-                if (MovableTarget.GetSlideCount() > 0)
+                MoveAndSlide(movement);
+                if (GetSlideCount() > 0)
                 {
                     HandleMovableObstacleCollision(movement);
                 }
             }
-        }
-
-        public Vector2 MoveAndSlide(Vector2 force) => MovableTarget.MoveAndSlide(force);
-
-        public KinematicCollision2D MoveAndCollide(Vector2 force) => MovableTarget.MoveAndCollide(force);
-
-        public int GetSlideCount() => MovableTarget.GetSlideCount();
-
-        public void Init(KinematicBody2D movableTarget)
-        {
-            this.MovableTarget = movableTarget;
         }
     }
 }

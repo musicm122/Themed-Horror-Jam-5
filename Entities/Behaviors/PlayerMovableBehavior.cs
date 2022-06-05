@@ -4,7 +4,7 @@ using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class PlayerMovableBehavior :BaseMovableBehavior
+    public class PlayerMovableBehavior : BaseMovableBehavior
     {
         public override Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
                 isRunning ?
@@ -17,8 +17,8 @@ namespace ThemedHorrorJam5.Entities.Components
             {
                 IsRunning = Input.IsActionPressed(InputAction.Run);
                 var movement = GetMovementSpeed(IsRunning, Velocity);
-                MovableTarget.MoveAndSlide(movement);
-                if (MovableTarget.GetSlideCount() > 0)
+                MoveAndSlide(movement);
+                if (GetSlideCount() > 0)
                 {
                     this.HandleMovableObstacleCollision(movement);
                 }

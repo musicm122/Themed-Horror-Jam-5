@@ -1,21 +1,20 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/SecurityCamera.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Entities/Enemy3.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/EnemyAILevel.cs" type="Script" id=4]
 [ext_resource path="res://Entities/Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Entities/PlayerV2.tscn" type="PackedScene" id=10]
-
-[sub_resource type="NavigationPolygon" id=3]
-vertices = PoolVector2Array( -728, -267, -40, -403, 816, -307, 800, 397, 88, 429, -544, 429, -728, 53 )
-polygons = [ PoolIntArray( 0, 1, 2, 3, 4, 5, 6 ) ]
-outlines = [ PoolVector2Array( -728, -267, -40, -403, 816, -307, 800, 397, 88, 429, -544, 429, -728, 53 ) ]
 
 [sub_resource type="Curve2D" id=2]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, -354.896, 74.1996, 0, 0, 0, 0, -333.167, -20.2363, 0, 0, 0, 0, -405.595, -26.9817, 0, 0, 0, 0, -340.41, -87.6905, 0, 0, 0, 0, -202.798, -47.2179, 0, 0, 0, 0, -40, -112, 0, 0, 0, 0, -86.9132, -33.7271, 0, 0, 0, 0, -86.9132, 26.9817, 0, 0, 0, 0, -43.4566, 20.2363, 0, 0, 0, 0, -101.399, 80.945, 0, 0, 0, 0, -224.526, 33.7271, 0, 0, 0, 0, -354.896, 74.1996 )
 }
+
+[sub_resource type="NavigationPolygon" id=3]
+vertices = PoolVector2Array( 8, -200, 8, 144, -824, 144, -824, -216 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+outlines = [ PoolVector2Array( -824, -216, -824, 144, 8, 144, 8, -200 ) ]
 
 [node name="Level1" type="Node2D"]
 position = Vector2( -200, 48 )
@@ -32,20 +31,14 @@ margin_top = -216.0
 margin_right = 496.0
 text = "G"
 
-[node name="Navigation2D" type="Navigation2D" parent="."]
-position = Vector2( -232, -37 )
-
-[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
-navpoly = SubResource( 3 )
-
 [node name="Player" parent="." groups=["Movable", "Player", "targets"] instance=ExtResource( 10 )]
 position = Vector2( -544, -48 )
+PushSpeed = 50.0
+MaxSpeed = 100.0
 
 [node name="Paths" type="Node" parent="."]
 
 [node name="Enemy2_Path2D" type="Path2D" parent="Paths"]
-position = Vector2( -200, 48 )
-scale = Vector2( 1.10455, 1.18599 )
 curve = SubResource( 2 )
 
 [node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Paths/Enemy2_Path2D"]
@@ -66,27 +59,30 @@ position = Vector2( -240, -56 )
 [node name="Block2" parent="Environment" instance=ExtResource( 1 )]
 position = Vector2( -256, 120 )
 
-[node name="Enemies" type="Node" parent="."]
+[node name="Enemies" type="YSort" parent="."]
+position = Vector2( -344, -40 )
 
 [node name="SecurityCamera" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
 visible = false
-position = Vector2( -664, 156 )
+position = Vector2( -120, 148 )
 rotation = -2.09439
 
 [node name="SecurityCamera2" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
 visible = false
-position = Vector2( -200, -67 )
+position = Vector2( 344, -75 )
 rotation = 1.04721
 
 [node name="Enemy" parent="Enemies" groups=["Movable"] instance=ExtResource( 5 )]
-position = Vector2( -544, 8 )
-PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+MoveSpeed = 50.0
+IsDebugging = true
+MaxSpeed = 50.0
+ArrivalZoneRadius = 20
+EnclosureZone = Rect2( -344, -40, 50, 50 )
 
 [node name="Line2D" type="Line2D" parent="Enemies/Enemy"]
-position = Vector2( 344, 40 )
 default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )
 
-[node name="Enemy3" parent="Enemies" groups=["Movable"] instance=ExtResource( 3 )]
-Enable = true
-PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
-AggroBehavior = 4
+[node name="Navigation2D" type="Navigation2D" parent="."]
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
+navpoly = SubResource( 3 )

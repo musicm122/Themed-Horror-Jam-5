@@ -10,7 +10,6 @@ namespace ThemedHorrorJam5.Scenes
 
         public EnemyV4 Enemy { get; set; }
 
-        public Enemy3 Enemy3 { get; set; }
 
         public Label MousePosition { get; set; }
 
@@ -29,8 +28,7 @@ namespace ThemedHorrorJam5.Scenes
         {
             MousePosition = GetNode<Label>("CanvasLayer/MousePosition");
             Enemy = GetNode<EnemyV4>("Enemies/Enemy");
-            Enemy3 = GetNode<Enemy3>("Enemies/Enemy3");
-            
+
             Player = this.GetTree().GetPlayerNode().Item2;
 
             if (PatrolPath != null)
@@ -61,7 +59,7 @@ namespace ThemedHorrorJam5.Scenes
         //  // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta)
         {
-            
+
             var mousePos = GetGlobalMousePosition();
             var playerPos = Player.Position;
             MousePosition.Text = "-----------------------------------------------------------\r\n";
@@ -72,10 +70,6 @@ namespace ThemedHorrorJam5.Scenes
             MousePosition.Text += "-----------------------------------------------------------\r\n";
             MousePosition.Text += $"Enemy : X : {Enemy.Position.x} : Y : {Enemy.Position.y}\r\n";
             MousePosition.Text += $"Enemy Global: X :{Enemy.GlobalPosition.x} :  Y : {Enemy.GlobalPosition.y}\r\n";
-            MousePosition.Text += "-----------------------------------------------------------\r\n";
-            MousePosition.Text += $"Enemy : X : {Enemy.Movable.Position.x} : Y : {Enemy.Movable.Position.y}\r\n";
-            MousePosition.Text += $"Enemy Global: X :{Enemy.Movable.GlobalPosition.x} :  Y : {Enemy.Movable.GlobalPosition.y}\r\n";
-
             MousePosition.Text += "-----------------------------------------------------------\r\n";
         }
     }

@@ -7,8 +7,10 @@ using System.Linq;
 
 namespace ThemedHorrorJam5.Entities
 {
+
     public class ChaseEnemyState : State
     {
+
         private Navigation2D? GetLevelNavigation()
         {
             var nodeTuples = Enemy.GetTree().GetNavigation2dNodes();
@@ -16,12 +18,26 @@ namespace ThemedHorrorJam5.Entities
             return null;
         }
 
+        private Navigation2D Nav { get; set; }
         private EnemyV4 Enemy { get; set; }
+        private PlayerV2 PlayerRef { get; set; }
 
         public ChaseEnemyState(EnemyV4 enemy)
         {
             this.Name = EnemyBehaviorStates.ChasePlayer.GetDescription();
             Enemy = enemy;
+            (var hasPlayer, PlayerRef) = Enemy.GetTree().GetPlayerNode();
+            if (!hasPlayer)
+            {
+                Logger.Error("Player ref not found on scene tree");
+            }
+
+            (var hasNav, var navNodes) = Enemy.GetTree().GetNavigation2dNodes();
+            if (hasNav && navNodes != null)
+            {
+                Nav = navNodes[0];
+            }
+
             this.OnEnter += () => this.Logger.Debug("ChaseEnemyState OnEnter called");
             this.OnExit += () => this.Logger.Debug("ChaseEnemyState Exit called");
             this.OnFrame += ChasePlayer;
@@ -34,34 +50,29 @@ namespace ThemedHorrorJam5.Entities
                 Enemy.Status.Line = (Line2D)Enemy.GetNode("Line2D");
 
             }
-            if (Enemy.Owner.HasNode("Navigation2D"))
+            if (Nav!=null)
             {
-                if (Enemy.IsDebugging)
-                {
-                    Enemy.Status.DebugLabel.Text =
-                   @$"
-                    |-----------------------------------------------------------
-                    | Enemy Global Position: {Enemy.GlobalPosition}
-                    | Enemy Local Position: {Enemy.Position}
-                    |----------------------------------------------------------
-                    | Enemy Movable Global Position: {Enemy.Movable.GlobalPosition}
-                    | Enemy Movable Local Position: {Enemy.Movable.Position}
-                    |----------------------------------------------------------
-                    | Target Global Position: {Enemy.Status.Target.GlobalPosition}
-                    | Target Local Position: {Enemy.Status.Target.Position}
-                    |-----------------------------------------------------------";
-                }
+
 
                 //Enemy.Status.Navigation2D = GetLevelNavigation();
-                Enemy.Status.Navigation2D = (Navigation2D)Enemy.Owner.GetNode("Navigation2D");
+                //var nav = (Navigation2D)Enemy.Owner.GetNode("Navigation2D");
+                //Enemy.Status.Navigation2D = (Navigation2D)Enemy.Owner.GetNode("Navigation2D");
 
-                var from = Enemy.Movable.Position;
-                var to = Enemy.Status.Target.Position;
+
+                //var from = Enemy.Position;
+                //var from = Enemy.Status.Navigation2D.ToLocal(Enemy.Position);
+                var from = Enemy.GlobalPosition;
+
+                //var to = Enemy.Status.Navigation2D.ToLocal(PlayerRef.Position);
+                var to = PlayerRef.GlobalPosition;
+                //var to = Enemy.Status.Target.Position;
                 //var to = Enemy.Status.Target.ToLocal(Enemy.Status.Target.Position);
-                
+
                 //Enemy.DrawLine(from, to, new Color(255, 255, 255), 3);
 
-                var paths = Enemy.Status.Navigation2D.GetSimplePath(from, to);
+                //var paths = Enemy.Status.Navigation2D.GetSimplePath(from, to);
+
+                var paths = Nav.GetSimplePath(from, to);
 
                 Enemy.Status.NavPath = new Stack<Vector2>(paths);
 
@@ -70,28 +81,43 @@ namespace ThemedHorrorJam5.Entities
                     Enemy.Status.Line.Points = Enemy.Status.NavPath.ToArray();
                 }
 
-                var distance_to_walk = Enemy.Movable.MoveSpeed * delta;
+                var distance_to_walk = Enemy.MoveSpeed * delta;
 
                 while (distance_to_walk > 0f && Enemy.Status.NavPath.Count > 0f)
                 {
-                    var distance_to_next_point = Enemy.Movable.Position.DistanceTo(Enemy.Status.NavPath.Peek());
+                    var distance_to_next_point = Enemy.Position.DistanceTo(Enemy.Status.NavPath.Peek());
                     if (distance_to_walk <= distance_to_next_point)
                     {
-                        var newPosition = Enemy.Movable.Position.DirectionTo(Enemy.Status.NavPath.Peek()) * distance_to_walk;
+                        var newPosition = Enemy.Position.DirectionTo(Enemy.Status.NavPath.Peek()) * distance_to_walk;
                         Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
-                        Enemy.Movable.Position += newPosition;
+                        Enemy.Position += newPosition;
                     }
                     else
                     {
                         var newPosition = Enemy.Status.NavPath.Pop();
                         Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
-                        if (Enemy.Movable.GetSlideCount() > 0)
+                        if (Enemy.GetSlideCount() > 0)
                         {
-                            Enemy.Movable.HandleMovableObstacleCollision(newPosition);
+                            Enemy.HandleMovableObstacleCollision(newPosition);
                         }
-                        Enemy.Movable.Position = newPosition;
+                        Enemy.Position = newPosition;
                     }
                     distance_to_walk -= distance_to_next_point;
+                }
+                if (Enemy.IsDebugging)
+                {
+                    Enemy.Status.DebugLabel.Text =
+                   @$"
+                    |-----------------------------------------------------------
+                    | Enemy Global Position: {Enemy.GlobalPosition}
+                    | Enemy Local Position: {Enemy.Position}
+                    |----------------------------------------------------------
+                    | Target Global Position: {Enemy.Status.Target.GlobalPosition}
+                    | Target Local Position: {Enemy.Status.Target.Position}
+                    |-----------------------------------------------------------
+                    | From {from}
+                    | To {to}
+                    |-----------------------------------------------------------";
                 }
             }
             else

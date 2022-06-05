@@ -73,10 +73,6 @@ namespace ThemedHorrorJam5.Scenes
             MousePosition.Text += $"Enemy : X : {Enemy.Position.x} : Y : {Enemy.Position.y}\r\n";
             MousePosition.Text += $"Enemy Global: X :{Enemy.GlobalPosition.x} :  Y : {Enemy.GlobalPosition.y}\r\n";
             MousePosition.Text += "-----------------------------------------------------------\r\n";
-            MousePosition.Text += $"Enemy : X : {Enemy.Movable.Position.x} : Y : {Enemy.Movable.Position.y}\r\n";
-            MousePosition.Text += $"Enemy Global: X :{Enemy.Movable.GlobalPosition.x} :  Y : {Enemy.Movable.GlobalPosition.y}\r\n";
-
-            MousePosition.Text += "-----------------------------------------------------------\r\n";
         }
     }
 }

@@ -11,9 +11,10 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         public static double RandomDouble(this Random random, double minimum, double maximum) =>
              (random.NextDouble() * (maximum - minimum)) + minimum;
 
-        public static double RandomFloat(this Random random, float minimum, float maximum) {
+        public static float RandomFloat(this Random random, float minimum, float maximum) {
             var val = (float)random.NextDouble();
-            return (val * (maximum - minimum)) + minimum;
+            var retval =(val* (maximum -minimum)) +minimum;
+            return retval;
         }
 
     }

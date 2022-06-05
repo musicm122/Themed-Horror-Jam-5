@@ -32,6 +32,7 @@ color = Color( 0.568627, 0, 1, 1 )
 polygon = PoolVector2Array( -8, -16, -8, 24, 0, 24, 8, 24, 7.99999, -6.26688, 8, -16, 0, -24 )
 
 [node name="VisionRadius" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="VisionRadius"]
 position = Vector2( 99, -11 )
@@ -50,3 +51,17 @@ margin_left = -24.0
 margin_top = -32.0
 margin_right = 24.0
 margin_bottom = -18.0
+
+[node name="ObstacleAvoidance" type="Node2D" parent="."]
+
+[node name="RayCast2D" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, -16 )
+cast_to = Vector2( 45, 0 )
+
+[node name="RayCast2D3" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, 1 )
+cast_to = Vector2( 45, 0 )
+
+[node name="RayCast2D2" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, 21 )
+cast_to = Vector2( 45, 0 )

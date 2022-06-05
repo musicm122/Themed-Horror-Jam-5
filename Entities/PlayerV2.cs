@@ -3,15 +3,13 @@ using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities.GSAI
+namespace ThemedHorrorJam5.Entities
 {
-    public class PlayerV2 : KinematicBody2D, IDebuggable<Node>
+    public class PlayerV2 : PlayerMovableBehavior, IDebuggable<Node>
     {
         public PlayerState State { get; set; }
 
         public DamagableBehavior Damagable { get; private set; }
-
-        public PlayerMovableBehavior Movable { get; private set; }
 
         public InteractableBehavior Interactable { get; private set; }
 
@@ -38,8 +36,8 @@ namespace ThemedHorrorJam5.Entities.GSAI
                 MissionManager = new MissionManager()
             };
 
-            Movable = GetNode<PlayerMovableBehavior>("Behaviors/Movable");
-            Movable.Init(this);
+            //Movable = GetNode<PlayerMovableBehavior>("Behaviors/Movable");
+            //Movable.Init(this);
 
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
             Damagable.Init(PlayerStatus);
@@ -55,12 +53,12 @@ namespace ThemedHorrorJam5.Entities.GSAI
             Ui.Init(State);
 
 
-            Interactable.InteractingCallback += (e) => Movable.CanMove = false;
-            Interactable.InteractingCompleteCallback += (e) => Movable.CanMove = true;
+            Interactable.InteractingCallback += (e) => CanMove = false;
+            Interactable.InteractingCompleteCallback += (e) => CanMove = true;
 
             Damagable.OnTakeDamage += (obj, force) =>
             {
-                Movable.MoveAndSlide(force);
+                MoveAndSlide(force);
                 Ui.RefreshUI();
             };
         }

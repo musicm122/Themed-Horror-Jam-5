@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Entities/Components/HitBox.cs" type="Script" id=1]
 [ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Entities/Components/EnemyStatus.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Entities/Behaviors/EnemyMovableBehavior.cs" type="Script" id=4]
 [ext_resource path="res://Entities/Behaviors/DamagableBehavior.cs" type="Script" id=5]
 [ext_resource path="res://Entities/EnemyV4.cs" type="Script" id=6]
 [ext_resource path="res://Entities/Components/Area2dVision.tscn" type="PackedScene" id=7]
@@ -23,8 +22,6 @@ script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
-IsDebugging = true
-DefaultState = 2
 
 [node name="Status" parent="." instance=ExtResource( 3 )]
 
@@ -58,9 +55,6 @@ script = ExtResource( 5 )
 position = Vector2( 0, 1 )
 shape = SubResource( 4 )
 
-[node name="Movable" type="Node2D" parent="Behaviors"]
-script = ExtResource( 4 )
-
 [node name="Cooldown" type="Label" parent="."]
 margin_left = -24.0
 margin_top = -32.0
@@ -70,5 +64,23 @@ margin_bottom = -18.0
 [node name="DebugLabel" type="Label" parent="."]
 margin_right = 40.0
 margin_bottom = 14.0
+
+[node name="ObstacleAvoidance" type="Node2D" parent="."]
+scale = Vector2( -1, 1 )
+
+[node name="RayCast2D" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, -16 )
+enabled = true
+cast_to = Vector2( 45, 0 )
+
+[node name="RayCast2D3" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, 1 )
+enabled = true
+cast_to = Vector2( 45, 0 )
+
+[node name="RayCast2D2" type="RayCast2D" parent="ObstacleAvoidance"]
+position = Vector2( 0, 21 )
+enabled = true
+cast_to = Vector2( 45, 0 )
 
 [editable path="Behaviors/Damagable/Hurtbox"]
