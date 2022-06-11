@@ -23,6 +23,8 @@ namespace ThemedHorrorJam5.Entities
         public Node2D ObstacleAvoidance { get; set; }
 
         public Label Cooldown { get; set; }
+        
+        public Label StateLabel { get; set; }
 
         private readonly StateMachine stateMachine = new();
 
@@ -52,6 +54,7 @@ namespace ThemedHorrorJam5.Entities
 
         public override void _Ready()
         {
+            StateLabel = GetNode<Label>("StateLabel");
             Status = GetNode<EnemyStatus>("Status");
             Status.VisionManager = GetNode<Area2dVision>("Vision");
             ObstacleAvoidance = GetNode<Node2D>("ObstacleAvoidance");
@@ -94,6 +97,7 @@ namespace ThemedHorrorJam5.Entities
         public override void _PhysicsProcess(float delta)
         {
             stateMachine.Update(delta);
+            this.StateLabel.Text = stateMachine.CurrentState.ToString();
         }
     }
 }
