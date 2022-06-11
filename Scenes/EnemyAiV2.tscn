@@ -20,7 +20,7 @@ outlines = [ PoolVector2Array( -824, -216, -824, 144, 8, 144, 8, -200 ) ]
 position = Vector2( -200, 48 )
 script = ExtResource( 4 )
 PatrolPath = NodePath("Paths/Enemy2_Path2D")
-PatrolPathFollow2D = NodePath("Paths/Enemy2_Path2D/Enemy2_PathFollow2D")
+PatrolPathFollow2D = NodePath("Paths/Enemy2_Path2D/PathFollow2D")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -41,7 +41,7 @@ MaxSpeed = 100.0
 [node name="Enemy2_Path2D" type="Path2D" parent="Paths"]
 curve = SubResource( 2 )
 
-[node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Paths/Enemy2_Path2D"]
+[node name="PathFollow2D" type="PathFollow2D" parent="Paths/Enemy2_Path2D"]
 position = Vector2( -354.896, 74.1996 )
 rotation = -1.34464
 
@@ -62,25 +62,15 @@ position = Vector2( -256, 120 )
 [node name="Enemies" type="YSort" parent="."]
 position = Vector2( -344, -40 )
 
-[node name="SecurityCamera" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
-visible = false
-position = Vector2( -120, 148 )
-rotation = -2.09439
+[node name="Enemy" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( 159, -42 )
+MoveSpeed = 50.0
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
-[node name="SecurityCamera2" parent="Enemies" groups=["Movable"] instance=ExtResource( 2 )]
-visible = false
-position = Vector2( 344, -75 )
-rotation = 1.04721
-
-[node name="Enemy" parent="Enemies" groups=["Movable"] instance=ExtResource( 5 )]
-IsDebugging = true
-ArrivalZoneRadius = 20
-EnclosureZone = Rect2( -344, -40, 50, 50 )
-
-[node name="Line2D" type="Line2D" parent="Enemies/Enemy"]
-default_color = Color( 0.972549, 0.282353, 0.0431373, 1 )
+[node name="SecurityCamera" parent="Enemies" instance=ExtResource( 2 )]
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
+visible = false
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
 navpoly = SubResource( 3 )

@@ -3,7 +3,7 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class Hurtbox : Area2D, IDebuggable<Node>
+    public class Hurtbox : Area2D, IDebuggable<Node>, IHurtbox
     {
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -14,13 +14,13 @@ namespace ThemedHorrorJam5.Entities.Components
         [Signal]
         public delegate void InvincibilityEnded();
 
-        public bool Invincible { get; set; }
+        public bool IsInvincible { get; set; }
         public Timer Timer { get; set; }
         public CollisionShape2D CollisionShape { get; set; }
 
         public void SetInvincibility(bool hasInvincibility)
         {
-            Invincible = hasInvincibility;
+            IsInvincible = hasInvincibility;
             if (hasInvincibility)
             {
                 EmitSignal(nameof(InvincibilityStarted));
@@ -33,11 +33,11 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void StartInvincibility(float duration)
         {
-            this.Invincible = true;
+            this.IsInvincible = true;
             Timer.Start(duration);
         }
 
-        public void OnTimerTimeout() => Invincible = false;
+        public void OnTimerTimeout() => IsInvincible = false;
 
         public void OnHurtboxInvincibilityStarted() => CollisionShape.SetDeferred("disabled", true);
 

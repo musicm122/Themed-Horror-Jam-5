@@ -22,12 +22,15 @@ script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
+ArrivalZoneRadius = 10
+EnclosureZone = Rect2( 32, 32, 5, 5 )
 
 [node name="Status" parent="." instance=ExtResource( 3 )]
 
 [node name="HitBox" type="Area2D" parent="."]
 script = ExtResource( 1 )
-EffectForce = 10.0
+IsDebugging = true
+EffectForce = 40.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2( 0, 2.5 )

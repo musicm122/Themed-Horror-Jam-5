@@ -5,18 +5,18 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class DamagableBehavior : Node2D, IDebuggable<Node>
+    public class DamagableBehavior : Node2D, IDebuggable<Node>, IDamagableBehavior
     {
         public bool IsDead = false;
 
-        private Status Status { get; set; }
+        private Health Status { get; set; }
 
         [Export]
         public bool IsDebugging { get; set; } = false;
 
         private Hurtbox HurtBox { get; set; }
 
-        public Action<Node,Vector2> OnTakeDamage { get; set; }
+        public Action<Node, Vector2> OnTakeDamage { get; set; }
         public Action EmptyHealthBarCallback { get; set; }
         public Action HurtboxInvincibilityStartedCallback { get; set; }
         public Action HurtboxInvincibilityEndedCallback { get; set; }
@@ -28,12 +28,13 @@ namespace ThemedHorrorJam5.Entities.Components
         public void OnHurtboxAreaEntered(Node body)
         {
             this.Print($"OnHurtboxAreaEntered({body.Name})");
+            if(this.HurtBox.IsInvincible) return ;
             if (body.Name.ToLower() == "hitbox" || body.Name.ToLower() == "spikes")
             {
                 this.HurtBox.StartInvincibility(0.6f);
 
                 var hitBox = (HitBox)body;
-                var force = (this.Position - hitBox.Position) * hitBox.EffectForce;
+                var force = (this.GlobalPosition - hitBox.GlobalPosition) * hitBox.EffectForce;
                 OnTakeDamage?.Invoke(body, force);
                 Status.CurrentHealth -= hitBox.Damage;
                 this.Print("Current Health =", Status.CurrentHealth);
@@ -62,7 +63,6 @@ namespace ThemedHorrorJam5.Entities.Components
         public void OnHealthChanged(int health)
         {
             this.PrintCaller();
-            //RefreshUI();
             HealthChangedCallback?.Invoke(health);
         }
 
@@ -75,9 +75,9 @@ namespace ThemedHorrorJam5.Entities.Components
         private void RegisterHealthSignals()
         {
             this.PrintCaller();
-            Status.Connect(nameof(Components.Status.NoHealth), this, nameof(OnEmptyHealthBar));
-            Status.Connect(nameof(Components.Status.HealthChanged), this, nameof(OnHealthChanged));
-            Status.Connect(nameof(Components.Status.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
+            Status.Connect(nameof(Health.NoHealth), this, nameof(OnEmptyHealthBar));
+            Status.Connect(nameof(Health.HealthChanged), this, nameof(OnHealthChanged));
+            Status.Connect(nameof(Health.MaxHealthChanged), this, nameof(OnMaxHealthChanged));
         }
 
         private void RegisterHurtBoxSignals()
@@ -102,7 +102,8 @@ namespace ThemedHorrorJam5.Entities.Components
             }
         }
 
-        public void Init(Status status){
+        public void Init(Health status)
+        {
             Status = status;
             HurtBox = GetNode<Hurtbox>("Hurtbox");
             RegisterHealthSignals();

@@ -25,7 +25,7 @@ namespace ThemedHorrorJam5.Scripts.UI
             GameOverPanel.Hide();
         }
 
-        public void RefreshUI(Status status)
+        public void RefreshUI(Health status)
         {
             string maxHealthVal = "Health: ";
             for (int i = 0; i < status.MaxHealth; i++)

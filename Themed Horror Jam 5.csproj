@@ -3,7 +3,7 @@
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
     <!--Force nullable warnings, you can disable if you want-->
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <RootNamespace>ThemedHorrorJam5</RootNamespace>
     <CodeAnalysisRuleSet>roslynator.ruleset</CodeAnalysisRuleSet>

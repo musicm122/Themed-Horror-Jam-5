@@ -9,15 +9,15 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class InteractableBehavior : Node2D, IDebuggable<Node>
+    public class InteractableBehavior : Node2D, IDebuggable<Node>, IInteractableBehavior
     {
 
         public PlayerState State { get; set; }
 
-        public Action<Examinable> InteractingCallback;
-        public Action<Examinable> InteractingCompleteCallback;
-        public Action<Examinable> InteractingAvailableCallback;
-        public Action<Examinable> InteractingUnavailableCallback;
+        public Action<Examinable> InteractingCallback { get; set; }
+        public Action<Examinable> InteractingCompleteCallback { get; set; }
+        public Action<Examinable> InteractingAvailableCallback { get; set; }
+        public Action<Examinable> InteractingUnavailableCallback { get; set; }
 
         public bool HasKey(Key key) => State.Inventory.HasKey(key);
         public bool HasItem(string itemName) => State.Inventory.HasItem(itemName);
@@ -56,7 +56,8 @@ namespace ThemedHorrorJam5.Entities.Components
                 this.Print("lockedDoorCollection count = ", lockedDoorCollection.Count);
                 if (!lockedDoorCollection.IsNullOrEmpty())
                 {
-                    lockedDoorCollection.ForEach(e =>{
+                    lockedDoorCollection.ForEach(e =>
+                    {
                         e.Connect(nameof(LockedDoor.DoorInteraction), this, nameof(OnDoorInteraction));
                         e.Connect(nameof(LockedDoor.DoorInteractionComplete), this, nameof(OnDoorInteractionComplete));
                     });
@@ -129,7 +130,7 @@ namespace ThemedHorrorJam5.Entities.Components
             }
             this.InteractingCallback?.Invoke(lockedDoor);
         }
-        
+
         public void OnDoorInteractionComplete(LockedDoor lockedDoor)
         {
             this.InteractingCompleteCallback?.Invoke(lockedDoor);

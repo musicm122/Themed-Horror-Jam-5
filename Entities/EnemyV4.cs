@@ -8,7 +8,7 @@ using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public class EnemyV4 : EnemyMovableBehavior
+    public class EnemyV4 : EnemyMovableBehavior, IEnemy
     {
         [Export]
         public NodePath PatrolPath { get; set; }
@@ -18,16 +18,13 @@ namespace ThemedHorrorJam5.Entities
 
         public EnemyStatus Status { get; set; }
 
-        public DamagableBehavior Damagable { get; private set; }
-
-        //public EnemyMovableBehavior Movable { get; set; }
+        public IDamagableBehavior Damagable { get; private set; }
 
         public Node2D ObstacleAvoidance { get; set; }
 
         public Label Cooldown { get; set; }
 
         private readonly StateMachine stateMachine = new();
-
 
         public void Init()
         {
@@ -68,8 +65,6 @@ namespace ThemedHorrorJam5.Entities
             Cooldown = GetNode<Label>("Cooldown");
             Status.DebugLabel = this.GetNode<Label>("DebugLabel");
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
-            //Movable = GetNode<EnemyMovableBehavior>("Behaviors/Movable");
-
 
             if (this.PatrolPath != null)
             {
@@ -80,7 +75,6 @@ namespace ThemedHorrorJam5.Entities
                 Status.DebugLabel.Text = "this.PatrolPath is null";
             }
             Damagable.Init(Status);
-            //Movable.Init(this);
             Init();
         }
 

@@ -6,7 +6,7 @@ using ThemedHorrorJam5.Scripts.Extensions;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public class Inventory
+    public class Inventory : IInventory
     {
         public delegate void AddingItemHandler(object sender, InventoryEventArgs args);
 

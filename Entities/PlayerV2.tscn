@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://Entities/Components/PlayerStats.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Entities/Components/PlayerHealth.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Components/Hurtbox.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Entities/Components/Target.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Art/Environment/Light/light_mask.png" type="Texture" id=4]
@@ -21,7 +21,8 @@ corner_radius_bottom_left = 8
 radius = 6.0
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 6.0
+radius = 8.0
+height = 14.0
 
 [node name="PlayerRoot" type="KinematicBody2D"]
 script = ExtResource( 13 )
@@ -29,7 +30,6 @@ MoveSpeed = 100.0
 
 [node name="UI" type="Node2D" parent="."]
 script = ExtResource( 12 )
-IsDebugging = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="UI"]
 
@@ -154,11 +154,6 @@ __meta__ = {
 [node name="CanvasModulate" type="CanvasModulate" parent="UI/Camera2D/CanvasLayer/Hud/GameOverPanel"]
 color = Color( 0.537255, 0, 0, 0.878431 )
 
-[node name="PlayerStatus" parent="." instance=ExtResource( 1 )]
-MaxHealth = 5
-CurrentHealth = 5
-IsDebugging = true
-
 [node name="Target" parent="." instance=ExtResource( 3 )]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -174,7 +169,6 @@ polygon = PoolVector2Array( -8, -16, -8, 16, 8, 16, 8, -16 )
 position = Vector2( 0, 2.38419e-07 )
 scale = Vector2( 0.196242, 0.203549 )
 script = ExtResource( 11 )
-IsDebugging = true
 
 [node name="Flashlight" type="Light2D" parent="Behaviors/Flashlight"]
 texture = ExtResource( 4 )
@@ -196,5 +190,12 @@ IsDebugging = true
 
 [node name="CollisionShape" parent="Behaviors/Damagable/Hurtbox" index="0"]
 shape = SubResource( 2 )
+
+[node name="Timer" parent="Behaviors/Damagable/Hurtbox" index="1"]
+wait_time = 3.0
+
+[node name="Health" parent="." instance=ExtResource( 1 )]
+MaxHealth = 10
+CurrentHealth = 10
 
 [editable path="Behaviors/Damagable/Hurtbox"]

@@ -5,29 +5,24 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public class PlayerV2 : PlayerMovableBehavior, IDebuggable<Node>
+    public class PlayerV2 : PlayerMovableBehavior
     {
         public PlayerState State { get; set; }
 
-        public DamagableBehavior Damagable { get; private set; }
+        public IDamagableBehavior Damagable { get; private set; }
 
-        public InteractableBehavior Interactable { get; private set; }
+        public IInteractableBehavior Interactable { get; private set; }
 
-        public UiBehavior Ui { get; private set; }
+        public IUiBehavior Ui { get; private set; }
 
-        public FlashlightBehavior Flashlight { get; private set; }
+        public IFlashlightBehavior Flashlight { get; private set; }
 
-        public Status PlayerStatus { get; set; }
-
-        [Export]
-        public bool IsDebugging { get; set; } = false;
-
-        public bool IsDebugPrintEnabled() => IsDebugging;
+        public Health PlayerStatus { get; set; }
 
         public override void _Ready()
         {
 
-            PlayerStatus = GetNode<Status>("PlayerStatus");
+            PlayerStatus = GetNode<Health>("Health");
 
             State = new PlayerState
             {
@@ -35,9 +30,6 @@ namespace ThemedHorrorJam5.Entities
                 Inventory = new Inventory(),
                 MissionManager = new MissionManager()
             };
-
-            //Movable = GetNode<PlayerMovableBehavior>("Behaviors/Movable");
-            //Movable.Init(this);
 
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
             Damagable.Init(PlayerStatus);
@@ -56,11 +48,13 @@ namespace ThemedHorrorJam5.Entities
             Interactable.InteractingCallback += (e) => CanMove = false;
             Interactable.InteractingCompleteCallback += (e) => CanMove = true;
 
-            Damagable.OnTakeDamage += (obj, force) =>
-            {
-                MoveAndSlide(force);
-                Ui.RefreshUI();
-            };
+            Damagable.OnTakeDamage += OnTakeDamage;
+        }
+
+        private void OnTakeDamage(Node sender, Vector2 damageForce) 
+        {
+            MoveAndSlide(damageForce);
+            Ui.RefreshUI();
         }
 
         public void AddItem(string name, int amt)

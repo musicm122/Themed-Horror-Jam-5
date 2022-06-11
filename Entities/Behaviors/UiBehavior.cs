@@ -8,7 +8,7 @@ using ThemedHorrorJam5.Scripts.UI;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class UiBehavior : Node2D, IDebuggable<Node>
+    public class UiBehavior : Node2D, IDebuggable<Node>, IUiBehavior
     {
         public PlayerState State { get; set; }
 

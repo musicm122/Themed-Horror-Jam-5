@@ -10,8 +10,6 @@ namespace ThemedHorrorJam5.Scenes
 
         public EnemyV4 Enemy { get; set; }
 
-        public Enemy3 Enemy3 { get; set; }
-
         public Label MousePosition { get; set; }
 
         [Export]
@@ -29,8 +27,6 @@ namespace ThemedHorrorJam5.Scenes
         {
             MousePosition = GetNode<Label>("CanvasLayer/MousePosition");
             Enemy = GetNode<EnemyV4>("Enemy");
-            Enemy3 = GetNode<Enemy3>("Enemy3");
-
             Player = this.GetTree().GetPlayerNode().Item2;
 
             if (PatrolPath != null)

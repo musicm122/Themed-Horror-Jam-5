@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Scripts/ItemComponents/Examinable.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/Item/Examinable.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Art/UI/information.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]

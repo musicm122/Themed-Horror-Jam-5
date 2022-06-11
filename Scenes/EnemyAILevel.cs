@@ -10,7 +10,6 @@ namespace ThemedHorrorJam5.Scenes
 
         public EnemyV4 Enemy { get; set; }
 
-
         public Label MousePosition { get; set; }
 
         [Export]
@@ -61,16 +60,19 @@ namespace ThemedHorrorJam5.Scenes
         {
 
             var mousePos = GetGlobalMousePosition();
-            var playerPos = Player.Position;
             MousePosition.Text = "-----------------------------------------------------------\r\n";
             MousePosition.Text += $"Mouse: X:{mousePos.x} : Y:{mousePos.y}\r\n";
             MousePosition.Text += "-----------------------------------------------------------\r\n";
             MousePosition.Text += $"Player : X : {Player.Position.x} : Y : {Player.Position.y}\r\n";
             MousePosition.Text += $"Player Global : X:{Player.GlobalPosition.x} : Y : {Player.GlobalPosition.y}\r\n";
             MousePosition.Text += "-----------------------------------------------------------\r\n";
-            MousePosition.Text += $"Enemy : X : {Enemy.Position.x} : Y : {Enemy.Position.y}\r\n";
-            MousePosition.Text += $"Enemy Global: X :{Enemy.GlobalPosition.x} :  Y : {Enemy.GlobalPosition.y}\r\n";
-            MousePosition.Text += "-----------------------------------------------------------\r\n";
+            if(Enemy!=null)
+            {
+                MousePosition.Text += "-----------------------------------------------------------\r\n";
+                MousePosition.Text += $"Enemy : X : {Enemy.Position.x} : Y : {Enemy.Position.y}\r\n";
+                MousePosition.Text += $"Enemy Global: X :{Enemy.GlobalPosition.x} :  Y : {Enemy.GlobalPosition.y}\r\n";
+                MousePosition.Text += "-----------------------------------------------------------\r\n";
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Entities/Flashlight.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Entities/Enemy1.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Entities/Enemy3.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Entities/SecurityCamera.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Entities/Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Entities/Block.tscn" type="PackedScene" id=6]
@@ -120,16 +118,6 @@ curve = SubResource( 2 )
 [node name="Enemy2_PathFollow2D" type="PathFollow2D" parent="Enemy2_Path2D"]
 position = Vector2( -336, 88 )
 rotation = -2.61153
-
-[node name="Enemy1" parent="." groups=["Movable"] instance=ExtResource( 2 )]
-Enable = true
-PatrolPath = NodePath("../Enemy1_Path")
-
-[node name="Enemy3" parent="." groups=["Movable"] instance=ExtResource( 3 )]
-position = Vector2( 88, -69 )
-Enable = true
-PatrolPath = NodePath("../Enemy2_Path2D")
-AggroBehavior = 3
 
 [node name="SecurityCamera" parent="." groups=["Movable"] instance=ExtResource( 4 )]
 position = Vector2( -752, -171 )

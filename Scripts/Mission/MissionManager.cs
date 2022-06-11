@@ -6,7 +6,7 @@ using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public class MissionManager
+    public class MissionManager : IMissionManager
     {
         public delegate void AddingMissionHandler(object sender, MissionManagerEventArgs args);
 

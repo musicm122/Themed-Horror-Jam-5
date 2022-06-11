@@ -5,7 +5,7 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class Status : Node, IDebuggable<Node>
+    public class Health : Node, IDebuggable<Node>
     {
         public Action EmptyHealthBarCallback { get; set; }
         public Action<int> HealthChangedCallback { get; set; }

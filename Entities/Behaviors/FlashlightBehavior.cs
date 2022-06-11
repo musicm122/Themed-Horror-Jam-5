@@ -5,7 +5,7 @@ using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class FlashlightBehavior : Node2D, IDebuggable<Node>
+    public class FlashlightBehavior : Node2D, IDebuggable<Node>, IFlashlightBehavior
     {
         public PlayerState State { get; set; }
 

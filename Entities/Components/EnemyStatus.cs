@@ -7,7 +7,7 @@ using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class EnemyStatus : Status
+    public class EnemyStatus : Health
     {
         public IVision VisionManager { get; set; }
 
