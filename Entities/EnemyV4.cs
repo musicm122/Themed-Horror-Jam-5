@@ -101,14 +101,5 @@ namespace ThemedHorrorJam5.Entities
         {
             stateMachine.Update(delta);
         }
-
-        public override void _Draw()
-        {
-            // DrawRect(this.EnclosureZone, new Godot.Color(255f, 255f, 0f));
-            //if (IsDebugging)
-            //{
-            //    DrawRect(this.EnclosureZone, new Godot.Color(100));
-            //}
-        }
     }
 }

@@ -73,9 +73,7 @@ position = Vector2( 344, -75 )
 rotation = 1.04721
 
 [node name="Enemy" parent="Enemies" groups=["Movable"] instance=ExtResource( 5 )]
-MoveSpeed = 50.0
 IsDebugging = true
-MaxSpeed = 50.0
 ArrivalZoneRadius = 20
 EnclosureZone = Rect2( -344, -40, 50, 50 )
 

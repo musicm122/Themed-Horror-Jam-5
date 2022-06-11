@@ -26,7 +26,6 @@ radius = 6.0
 [node name="PlayerRoot" type="KinematicBody2D"]
 script = ExtResource( 13 )
 MoveSpeed = 100.0
-EnclosureZone = Rect2( 16, 16, 50, 50 )
 
 [node name="UI" type="Node2D" parent="."]
 script = ExtResource( 12 )

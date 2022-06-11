@@ -10,14 +10,6 @@ namespace ThemedHorrorJam5.Entities
 
     public class ChaseEnemyState : State
     {
-
-        private Navigation2D? GetLevelNavigation()
-        {
-            var nodeTuples = Enemy.GetTree().GetNavigation2dNodes();
-            if (nodeTuples.Item1) return nodeTuples.Item2[0];
-            return null;
-        }
-
         private Navigation2D Nav { get; set; }
         private EnemyV4 Enemy { get; set; }
         private PlayerV2 PlayerRef { get; set; }
@@ -52,57 +44,66 @@ namespace ThemedHorrorJam5.Entities
             }
             if (Nav!=null)
             {
-
-
-                //Enemy.Status.Navigation2D = GetLevelNavigation();
-                //var nav = (Navigation2D)Enemy.Owner.GetNode("Navigation2D");
-                //Enemy.Status.Navigation2D = (Navigation2D)Enemy.Owner.GetNode("Navigation2D");
-
-
-                //var from = Enemy.Position;
-                //var from = Enemy.Status.Navigation2D.ToLocal(Enemy.Position);
-                var from = Enemy.GlobalPosition;
-
-                //var to = Enemy.Status.Navigation2D.ToLocal(PlayerRef.Position);
-                var to = PlayerRef.GlobalPosition;
-                //var to = Enemy.Status.Target.Position;
-                //var to = Enemy.Status.Target.ToLocal(Enemy.Status.Target.Position);
-
-                //Enemy.DrawLine(from, to, new Color(255, 255, 255), 3);
-
-                //var paths = Enemy.Status.Navigation2D.GetSimplePath(from, to);
-
+                var from = Nav.ToLocal(Enemy.GlobalPosition);
+                var to = Nav.ToLocal(PlayerRef.GlobalPosition);
                 var paths = Nav.GetSimplePath(from, to);
 
                 Enemy.Status.NavPath = new Stack<Vector2>(paths);
 
-                if (Enemy.Status.Line != null)
-                {
-                    Enemy.Status.Line.Points = Enemy.Status.NavPath.ToArray();
-                }
-
                 var distance_to_walk = Enemy.MoveSpeed * delta;
-
-                while (distance_to_walk > 0f && Enemy.Status.NavPath.Count > 0f)
+                while (distance_to_walk > 0f && paths.Length > 0f)
                 {
-                    var distance_to_next_point = Enemy.Position.DistanceTo(Enemy.Status.NavPath.Peek());
-                    if (distance_to_walk <= distance_to_next_point)
+                    //var distance_to_next_point = Enemy.Position.DistanceTo(Enemy.Status.NavPath.Peek());
+                    var distance_to_next_point = Enemy.GlobalPosition.DistanceTo(Nav.ToGlobal(Enemy.Status.NavPath.Peek()));
+                    var next_point = Nav.ToGlobal(Enemy.Status.NavPath.Peek());
+                    var global_direction = Enemy.GlobalPosition.DirectionTo(next_point);
+                    var global_distance = Enemy.GlobalPosition.DistanceTo(next_point);
+                    if (distance_to_walk <= global_distance)
                     {
-                        var newPosition = Enemy.Position.DirectionTo(Enemy.Status.NavPath.Peek()) * distance_to_walk;
-                        Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
-                        Enemy.Position += newPosition;
+                        var global_displacement = global_direction * distance_to_walk;
+                        var global_new_position = Enemy.GlobalPosition + global_displacement;
+                        var local_new_position = Enemy.ToLocal(global_new_position);
+                        Enemy.Status.VisionManager.UpdateFacingDirection(local_new_position);
+                        //Enemy.GlobalPosition = global_new_position;
+                        Enemy.MoveAndSlide(global_displacement / delta);
+
                     }
                     else
                     {
-                        var newPosition = Enemy.Status.NavPath.Pop();
-                        Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
+                        _ = Enemy.Status.NavPath.Pop();
+                        var global_new_position = next_point;
+                        var local_new_position = Enemy.ToLocal(global_new_position);
+                        Enemy.Status.VisionManager.UpdateFacingDirection(local_new_position);
                         if (Enemy.GetSlideCount() > 0)
                         {
-                            Enemy.HandleMovableObstacleCollision(newPosition);
+                            Enemy.HandleMovableObstacleCollision(global_direction);
                         }
-                        Enemy.Position = newPosition;
+                        Enemy.GlobalPosition = global_new_position;
                     }
-                    distance_to_walk -= distance_to_next_point;
+                    distance_to_walk -= global_distance;
+
+
+
+
+
+                    // //var distance_to_next_point = Enemy.GlobalPosition.DistanceTo(Enemy.ToLocal(Nav.ToGlobal(paths.)))
+                    // if (distance_to_walk <= distance_to_next_point)
+                    // {
+                    //     var newPosition = Enemy.Position.DirectionTo(Enemy.Status.NavPath.Peek()) * distance_to_walk;
+                    //     Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
+                    //     Enemy.Position += newPosition;
+                    // }
+                    // else
+                    // {
+                    //     var newPosition = Enemy.Status.NavPath.Pop();
+                    //     Enemy.Status.VisionManager.UpdateFacingDirection(newPosition.Normalized());
+                    //     if (Enemy.GetSlideCount() > 0)
+                    //     {
+                    //         Enemy.HandleMovableObstacleCollision(newPosition);
+                    //     }
+                    //     Enemy.Position = newPosition;
+                    // }
+                    // distance_to_walk -= distance_to_next_point;
                 }
                 if (Enemy.IsDebugging)
                 {
