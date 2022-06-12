@@ -1,9 +1,9 @@
-using Godot;
 using System;
+using Godot;
 using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities.Behaviors
+namespace ThemedHorrorJam5.Entities.Vision
 {
     public class RaycastVision : RayCast2D, IDebuggable<Node2D>, IVision
     {
@@ -17,9 +17,9 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         [Export]
         public float AngleBetweenRays { get; set; } = Mathf.Deg2Rad(5);
 
-        public bool CheckThisFrame = false;
+        private bool CheckThisFrame { get; set; }
 
-        public float MaxViewDistance { get; set; } = 100;
+        private float MaxViewDistance { get; set; } = 100;
 
         public override void _Ready()
         {
@@ -41,7 +41,7 @@ namespace ThemedHorrorJam5.Entities.Behaviors
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        public Node2D? Target { get; set; }
+        public Node2D Target { get; set; }
         public Action<Node2D> OnTargetSeen { get; set; }
         public Action<Node2D> OnTargetOutOfSight { get; set; }
 

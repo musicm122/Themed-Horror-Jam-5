@@ -1,5 +1,6 @@
 using Godot;
 using ThemedHorrorJam5.Entities;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Scenes
@@ -59,7 +60,6 @@ namespace ThemedHorrorJam5.Scenes
         {
             
             var mousePos = GetGlobalMousePosition();
-            var playerPos = Player.Position;
             MousePosition.Text = "-----------------------------------------------------------\r\n";
             MousePosition.Text += $"Mouse: X:{mousePos.x} : Y:{mousePos.y}\r\n";
             MousePosition.Text += "-----------------------------------------------------------\r\n";

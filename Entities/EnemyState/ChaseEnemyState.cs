@@ -1,21 +1,22 @@
-using Godot;
-using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
-using ThemedHorrorJam5.Scripts.GDUtils;
 using System.Collections.Generic;
-using ThemedHorrorJam5.Entities.Components;
+using Godot;
 using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
+using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Scripts.Enum;
+using ThemedHorrorJam5.Scripts.Extensions;
+using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
-namespace ThemedHorrorJam5.Entities
+namespace ThemedHorrorJam5.Entities.EnemyState
 {
 
     public class ChaseEnemyState : State
     {
-        private Navigation2D Nav { get; set; }
-        private EnemyV4 Enemy { get; set; }
-        private PlayerV2 PlayerRef { get; set; }
-        private EnemyStatus Status { get => Enemy.Status; }
-        private IVision VisionManager { get => Enemy.Status.VisionManager; }
+        private Navigation2D Nav { get; }
+        private EnemyV4 Enemy { get; }
+        private PlayerV2 PlayerRef { get; }
+        private EnemyStatus Status => Enemy.Status; 
+        private IVision VisionManager => Enemy.Status.VisionManager;
 
         public ChaseEnemyState(EnemyV4 enemy)
         {
@@ -27,15 +28,25 @@ namespace ThemedHorrorJam5.Entities
                 Logger.Error("Player ref not found on scene tree");
             }
 
-            (var hasNav, var navNodes) = Enemy.GetTree().GetNavigation2dNodes();
+            var (hasNav, navNodes) = Enemy.GetTree().GetNavigation2dNodes();
             if (hasNav && navNodes != null)
             {
                 Nav = navNodes[0];
             }
 
-            this.OnEnter += () => this.Logger.Debug("ChaseEnemyState OnEnter called");
-            this.OnExit += () => this.Logger.Debug("ChaseEnemyState Exit called");
+            this.OnEnter += OnEnterState;
+            this.OnExit += OnExitState;
             this.OnFrame += ChasePlayer;
+        }
+
+        private void OnEnterState()
+        {
+            this.Logger.Debug("ChaseEnemyState OnEnter called");
+        }
+
+        private void OnExitState()
+        {
+            this.Logger.Debug("ChaseEnemyState Exit called");
         }
 
         private void ChasePlayer(float delta)
@@ -47,35 +58,34 @@ namespace ThemedHorrorJam5.Entities
                 var paths = Nav.GetSimplePath(from, to);
 
                 var enemyNavPath = new Stack<Vector2>(paths);
-                var distance_to_walk = Enemy.MoveSpeed * delta;
+                var distanceToWalk = Enemy.MoveSpeed * delta;
                 
-                while (distance_to_walk > 0f && enemyNavPath.Count > 0)
+                while (distanceToWalk > 0f && enemyNavPath.Count > 0)
                 {
-                    var next_point = Nav.ToGlobal(enemyNavPath.Peek());
-                    var global_direction = Enemy.GlobalPosition.DirectionTo(next_point);
-                    var global_distance = Enemy.GlobalPosition.DistanceTo(next_point);
-                    if (distance_to_walk <= global_distance)
+                    var nextPoint = Nav.ToGlobal(enemyNavPath.Peek());
+                    var globalDirection = Enemy.GlobalPosition.DirectionTo(nextPoint);
+                    var globalDistance = Enemy.GlobalPosition.DistanceTo(nextPoint);
+                    if (distanceToWalk <= globalDistance)
                     {
-                        var global_displacement = global_direction * distance_to_walk;
-                        var global_new_position = Enemy.GlobalPosition + global_displacement;
-                        var local_new_position = Enemy.ToLocal(global_new_position);
-                        Enemy.Status.VisionManager.UpdateFacingDirection(local_new_position);
-                        Enemy.MoveAndSlide(global_displacement / delta);
-
+                        var globalDisplacement = globalDirection * distanceToWalk;
+                        var globalNewPosition = Enemy.GlobalPosition + globalDisplacement;
+                        var localNewPosition = Enemy.ToLocal(globalNewPosition);
+                        VisionManager.UpdateFacingDirection(localNewPosition);
+                        Enemy.MoveAndSlide(globalDisplacement / delta);
                     }
                     else
                     {
                         _ = enemyNavPath.Pop();
-                        var global_new_position = next_point;
-                        var local_new_position = Enemy.ToLocal(global_new_position);
-                        Enemy.Status.VisionManager.UpdateFacingDirection(local_new_position);
+                        var globalNewPosition = nextPoint;
+                        var localNewPosition = Enemy.ToLocal(globalNewPosition);
+                        VisionManager.UpdateFacingDirection(localNewPosition);
                         if (Enemy.GetSlideCount() > 0)
                         {
-                            Enemy.HandleMovableObstacleCollision(global_direction);
+                            Enemy.HandleMovableObstacleCollision(globalDirection);
                         }
-                        Enemy.GlobalPosition = global_new_position;
+                        Enemy.GlobalPosition = globalNewPosition;
                     }
-                    distance_to_walk -= global_distance;
+                    distanceToWalk -= globalDistance;
                 }
             }
             else

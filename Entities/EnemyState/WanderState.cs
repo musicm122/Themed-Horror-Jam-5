@@ -1,28 +1,25 @@
 using System;
-using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
-using ThemedHorrorJam5.Scripts.GDUtils;
+using System.Globalization;
 using Godot;
 using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
-namespace ThemedHorrorJam5.Entities
+namespace ThemedHorrorJam5.Entities.EnemyState
 {
     public class WanderState : State
     {
-        private float WanderAngle { get; set; } = 0;
+        private float WanderAngle { get; set; }
+        
         private const int CircleRadius = 8;
+
         private const float Randomness = 0.2f;
 
-        //const WANDER_RANDOMNESS: float = 0.2
-        //var wander_angle: float = 0
-
         private EnemyV4 Agent { get; set; }
-
 
         public WanderState(EnemyV4 enemy)
         {
             Agent = enemy;
-            Agent.EnclosureZone = new Rect2(Agent.Position,new Vector2(50,50));
             this.Name = EnemyBehaviorStates.Wander.GetDescription();
             this.OnEnter += () => this.Logger.Debug("WanderState OnEnter called");
             this.OnExit += () => this.Logger.Debug("WanderState Exit called");
@@ -51,12 +48,9 @@ namespace ThemedHorrorJam5.Entities
             }
 
             desiredVelocity = desiredVelocity.Normalized() * Agent.MaxSpeed;
-            if (desiredVelocity != Vector2.Zero)
-            {
-                WanderAngle = desiredVelocity.Angle();
-                return desiredVelocity - Agent.Velocity;
-            }
-            return Vector2.Zero;
+            if (desiredVelocity == Vector2.Zero) return Vector2.Zero;
+            WanderAngle = desiredVelocity.Angle();
+            return desiredVelocity - Agent.Velocity;
         }
 
         private Vector2 WanderSteering()
@@ -92,14 +86,29 @@ namespace ThemedHorrorJam5.Entities
             if (Agent.IsDebugging)
             {
                 Agent.Status.DebugLabel.Text =
+                    Agent.Status.DebugLabel.Text =
                    @$"
                     |-----------------------------------------------------------
-                    | Steering Vector : {steering}
-                    | enclosureSteeringVector {enclosureSteeringVector}
-                    | wanderSteeringVector {wanderSteeringVector}
-                    | avoidObstaclesSteeringVector {avoidObstaclesSteeringVector}
-                    | clampedSteering {clampedSteering}
-                    | Velocity : {Agent.Velocity}
+                    | Agent Position : {Agent.Position.ToString()}
+                    | Agent Global Position : {Agent.GlobalPosition.ToString()}
+                    | Velocity : {Agent.Velocity.ToString()}
+                    |-----------------------------------------------------------
+                    |-----------------------------------------------------------
+                    | EnclosureZone : {Agent.EnclosureZone.ToString()}
+                    | EnclosureZone Position  : {Agent.EnclosureZone.Position.ToString()}
+                    | EnclosureZone Relative Position: {Agent.ToLocal(Agent.EnclosureZone.Position).ToString()}
+                    | EnclosureZone Width : {Agent.EnclosureZone.Size.x.ToString(CultureInfo.InvariantCulture)}
+                    | EnclosureZone Height : {Agent.EnclosureZone.Size.y.ToString(CultureInfo.InvariantCulture)}
+                    |-----------------------------------------------------------
+                    | In Enclosure Zone Global : {Agent.EnclosureZone.HasPoint(Agent.GlobalPosition).ToString()}
+                    | In Enclosure Zone Local : {Agent.EnclosureZone.HasPoint(Agent.Position).ToString()}
+                    |-----------------------------------------------------------
+                    |-----------------------------------------------------------
+                    | Steering Vector : {steering.ToString()}
+                    | enclosureSteeringVector {enclosureSteeringVector.ToString()}
+                    | wanderSteeringVector {wanderSteeringVector.ToString()}
+                    | avoidObstaclesSteeringVector {avoidObstaclesSteeringVector.ToString()}
+                    | clampedSteering {clampedSteering.ToString()}
                     |-----------------------------------------------------------";
             }
         }
@@ -108,14 +117,12 @@ namespace ThemedHorrorJam5.Entities
         {
             Agent.ObstacleAvoidance.Rotation = Agent.Velocity.Angle();
             var raycasts = Agent.ObstacleAvoidance.GetChildren();
-            for (int i = 0; i < raycasts.Count; i++)
+            for (var i = 0; i < raycasts.Count; i++)
             {
                 var raycast = (RayCast2D)raycasts[i];
-                if (raycast.IsColliding())
-                {
-                    var obstacle = (PhysicsBody2D)raycast.GetCollider();
-                    return (Agent.Position + Agent.Velocity - obstacle.Position).Normalized() * Agent.AvoidForce;
-                }
+                if (!raycast.IsColliding()) continue;
+                var obstacle = (PhysicsBody2D)raycast.GetCollider();
+                return (Agent.Position + Agent.Velocity - obstacle.Position).Normalized() * Agent.AvoidForce;
             }
             return Vector2.Zero;
         }

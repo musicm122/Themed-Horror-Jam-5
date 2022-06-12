@@ -22,8 +22,9 @@ script = ExtResource( 6 )
 __meta__ = {
 "_edit_group_": true
 }
+IsDebugging = true
 ArrivalZoneRadius = 10
-EnclosureZone = Rect2( 32, 32, 5, 5 )
+EnclosureZone = Rect2( 8, 8, 10, 10 )
 
 [node name="Status" parent="." instance=ExtResource( 3 )]
 
@@ -67,6 +68,13 @@ margin_bottom = -18.0
 [node name="DebugLabel" type="Label" parent="."]
 margin_right = 40.0
 margin_bottom = 14.0
+
+[node name="StateLabel" type="Label" parent="."]
+margin_left = -40.0
+margin_top = -40.0
+margin_right = 51.0
+margin_bottom = -26.0
+text = "Current State: "
 
 [node name="ObstacleAvoidance" type="Node2D" parent="."]
 scale = Vector2( -1, 1 )

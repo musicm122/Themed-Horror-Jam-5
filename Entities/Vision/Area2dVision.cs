@@ -4,7 +4,7 @@ using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities.Behaviors
+namespace ThemedHorrorJam5.Entities.Vision
 {
     public class Area2dVision : Area2D, IDebuggable<Node2D>, IVision
     {
@@ -16,7 +16,7 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         [Export]
         public bool IsDebugging { get; set; }
 
-        public bool LineOfSight = false;
+        private bool LineOfSight { get; set; }
 
         public override void _Ready()
         {
@@ -33,8 +33,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
                 if (HasLineOfSight(Target.Position))
                 {
                     OnTargetSeen?.Invoke(Target);
-                    //CurrentState = AggroBehavior;
-                    //CurrentCoolDownCounter = MaxCoolDownTime;
                 }
             }
         }
@@ -45,20 +43,14 @@ namespace ThemedHorrorJam5.Entities.Behaviors
             {
                 Target = (Node2D)body;
                 this.PrintCaller();
-                //CurrentCoolDownCounter = MaxCoolDownTime;
                 if (!HasLineOfSight(Target.Position))
                 {
                     OnTargetOutOfSight?.Invoke(Target);
-                    //CurrentState = EnemyBehaviorStates.Patrol;
-                    //CurrentCoolDownCounter = MaxCoolDownTime;
                 }
                 else
                 {
                     OnTargetSeen?.Invoke(Target);
-                    //CurrentCoolDownCounter = MaxCoolDownTime;
                 }
-                //this.player = null;
-                //this.CurrentState = EnemyBehaviorStates.Patrol;
             }
         }
 
@@ -79,7 +71,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
 
         public bool HasLineOfSight(Vector2 point)
         {
-            //if (!CanCheckFrame()) return LineOfSight;
             var spaceState = GetWorld2d().DirectSpaceState;
             var result = spaceState.IntersectRay(GlobalTransform.origin, point, null, CollisionMask);
             LineOfSight = result?.Count > 0;
@@ -89,35 +80,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         public void UpdateFacingDirection(Vector2 newVelocity)
         {
             this.Rotation = this.Position.AngleToPoint(newVelocity);
-
-            // if (newVelocity.x < 0)
-            // {
-            //     Scale = new Vector2(-1, Scale.y);
-            // }
-            // else
-            // {
-            //     Scale = new Vector2(1, Scale.y);
-            // }
-            // if (newVelocity.y < 0)
-            // {
-            //     Scale = new Vector2(1, Scale.y);
-            // }
-        }
-
-
-        public bool IsPlayerInSight()
-        {
-            var bodies = GetOverlappingBodies();
-            if (bodies == null || bodies.Count == 0) return false;
-            for (int i = 0; i < bodies.Count; i++)
-            {
-                var body = (Node)bodies[i];
-                if (body.Name.ToLower().Contains("player"))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

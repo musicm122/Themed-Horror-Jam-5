@@ -1,6 +1,7 @@
-﻿using Godot;
-using ThemedHorrorJam5.Entities.Behaviors;
+﻿using System.Globalization;
+using Godot;
 using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
+using ThemedHorrorJam5.Entities.Vision;
 using ThemedHorrorJam5.Scripts.Constants;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
@@ -8,35 +9,35 @@ namespace ThemedHorrorJam5.Entities
 {
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
-        private bool IsStartMovement = true;
+        private bool IsStartMovement { get; set; } = true;
 
-        private bool IsPausing = false;
+        private bool IsPausing { get; set; }
 
-        private float Elapsed = 0f;
+        private float Elapsed { get; set; }
 
         private Label DebugLabel { get; set; }
 
-        public CameraState CurrentState = CameraState.Idle;
+        public CameraState CurrentState { get; set; } =  CameraState.Idle;
 
         public IVision VisionManager { get; set; }
 
         public Node2D PlayerRef { get; set; }
 
         [Export]
-        public float MaxRotationMovementTime = 2f;
+        public float MaxRotationMovementTime { get; set; } = 2f;
 
         [Export]
-        public float PauseRotationTime = 2f;
+        public float PauseRotationTime { get; set; } = 2f;
 
         [Export]
         public float RotationSpeed { get; set; } = 80f;
 
-        public Node2D? Target { get; set; }
+        public Node2D Target { get; set; }
 
         public Polygon2D CameraSprite { get; set; }
 
         [Export]
-        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugging { get; set; } 
 
         public override void _Ready()
         {
@@ -52,7 +53,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnTargetLost(Node2D player)
         {
-            this.Print($"Player lost. Player last known position at {player.GlobalPosition}");
+            this.Print($"Player lost. Player last known position at {player.GlobalPosition.ToString()}");
             CameraSprite.Color = CommonColors.AggroColor;
             this.Target = null;
         }
@@ -100,15 +101,11 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnAggro(float delta)
         {
-            if (PlayerRef != null)
-            {
-                var targetPoint = PlayerRef.GlobalPosition;
-                //var targetPoint = PlayerRef.GetAimAtPoint();
-                CameraSprite.Color = CommonColors.AggroColor;
-                this.LookAt(targetPoint);
-                this.PrintCaller();
-
-            }
+            if (PlayerRef == null) return;
+            var targetPoint = PlayerRef.GlobalPosition;
+            CameraSprite.Color = CommonColors.AggroColor;
+            this.LookAt(targetPoint);
+            this.PrintCaller();
         }
 
         private void OnDamaged(float delta)
@@ -148,14 +145,14 @@ namespace ThemedHorrorJam5.Entities
                 DebugLabel.Text =
 @$"
 ------Angle--------------
-Rotation : {Mathf.Rad2Deg(this.Rotation)}
-Global Rotation: {Mathf.Rad2Deg(this.GlobalRotation)}
-GlobalTransform.Rotation: {Mathf.Rad2Deg(this.GlobalTransform.Rotation)}
+Rotation : {Mathf.Rad2Deg(this.Rotation).ToString(CultureInfo.InvariantCulture)}
+Global Rotation: {Mathf.Rad2Deg(this.GlobalRotation).ToString(CultureInfo.InvariantCulture)}
+GlobalTransform.Rotation: {Mathf.Rad2Deg(this.GlobalTransform.Rotation).ToString(CultureInfo.InvariantCulture)}
 
 ------Degree-------------
-Rotation: {this.Rotation}
-Global Rotation: {this.GlobalRotation}
-GlobalTransform.Rotation: {this.GlobalTransform.Rotation}";
+Rotation: {this.Rotation.ToString(CultureInfo.InvariantCulture)}
+Global Rotation: {this.GlobalRotation.ToString(CultureInfo.InvariantCulture)}
+GlobalTransform.Rotation: {this.GlobalTransform.Rotation.ToString(CultureInfo.InvariantCulture)}";
 
             }
         }

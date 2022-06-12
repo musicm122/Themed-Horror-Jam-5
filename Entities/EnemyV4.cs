@@ -1,9 +1,10 @@
 using Godot;
 using System;
-using ThemedHorrorJam5.Entities.Behaviors;
+using System.Globalization;
 using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Entities.EnemyState;
+using ThemedHorrorJam5.Entities.Vision;
 using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Scripts.Patterns.Logger;
 using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
 namespace ThemedHorrorJam5.Entities
@@ -13,8 +14,7 @@ namespace ThemedHorrorJam5.Entities
         [Export]
         public NodePath PatrolPath { get; set; }
 
-        [Export]
-        public EnemyBehaviorStates DefaultState = EnemyBehaviorStates.Wander;
+        [Export] public EnemyBehaviorStates DefaultState { get; set; } = EnemyBehaviorStates.Wander;
 
         public EnemyStatus Status { get; set; }
 
@@ -23,33 +23,33 @@ namespace ThemedHorrorJam5.Entities
         public Node2D ObstacleAvoidance { get; set; }
 
         public Label Cooldown { get; set; }
-        
-        public Label StateLabel { get; set; }
 
-        private readonly StateMachine stateMachine = new();
+        private Label StateLabel { get; set; }
+
+        private readonly StateMachine _stateMachine = new();
 
         public void Init()
         {
-            stateMachine.AddState(new IdleEnemyState(this));
-            stateMachine.AddState(new PatrolEnemyState(this));
-            stateMachine.AddState(new ChaseEnemyState(this));
-            stateMachine.AddState(new WanderState(this));
+            _stateMachine.AddState(new IdleEnemyState(this));
+            _stateMachine.AddState(new PatrolEnemyState(this));
+            _stateMachine.AddState(new ChaseEnemyState(this));
+            _stateMachine.AddState(new WanderState(this));
 
             if (!Status.LineOfSight)
             {
-                stateMachine.TransitionTo(EnemyBehaviorStates.Patrol);
+                _stateMachine.TransitionTo(EnemyBehaviorStates.Patrol);
             }
             if (Status.CurrentCoolDownCounter <= 0f)
             {
-                stateMachine.TransitionTo(EnemyBehaviorStates.Patrol);
-                Status.Target = null;
+                _stateMachine.TransitionTo(EnemyBehaviorStates.Patrol);
                 Cooldown.Text = String.Empty;
             }
             else
             {
-                Status.Cooldown.Text = $"Cooling Down in {Status.CurrentCoolDownCounter} seconds";
+                Status.Cooldown.Text = 
+                    $"Cooling Down in {Status.CurrentCoolDownCounter.ToString(CultureInfo.InvariantCulture)} seconds";
             }
-            stateMachine.TransitionTo(DefaultState);
+            _stateMachine.TransitionTo(DefaultState);
         }
 
         public override void _Ready()
@@ -83,21 +83,19 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnTargetLost(Node2D target)
         {
-            Status.Target = null;
             Status.CurrentCoolDownCounter = Status.MaxCoolDownTime;
         }
 
         private void OnTargetDetection(Node2D target)
         {
-            Status.Target = target;
             Status.CurrentCoolDownCounter = Status.MaxCoolDownTime;
-            this.stateMachine.TransitionTo(EnemyBehaviorStates.ChasePlayer);
+            this._stateMachine.TransitionTo(EnemyBehaviorStates.ChasePlayer);
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            stateMachine.Update(delta);
-            this.StateLabel.Text = stateMachine.CurrentState.ToString();
+            _stateMachine.Update(delta);
+            this.StateLabel.Text = _stateMachine.CurrentState.ToString();
         }
     }
 }

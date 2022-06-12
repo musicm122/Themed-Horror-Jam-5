@@ -8,7 +8,7 @@
 
 [sub_resource type="Curve2D" id=2]
 _data = {
-"points": PoolVector2Array( 0, 0, 0, 0, -354.896, 74.1996, 0, 0, 0, 0, -333.167, -20.2363, 0, 0, 0, 0, -405.595, -26.9817, 0, 0, 0, 0, -340.41, -87.6905, 0, 0, 0, 0, -202.798, -47.2179, 0, 0, 0, 0, -40, -112, 0, 0, 0, 0, -86.9132, -33.7271, 0, 0, 0, 0, -86.9132, 26.9817, 0, 0, 0, 0, -43.4566, 20.2363, 0, 0, 0, 0, -101.399, 80.945, 0, 0, 0, 0, -224.526, 33.7271, 0, 0, 0, 0, -354.896, 74.1996 )
+"points": PoolVector2Array( 0, 0, 0, 0, -354.896, 74.1996, 0, 0, 0, 0, -333.167, -20.2363, 0, 0, 0, 0, -405.595, -26.9817, 0, 0, 0, 0, -361, -58, 0, 0, 0, 0, -340.41, -87.6905, 0, 0, 0, 0, -202.798, -47.2179, 0, 0, 0, 0, -194, -55, 0, 0, 0, 0, -40, -112, 0, 0, 0, 0, -86.9132, -33.7271, 0, 0, 0, 0, -86.9132, 26.9817, 0, 0, 0, 0, -43.4566, 20.2363, 0, 0, 0, 0, -101.399, 80.945, 0, 0, 0, 0, -224.526, 33.7271, 0, 0, 0, 0, -354.896, 74.1996 )
 }
 
 [sub_resource type="NavigationPolygon" id=3]
@@ -32,13 +32,14 @@ margin_right = 496.0
 text = "G"
 
 [node name="Player" parent="." groups=["Movable", "Player", "targets"] instance=ExtResource( 10 )]
-position = Vector2( -544, -48 )
+position = Vector2( 3, -141 )
 PushSpeed = 50.0
 MaxSpeed = 100.0
 
 [node name="Paths" type="Node" parent="."]
 
 [node name="Enemy2_Path2D" type="Path2D" parent="Paths"]
+position = Vector2( 173.595, -4 )
 curve = SubResource( 2 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Paths/Enemy2_Path2D"]
@@ -48,7 +49,7 @@ rotation = -1.34464
 [node name="Environment" type="Node" parent="."]
 
 [node name="Block" parent="Environment" instance=ExtResource( 1 )]
-position = Vector2( -664, -67 )
+position = Vector2( 74.595, -53 )
 
 [node name="Block3" parent="Environment" instance=ExtResource( 1 )]
 position = Vector2( -624, 152 )
@@ -60,14 +61,50 @@ position = Vector2( -240, -56 )
 position = Vector2( -256, 120 )
 
 [node name="Enemies" type="YSort" parent="."]
-position = Vector2( -344, -40 )
+position = Vector2( 394.595, -26 )
 
 [node name="Enemy" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 159, -42 )
-MoveSpeed = 50.0
+position = Vector2( -98.595, 10 )
+MoveSpeed = 20.0
+MaxSpeed = 20.0
+ArrivalZoneRadius = 5
+EnclosureZone = Rect2( 0, 0, 10, 10 )
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+
+[node name="Enemy2" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( -415.595, 121 )
+MoveSpeed = 20.0
+MaxSpeed = 20.0
+ArrivalZoneRadius = 5
+EnclosureZone = Rect2( 0, 0, 10, 10 )
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+
+[node name="Enemy3" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( -267.595, -183 )
+MoveSpeed = 20.0
+MaxSpeed = 20.0
+ArrivalZoneRadius = 5
+EnclosureZone = Rect2( 0, 0, 10, 10 )
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+
+[node name="Enemy4" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( -475.595, -174 )
+MoveSpeed = 20.0
+MaxSpeed = 20.0
+ArrivalZoneRadius = 5
+EnclosureZone = Rect2( 0, 0, 10, 10 )
+PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
+
+[node name="Enemy5" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( -166.595, -133 )
+MoveSpeed = 20.0
+MaxSpeed = 20.0
+ArrivalZoneRadius = 5
+EnclosureZone = Rect2( 0, 0, 10, 10 )
 PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
 [node name="SecurityCamera" parent="Enemies" instance=ExtResource( 2 )]
+position = Vector2( 42, 130 )
 
 [node name="Navigation2D" type="Navigation2D" parent="."]
 visible = false

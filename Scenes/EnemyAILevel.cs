@@ -1,26 +1,26 @@
+using System.Globalization;
 using Godot;
 using ThemedHorrorJam5.Entities;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Scenes
 {
     public class EnemyAILevel : Node2D
     {
-        public PlayerV2 Player { get; set; }
+        private PlayerV2 Player { get; set; }
 
-        public EnemyV4 Enemy { get; set; }
+        private EnemyV4 Enemy { get; set; }
 
-        public Label MousePosition { get; set; }
+        private Label MousePosition { get; set; }
 
-        [Export]
-        public NodePath PatrolPath { get; set; }
+        [Export] public NodePath PatrolPath { get; set; }
 
-        [Export]
-        public NodePath PatrolPathFollow2D { get; set; }
+        [Export] public NodePath PatrolPathFollow2D { get; set; }
 
-        public Path2D Path { get; set; }
+        private Path2D Path { get; set; }
 
-        public PathFollow2D PathFollow2D { get; set; }
+        private PathFollow2D PathFollow2D { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -38,6 +38,7 @@ namespace ThemedHorrorJam5.Scenes
             {
                 GD.PushWarning("PatrolPath could not be found");
             }
+
             if (PatrolPathFollow2D != null)
             {
                 PathFollow2D = (PathFollow2D)GetNode(PatrolPathFollow2D);
@@ -58,21 +59,20 @@ namespace ThemedHorrorJam5.Scenes
         //  // Called every frame. 'delta' is the elapsed time since the previous frame.
         public override void _Process(float delta)
         {
-
             var mousePos = GetGlobalMousePosition();
-            MousePosition.Text = "-----------------------------------------------------------\r\n";
-            MousePosition.Text += $"Mouse: X:{mousePos.x} : Y:{mousePos.y}\r\n";
-            MousePosition.Text += "-----------------------------------------------------------\r\n";
-            MousePosition.Text += $"Player : X : {Player.Position.x} : Y : {Player.Position.y}\r\n";
-            MousePosition.Text += $"Player Global : X:{Player.GlobalPosition.x} : Y : {Player.GlobalPosition.y}\r\n";
-            MousePosition.Text += "-----------------------------------------------------------\r\n";
-            if(Enemy!=null)
-            {
-                MousePosition.Text += "-----------------------------------------------------------\r\n";
-                MousePosition.Text += $"Enemy : X : {Enemy.Position.x} : Y : {Enemy.Position.y}\r\n";
-                MousePosition.Text += $"Enemy Global: X :{Enemy.GlobalPosition.x} :  Y : {Enemy.GlobalPosition.y}\r\n";
-                MousePosition.Text += "-----------------------------------------------------------\r\n";
-            }
+            MousePosition.Text =
+                $@"-----------------------------------------------------------\r\n
+                Mouse: X:{mousePos.x.ToString(CultureInfo.InvariantCulture)} : Y:{mousePos.y.ToString(CultureInfo.InvariantCulture)}\r\n
+                -----------------------------------------------------------\r\n
+                Player : X : {Player.Position.x.ToString(CultureInfo.InvariantCulture)} : Y : {Player.Position.y.ToString(CultureInfo.InvariantCulture)}\r\n
+                Player Global : X:{Player.GlobalPosition.x.ToString(CultureInfo.InvariantCulture)} : Y : {Player.GlobalPosition.y.ToString(CultureInfo.InvariantCulture)}\r\n
+                -----------------------------------------------------------\r\n";
+            if (Enemy == null) return;
+            MousePosition.Text =
+                $@"-----------------------------------------------------------\r\n
+                Enemy : X : {Enemy.Position.x.ToString(CultureInfo.InvariantCulture)} : Y : {Enemy.Position.y.ToString(CultureInfo.InvariantCulture)}\r\n
+                Enemy Global: X :{Enemy.GlobalPosition.x.ToString(CultureInfo.InvariantCulture)} :  Y : {Enemy.GlobalPosition.y.ToString(CultureInfo.InvariantCulture)}\r\n
+                -----------------------------------------------------------\r\n";
         }
     }
 }
