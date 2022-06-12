@@ -24,6 +24,8 @@ polygon = PoolVector2Array( 5.55316, 16.1605, 22.0204, 51.8373, 40.225, 47.1906,
 [node name="RayCast2D" parent="Pivot" instance=ExtResource( 3 )]
 enabled = true
 cast_to = Vector2( 0, 50 )
+ConeAngle = 0.523599
+AngleBetweenRays = 0.0872665
 
 [node name="DebugLabel" type="Label" parent="."]
 margin_right = 40.0

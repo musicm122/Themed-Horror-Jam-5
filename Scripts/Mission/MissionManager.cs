@@ -6,7 +6,7 @@ using ThemedHorrorJam5.Scripts.Mission;
 
 namespace ThemedHorrorJam5.Scripts.ItemComponents
 {
-    public class MissionManager
+    public class MissionManager : IMissionManager
     {
         public delegate void AddingMissionHandler(object sender, MissionManagerEventArgs args);
 
@@ -94,11 +94,11 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public int Count() => Missions.Count;
 
-        public void EvaluateMissionsState(Player player)
+        public void EvaluateMissionsState(PlayerState playerState)
         {
             for (int i = 0; i < Missions.Count; i++)
             {
-                if (Missions[i].EvaluateCompletionState(player))
+                if (Missions[i].EvaluateCompletionState(playerState))
                 {
                     Missions[i].IsComplete = true;
                 }

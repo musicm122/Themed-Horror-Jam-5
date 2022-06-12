@@ -1,7 +1,6 @@
 using Godot;
-using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Entities.Components;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Scripts.UI
 {
@@ -26,7 +25,7 @@ namespace ThemedHorrorJam5.Scripts.UI
             GameOverPanel.Hide();
         }
 
-        public void RefreshUI(Status status)
+        public void RefreshUI(Health status)
         {
             string maxHealthVal = "Health: ";
             for (int i = 0; i < status.MaxHealth; i++)

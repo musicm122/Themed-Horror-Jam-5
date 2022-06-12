@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Entities/Examinable.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Scripts/ItemComponents/ItemBehavior.cs" type="Script" id=2]
+[ext_resource path="res://Scripts/Item/ItemBehavior.cs" type="Script" id=2]
 [ext_resource path="res://Assets/Art/Item/Flashlight.png" type="Texture" id=3]
 
 [node name="Item" instance=ExtResource( 1 )]

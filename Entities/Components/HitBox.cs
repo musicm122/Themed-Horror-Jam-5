@@ -1,9 +1,9 @@
 using Godot;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Components
 {
-    public class HitBox : Area2D, IDebuggable<Node>
+    public class HitBox : Area2D, IDebuggable<Node>, IHitBox
     {
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -15,21 +15,5 @@ namespace ThemedHorrorJam5.Entities.Components
 
         [Export]
         public float EffectForce { get; set; } = 50f;
-
-        public override void _Ready()
-        {
-            base._Ready();
-            //this.ConnectBodyEntered(this, nameof(OnHitBoxEnter));
-        }
-
-        // public void OnHitBoxEnter(Node body)
-        // {
-        //     this.PrintCaller();
-        //     if(body.IsPlayer()){
-        //         var player =  (Player)body;
-        //         player.On
-        //     }
-        // }
-
     }
 }

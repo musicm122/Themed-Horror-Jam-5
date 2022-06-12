@@ -1,47 +1,38 @@
-﻿using System.Diagnostics;
-using Godot;
+﻿using Godot;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public class PlayerV2 : KinematicBody2D, IDebuggable<Node>
+    public class PlayerV2 : PlayerMovableBehavior
     {
-        public PlayerState State {get;set;}
+        public PlayerState State { get; set; }
 
-        public DamagableBehavior Damagable { get; private set; }
+        public IDamagableBehavior Damagable { get; private set; }
 
-        public MovableBehavior Movable { get; private set; }
+        public IInteractableBehavior Interactable { get; private set; }
 
-        public InteractableBehavior Interactable { get; private set; }
+        public IUiBehavior Ui { get; private set; }
 
-        public UiBehavior Ui { get; private set; }
+        public IFlashlightBehavior Flashlight { get; private set; }
 
-        public FlashlightBehavior Flashlight { get; private set; }
-
-        public Status PlayerStatus { get; set; }
-
-        [Export]
-        public bool IsDebugging { get; set; } = false;
-
-        public bool IsDebugPrintEnabled() => IsDebugging;
-
+        public Health PlayerStatus { get; set; }
 
         public override void _Ready()
         {
-            PlayerStatus = GetNode<Status>("PlayerStatus");
 
-            State = new PlayerState {
+            PlayerStatus = GetNode<Health>("Health");
+
+            State = new PlayerState
+            {
                 PlayerStatus = PlayerStatus,
                 Inventory = new Inventory(),
                 MissionManager = new MissionManager()
             };
 
-            Movable = GetNode<MovableBehavior>("Behaviors/Movable");
-            Movable.Init(this);
-
             Damagable = GetNode<DamagableBehavior>("Behaviors/Damagable");
-            Damagable.Init(State);
+            Damagable.Init(PlayerStatus);
 
             Interactable = GetNode<InteractableBehavior>("Behaviors/Interactable");
             Interactable.Init(State);
@@ -54,20 +45,25 @@ namespace ThemedHorrorJam5.Entities
             Ui.Init(State);
 
 
-            Interactable.InteractingCallback += (e) => Movable.CanMove = false;
-            Interactable.InteractingCompleteCallback += (e) => Movable.CanMove = true;
+            Interactable.InteractingCallback += (e) => CanMove = false;
+            Interactable.InteractingCompleteCallback += (e) => CanMove = true;
 
-            Damagable.OnTakeDamage += (obj, force) => {
-                Movable.MoveAndSlide(force);
-                Ui.RefreshUI();
-            };
+            Damagable.OnTakeDamage += OnTakeDamage;
         }
 
-        public void AddItem(string name, int amt){
+        private void OnTakeDamage(Node sender, Vector2 damageForce) 
+        {
+            MoveAndSlide(damageForce);
+            Ui.RefreshUI();
+        }
+
+        public void AddItem(string name, int amt)
+        {
             Ui.AddItem(name, amt);
         }
 
-        public void RemoveItems(string name, int amt) {
+        public void RemoveItems(string name, int amt)
+        {
             Ui.RemoveItems(name, amt);
         }
 

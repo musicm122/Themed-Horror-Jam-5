@@ -1,33 +1,33 @@
 ﻿using System.Globalization;
 using Godot;
-using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
+using ThemedHorrorJam5.Entities.Vision;
 using ThemedHorrorJam5.Scripts.Constants;
-using ThemedHorrorJam5.Scripts.ItemComponents;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public enum CameraState { Idle, Warning, Aggro, Damaged, Stun }
-
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
-        private bool IsStartMovement = true;
-        private bool IsPausing = false;
+        private bool IsStartMovement { get; set; } = true;
 
-        private float Elapsed = 0f;
+        private bool IsPausing { get; set; }
+
+        private float Elapsed { get; set; }
 
         private Label DebugLabel { get; set; }
 
-        public CameraState CurrentState = CameraState.Idle;
+        public CameraState CurrentState { get; set; } =  CameraState.Idle;
 
-        public RaycastVision VisionManager { get; set; }
+        public IVision VisionManager { get; set; }
 
         public Node2D PlayerRef { get; set; }
 
         [Export]
-        public float MaxRotationMovementTime = 2f;
+        public float MaxRotationMovementTime { get; set; } = 2f;
 
         [Export]
-        public float PauseRotationTime = 2f;
+        public float PauseRotationTime { get; set; } = 2f;
 
         [Export]
         public float RotationSpeed { get; set; } = 80f;
@@ -37,7 +37,7 @@ namespace ThemedHorrorJam5.Entities
         public Polygon2D CameraSprite { get; set; }
 
         [Export]
-        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugging { get; set; } 
 
         public override void _Ready()
         {
@@ -53,7 +53,7 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnTargetLost(Node2D player)
         {
-            this.Print($"Player lost. Player last known position at {player.GlobalPosition}");
+            this.Print($"Player lost. Player last known position at {player.GlobalPosition.ToString()}");
             CameraSprite.Color = CommonColors.AggroColor;
             this.Target = null;
         }
@@ -66,16 +66,15 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnIdle(float delta)
         {
-            var maxTime = 2f;
             this.CameraSprite.Color = CommonColors.IdleColor;
-            if (Elapsed > maxTime && !IsPausing)
+            if (Elapsed > MaxRotationMovementTime && !IsPausing)
             {
                 IsStartMovement = !IsStartMovement;
                 IsPausing = true;
                 Elapsed = 0f;
             }
 
-            if (Elapsed > maxTime && IsPausing)
+            if (Elapsed > MaxRotationMovementTime && IsPausing)
             {
                 IsPausing = false;
                 Elapsed = 0f;
@@ -92,37 +91,7 @@ namespace ThemedHorrorJam5.Entities
                     this.Rotation -= RotationSpeed * delta;
                 }
             }
-
-            //var minRad = Mathf.Deg2Rad(90f);
-            //var maxRad = Mathf.Deg2Rad(120f);
-            //this.Rotation = minRad;
-            //var startDegree = Mathf.Deg2Rad(StartRotationAngle);
-            //var endDegree = Mathf.Deg2Rad(EndRotationAngle);
-            //this.Rotation += RotationSpeed * delta;
-
-
-            //this.Rotation = this.Rotation > maxDegree ? minDegree : this.Rotation;
-            //this.Rotation = Mathf.LerpAngle(minDegree, maxDegree, Elapsed);
-            //this.Rotation = Mathf.Clamp(Mathf.LerpAngle(minDegree, maxDegree, elapsed), startDegree, endDegree) * delta;
-            //if (this.Rotation < StartRotationAngle)
-            //{
-            //    this.Rotation = Mathf.Clamp(Mathf.LerpAngle(startDegree, endDegree, elapsed), startDegree, endDegree) * delta;
-            //    //this.Rotation += Mathf.LerpAngle(startDegree, endDegree, 0.2f);
-            //    this.CameraSprite.Color = WarningColor;
-            //}
-            //else
-            //{
-            //    this.Rotation = Mathf.Clamp(Mathf.LerpAngle(endDegree, startDegree, elapsed), endDegree, startDegree) * delta;
-            //    //this.Rotation += Mathf.LerpAngle(endDegree, startDegree, 0.2f);
-            //    this.CameraSprite.Color = IdleColor;
-            //}
             Elapsed += delta;
-
-            // this.Rotation += RotationSpeed * delta;
-            //var minAngle = 
-            //var maxAngle = Mathf.Deg2Rad(RotationArc);
-            //while(this.Transform.Rotation)
-
         }
 
         private void OnWarning(float delta)
@@ -132,15 +101,11 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnAggro(float delta)
         {
-            if (PlayerRef != null)
-            {
-                var targetPoint = PlayerRef.GlobalPosition;
-                //var targetPoint = PlayerRef.GetAimAtPoint();
-                CameraSprite.Color = CommonColors.AggroColor;
-                this.LookAt(targetPoint);
-                this.PrintCaller();
-
-            }
+            if (PlayerRef == null) return;
+            var targetPoint = PlayerRef.GlobalPosition;
+            CameraSprite.Color = CommonColors.AggroColor;
+            this.LookAt(targetPoint);
+            this.PrintCaller();
         }
 
         private void OnDamaged(float delta)
@@ -180,14 +145,14 @@ namespace ThemedHorrorJam5.Entities
                 DebugLabel.Text =
 @$"
 ------Angle--------------
-Rotation : {Mathf.Rad2Deg(this.Rotation)}
-Global Rotation: {Mathf.Rad2Deg(this.GlobalRotation)}
-GlobalTransform.Rotation: {Mathf.Rad2Deg(this.GlobalTransform.Rotation)}
+Rotation : {Mathf.Rad2Deg(this.Rotation).ToString(CultureInfo.InvariantCulture)}
+Global Rotation: {Mathf.Rad2Deg(this.GlobalRotation).ToString(CultureInfo.InvariantCulture)}
+GlobalTransform.Rotation: {Mathf.Rad2Deg(this.GlobalTransform.Rotation).ToString(CultureInfo.InvariantCulture)}
 
 ------Degree-------------
-Rotation: {this.Rotation}
-Global Rotation: {this.GlobalRotation}
-GlobalTransform.Rotation: {this.GlobalTransform.Rotation}";
+Rotation: {this.Rotation.ToString(CultureInfo.InvariantCulture)}
+Global Rotation: {this.GlobalRotation.ToString(CultureInfo.InvariantCulture)}
+GlobalTransform.Rotation: {this.GlobalTransform.Rotation.ToString(CultureInfo.InvariantCulture)}";
 
             }
         }

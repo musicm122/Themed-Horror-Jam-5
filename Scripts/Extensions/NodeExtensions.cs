@@ -128,5 +128,13 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                 throw;
             }
         }
+
+        public static string DisplayPositionData(this Node2D node, string title) =>
+        @$"
+        |-----------------------------------------------------------
+        | {title} Global Position: {node.GlobalPosition}
+        | {title} Local Position: {node.Position}
+        |-----------------------------------------------------------";
+        
     }
 }

@@ -20,7 +20,7 @@ color = Color( 0.0431373, 0.0156863, 0.105882, 0.74902 )
 [node name="HealthKit" parent="." instance=ExtResource( 10 )]
 position = Vector2( 736, 56 )
 
-[node name="Player" parent="." groups=["Movable", "Player"] instance=ExtResource( 11 )]
+[node name="Player" parent="." groups=["Player"] instance=ExtResource( 11 )]
 position = Vector2( 648, -40 )
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]
@@ -99,9 +99,6 @@ margin_right = 597.0
 margin_bottom = -90.0
 rect_pivot_offset = Vector2( 272, 88 )
 text = "Talk to NPC "
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label4" type="Label" parent="."]
 show_behind_parent = true
