@@ -4,7 +4,6 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class InputUtils
     {
-
         public static bool IsAnyKeyPressed() =>
             Input.IsActionJustPressed(InputAction.ToggleFlashlight) ||
             Input.IsActionJustPressed(InputAction.Run) ||
@@ -25,18 +24,22 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             {
                 velocity.x += 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Left))
             {
                 velocity.x -= 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Up))
             {
                 velocity.y -= 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Down))
             {
                 velocity.y += 1f;
             }
+
             return velocity.Normalized() * speed;
         }
 
@@ -49,38 +52,99 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                 velocity.x += 0.5f;
                 velocity.y -= 0.5f;
             }
+
             if (Input.IsActionPressed(InputAction.Right) && Input.IsActionPressed(InputAction.Down))
             {
                 velocity.x += 0.5f;
                 velocity.y += 0.5f;
             }
+
             if (Input.IsActionPressed(InputAction.Left) && Input.IsActionPressed(InputAction.Up))
             {
                 velocity.x -= 0.5f;
                 velocity.y -= 0.5f;
             }
+
             if (Input.IsActionPressed(InputAction.Left) && Input.IsActionPressed(InputAction.Down))
             {
                 velocity.x -= 0.5f;
                 velocity.y += 0.5f;
             }
+
             if (Input.IsActionPressed(InputAction.Right))
             {
                 velocity.x += 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Left))
             {
                 velocity.x -= 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Up))
             {
                 velocity.y -= 1f;
             }
+
             if (Input.IsActionPressed(InputAction.Down))
             {
                 velocity.y += 1f;
             }
+
             return velocity.Normalized() * speed;
         }
+        
+        public static Vector2 GetCameraMovementInput(float speed = 1f)
+        {
+            var velocity = Vector2.Zero;
+
+            if (Input.IsActionPressed(InputAction.CameraRight) && Input.IsActionPressed(InputAction.CameraUp))
+            {
+                velocity.x += 0.5f;
+                velocity.y -= 0.5f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraRight) && Input.IsActionPressed(InputAction.CameraDown))
+            {
+                velocity.x += 0.5f;
+                velocity.y += 0.5f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraLeft) && Input.IsActionPressed(InputAction.CameraUp))
+            {
+                velocity.x -= 0.5f;
+                velocity.y -= 0.5f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraLeft) && Input.IsActionPressed(InputAction.CameraDown))
+            {
+                velocity.x -= 0.5f;
+                velocity.y += 0.5f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraRight))
+            {
+                velocity.x += 1f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraLeft))
+            {
+                velocity.x -= 1f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraUp))
+            {
+                velocity.y -= 1f;
+            }
+
+            if (Input.IsActionPressed(InputAction.CameraDown))
+            {
+                velocity.y += 1f;
+            }
+
+            return velocity.Normalized() * speed;
+        }
+        
+        public static bool IsCameraReset() => Input.IsActionJustPressed(InputAction.CameraReset);
     }
 }

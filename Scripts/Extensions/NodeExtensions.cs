@@ -1,13 +1,26 @@
 ﻿using System.Linq;
 using Godot;
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
+using ThemedHorrorJam5.Entities;
+using ThemedHorrorJam5.Scripts.Libraries;
 
 namespace ThemedHorrorJam5.Scripts.GDUtils
 {
     public static class NodeExtensions
     {
+
+        public static ThemedHorrorJam5.Entities.Global GetGlobal(this Node node)
+        {
+            var temp = node.GetNode("/root/Global");
+            return (ThemedHorrorJam5.Entities.Global)temp;
+        }
+
+        public static TinyIoCContainer GetContainer(this Node node) => node.GetGlobal().Container;
+        
+
         public static void DrawCircleArc(this Node2D node , Vector2 center, float radius, float angleFrom, float angleTo, Color color)
         {
             int nbPoints = 32;
@@ -35,8 +48,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                 {
                     var message =
                     $@"-------------------------------------
-                    ConnectBodyEntered with args failed with 
-                        {result}
+                    ConnectBodyEntered with args failed with {result.ToString()}
                     TryConnectSignal args
                     node:{node?.Name ?? "null"}
                     signal:{signal ?? "null"}
@@ -111,10 +123,10 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             node.GetTree().Paused = (!node.GetTree().Paused);
         }
 
-        public static T GetNode<T>(this Node node, string path) where T : Node
-        {
-            return (T)node.GetNode(path);
-        }
+        // public static T GetNode<T>(this Node node, string path) where T : Node
+        // {
+        //     return (T)node.GetNode(path);
+        // }
 
         public static async Task WaitForSeconds(this Node node, float seconds)
         {
@@ -132,8 +144,8 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         public static string DisplayPositionData(this Node2D node, string title) =>
         @$"
         |-----------------------------------------------------------
-        | {title} Global Position: {node.GlobalPosition}
-        | {title} Local Position: {node.Position}
+        | {title} Global Position: {node.GlobalPosition.ToString()}
+        | {title} Local Position: {node.Position.ToString()}
         |-----------------------------------------------------------";
         
     }

@@ -32,7 +32,7 @@ margin_right = 496.0
 text = "G"
 
 [node name="Player" parent="." groups=["Movable", "Player", "targets"] instance=ExtResource( 10 )]
-position = Vector2( 3, -141 )
+position = Vector2( -299, -65 )
 PushSpeed = 50.0
 MaxSpeed = 100.0
 
