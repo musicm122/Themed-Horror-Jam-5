@@ -6,7 +6,16 @@ namespace ThemedHorrorJam5.Scripts.Patterns.Logger
 
     public class GDLogger : ILogger
     {
-        public GDLogger(LogLevelOutput level = LogLevelOutput.Warning) => Level = level;
+
+        public GDLogger()
+        {
+            Level = LogLevelOutput.Warning;
+        }
+        
+        public GDLogger(LogLevelOutput level)
+        {
+            Level = level;
+        }
 
         [Export]
         public LogLevelOutput Level { get; set; }

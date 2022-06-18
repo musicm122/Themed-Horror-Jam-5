@@ -10,5 +10,10 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
         public const string Pause = "pause";
         public const string Run = "run";
         public const string ToggleFlashlight = "ToggleFlashlight";
+        public const string CameraUp = "camera_up";
+        public const string CameraDown = "camera_down";
+        public const string CameraLeft = "camera_left";
+        public const string CameraRight = "camera_right";
+        public const string CameraReset = "camera_reset";
     }
 }

@@ -12,7 +12,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             return pathFollow2D.Transform.x;
         }
 
-        public static void RotateCounterClockwiseByAngle(this Vector2 vector, float angle) 
+        public static void RotateCounterClockwiseByAngle(this Vector2 vector, float angle)
         {
             //x' = x cos θ − y sin θ
             //y' = x sin θ + y cos θ
@@ -22,6 +22,7 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             var newY = (vector.x * Mathf.Sin(angle)) + (vector.y * Mathf.Cos(angle));
             vector = new Vector2(newX, newY);
         }
+
         public static Vector2 RotatedCounterClockwiseByAngle(this Vector2 vector, float angle)
         {
             //x' = x cos θ − y sin θ
