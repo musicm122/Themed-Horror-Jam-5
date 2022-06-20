@@ -1,4 +1,5 @@
 ﻿using Godot;
+using ThemedHorrorJam5.Entities.Behaviors;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
@@ -21,7 +22,7 @@ namespace ThemedHorrorJam5.Entities
 
         public override void _Ready()
         {
-
+            base._Ready();
             PlayerStatus = GetNode<Health>("Health");
 
             State = new PlayerState

@@ -94,6 +94,22 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             return velocity.Normalized() * speed;
         }
         
+        public static Vector2 GetTopDownWithDiagMovementInputStrength(float speed = 1f)
+        {
+            var velocity = Vector2.Zero;
+            velocity.x = Input.GetActionStrength(InputAction.Right) - Input.GetActionStrength(InputAction.Left);
+            velocity.y = Input.GetActionStrength(InputAction.Down) - Input.GetActionStrength(InputAction.Up);
+            return velocity.Normalized() * speed;
+        }
+        
+        public static Vector2 GetTopDownWithDiagMovementInputStrengthVector()
+        {
+            var velocity = Vector2.Zero;
+            velocity.x = Input.GetActionStrength(InputAction.Right) - Input.GetActionStrength(InputAction.Left);
+            velocity.y = Input.GetActionStrength(InputAction.Down) - Input.GetActionStrength(InputAction.Up);
+            return velocity.Normalized();
+        }
+        
         public static Vector2 GetCameraMovementInput(float speed = 1f)
         {
             var velocity = Vector2.Zero;

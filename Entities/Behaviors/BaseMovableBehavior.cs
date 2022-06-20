@@ -45,6 +45,11 @@ namespace ThemedHorrorJam5.Entities.Components
         public virtual Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
                 isRunning ? direction.Normalized() * MoveSpeed * MoveMultiplier : direction.Normalized() * MoveSpeed;
 
+        public override void _Ready()
+        {
+            base._Ready();
+        }
+
         public override void _PhysicsProcess(float delta)
         {
             if (CanMove)
