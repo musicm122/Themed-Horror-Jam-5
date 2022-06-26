@@ -1,4 +1,5 @@
 using Godot;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.ItemComponents;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
@@ -28,7 +29,7 @@ namespace ThemedHorrorJam5.Entities
         public Label MissionDisplay { get; set; }
         public Label TitleDisplay { get; set; }
 
-        public bool IsHidden = false;
+        public bool IsHidden { get; set; }
 
         [Export]
         private readonly float PauseToggleCooldownWaitTime = 1.0f;
@@ -36,11 +37,6 @@ namespace ThemedHorrorJam5.Entities
         private float AccumulatorPauseToggleCooldown = 0.0f;
         private bool CanTogglePause = true;
 
-        // Declare member variables here. Examples:
-        // private int a = 2;
-        // private string b = "text";
-
-        // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             TitleDisplay = GetNode<Label>(TitleDisplayPath);

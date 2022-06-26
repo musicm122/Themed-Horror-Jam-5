@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Globalization;
+using ThemedHorrorJam5.Entities.Behaviors;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Entities.EnemyState;
 using ThemedHorrorJam5.Entities.Vision;

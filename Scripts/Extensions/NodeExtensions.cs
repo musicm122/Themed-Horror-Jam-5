@@ -1,21 +1,17 @@
-﻿using System.Linq;
-using Godot;
-using System;
-using System.Globalization;
+﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using ThemedHorrorJam5.Entities;
-using ThemedHorrorJam5.Scripts.Libraries;
+using Godot;
+using TinyIoC;
 
-namespace ThemedHorrorJam5.Scripts.GDUtils
+namespace ThemedHorrorJam5.Scripts.Extensions
 {
     public static class NodeExtensions
     {
-
-        public static ThemedHorrorJam5.Entities.Global GetGlobal(this Node node)
+        public static Entities.Global GetGlobal(this Node node)
         {
             var temp = node.GetNode("/root/Global");
-            return (ThemedHorrorJam5.Entities.Global)temp;
+            return (Entities.Global)temp;
         }
 
         public static TinyIoCContainer GetContainer(this Node node) => node.GetGlobal().Container;
@@ -50,13 +46,13 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                     $@"-------------------------------------
                     ConnectBodyEntered with args failed with {result.ToString()}
                     TryConnectSignal args
-                    node:{node?.Name ?? "null"}
+                    node:{node.Name ?? "null"}
                     signal:{signal ?? "null"}
                     target:{target.ToString() ?? "null"}
                     methodName :{methodName ?? "null"}
                     -------------------------------------";
 
-                    GD.PrintErr(MethodBase.GetCurrentMethod().Name, new ApplicationException(result.ToString()), message);
+                    GD.PrintErr(MethodBase.GetCurrentMethod()?.Name, new ApplicationException(result.ToString()), message);
                     GD.PrintStack();
                 }
             }
@@ -82,15 +78,14 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
                     node.Disconnect(signal, target, methodName);
                     return true;
                 }
-                else
-                {
-                    GD.Print($@"TryDisconnectSignal failed args
-                    node:{node?.Name ?? "null"}
-                    signal:{signal ?? "null"}
-                    target:{target.ToString() ?? "null"}
-                    methodName :{methodName ?? "null"}");
-                    return false;
-                }
+                
+                GD.Print($@"TryDisconnectSignal failed args
+                node:{node.Name ?? "null"}
+                signal:{signal ?? "null"}
+                target:{target.ToString() ?? "null"}
+                methodName :{methodName ?? "null"}");
+                return false;
+                
             }
             catch (Exception ex)
             {
@@ -123,18 +118,13 @@ namespace ThemedHorrorJam5.Scripts.GDUtils
             node.GetTree().Paused = (!node.GetTree().Paused);
         }
 
-        // public static T GetNode<T>(this Node node, string path) where T : Node
-        // {
-        //     return (T)node.GetNode(path);
-        // }
-
         public static async Task WaitForSeconds(this Node node, float seconds)
         {
             try
             {
                 await node.ToSignal(node.GetTree().CreateTimer(seconds), "timeout");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 GD.PrintErr("WaitForSeconds threw", ex);
                 throw;
