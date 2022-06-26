@@ -1,6 +1,6 @@
 using Godot;
-using ThemedHorrorJam5.Scripts.Libraries;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
+using TinyIoC;
 
 namespace ThemedHorrorJam5.Entities
 {
@@ -12,9 +12,5 @@ namespace ThemedHorrorJam5.Entities
         }
 
         public TinyIoCContainer Container { get; } = new();
-
-        public override void _Ready()
-        {
-        }
     }
 }
