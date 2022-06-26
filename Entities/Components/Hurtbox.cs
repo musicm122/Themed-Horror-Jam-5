@@ -21,23 +21,16 @@ namespace ThemedHorrorJam5.Entities.Components
         public void SetInvincibility(bool hasInvincibility)
         {
             IsInvincible = hasInvincibility;
-            if (hasInvincibility)
-            {
-                EmitSignal(nameof(InvincibilityStarted));
-            }
-            else
-            {
-                EmitSignal(nameof(InvincibilityEnded));
-            }
+            EmitSignal(hasInvincibility ? nameof(InvincibilityStarted) : nameof(InvincibilityEnded));
         }
 
         public void StartInvincibility(float duration)
         {
-            this.IsInvincible = true;
+            SetInvincibility(true);
             Timer.Start(duration);
         }
 
-        public void OnTimerTimeout() => IsInvincible = false;
+        public void OnTimerTimeout() => SetInvincibility(false);
 
         public void OnHurtboxInvincibilityStarted() => CollisionShape.SetDeferred("disabled", true);
 
@@ -49,8 +42,8 @@ namespace ThemedHorrorJam5.Entities.Components
             Timer.Connect("timeout", this, nameof(OnTimerTimeout));
 
             CollisionShape = GetNode<CollisionShape2D>("CollisionShape");
-            this.Connect(nameof(InvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted));
-            this.Connect(nameof(InvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded));
+            this.Connect(nameof(Hurtbox.InvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted));
+            this.Connect(nameof(Hurtbox.InvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded));
         }
 
         public bool IsDebugPrintEnabled() => this.IsDebugging;
