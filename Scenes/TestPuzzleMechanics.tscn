@@ -135,4 +135,4 @@ Timeline = "/KeyAFound"
 [node name="Spikes" parent="." instance=ExtResource( 9 )]
 position = Vector2( 792, -32 )
 IsDebugging = true
-EffectForce = 4.0
+EffectForce = 25.0
