@@ -21,26 +21,24 @@ namespace ThemedHorrorJam5.Entities.Behaviors
 
         public override void _PhysicsProcess(float delta)
         {
-            if (CanMove && AnimationTree !=null)
+            if (!CanMove || AnimationTree == null) return;
+            IsRunning = Input.IsActionPressed(InputAction.Run);
+            var movementVector = InputUtils.GetTopDownWithDiagMovementInputStrengthVector();
+            if (movementVector != Vector2.Zero)
             {
-                IsRunning = Input.IsActionPressed(InputAction.Run);
-                var movementVector = InputUtils.GetTopDownWithDiagMovementInputStrengthVector();
-                if (movementVector != Vector2.Zero)
+                AnimationTree.Set("parameters/Idle/blend_position", movementVector);
+                AnimationTree.Set("parameters/Walk/blend_position", movementVector);
+                StateMachinePlayback.Travel("Walk");
+                var movementSpeed = IsRunning ? movementVector * MoveMultiplier * MoveSpeed : movementVector * MoveSpeed; 
+                MoveAndSlide(movementSpeed);
+                if (GetSlideCount() > 0)
                 {
-                    AnimationTree.Set("parameters/Idle/blend_position", movementVector);
-                    AnimationTree.Set("parameters/Walk/blend_position", movementVector);
-                    StateMachinePlayback.Travel("Walk");
-                    var movementSpeed = IsRunning ? movementVector * MoveMultiplier * MoveSpeed : movementVector * MoveSpeed; 
-                    MoveAndSlide(movementSpeed);
-                    if (GetSlideCount() > 0)
-                    {
-                        this.HandleMovableObstacleCollision(movementSpeed);
-                    }
+                    this.HandleMovableObstacleCollision(movementSpeed);
                 }
-                else
-                {
-                    StateMachinePlayback.Travel("Idle");
-                }
+            }
+            else
+            {
+                StateMachinePlayback.Travel("Idle");
             }
         }
     }

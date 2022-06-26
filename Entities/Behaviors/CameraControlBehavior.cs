@@ -1,130 +1,124 @@
-﻿using System;
+﻿using System.Globalization;
 using Godot;
 using ThemedHorrorJam5.Scripts.GDUtils;
-using ThemedHorrorJam5.Scripts.Libraries;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities.Behaviors;
-
-public class CameraControlBehavior : Camera2D, IDebuggable<Node>, IMovableCamera
+namespace ThemedHorrorJam5.Entities.Behaviors
 {
-    private ILogger _logger;
-    [Export] public bool IsDebugging { get; set; }
-
-    [Export] public float DefaultZoomLevel { get; set; } = 1.0f;
-    [Export] public Vector2 DefaultPan { get; set; } = new Vector2(0, 0);
-    [Export] public float MinZoom { get; set; } = 0.5f;
-    [Export] public float MaxZoom { get; set; } = 2f;
-
-    [Export] public float ZoomFactor { get; set; } = 0.1f;
-    [Export] public float ZoomDuration { get; set; } = 0.2f;
-
-    [Export] public float ZoomLevel { get; set; } = 1.0f;
-
-    [Export] public Vector2 MaxPanRight { get; set; } = new Vector2(100, 0);
-    [Export] public Vector2 MaxPanLeft { get; set; } = new Vector2(-100, 0);
-    
-    [Export] public Vector2 MaxPanUp { get; set; } = new Vector2(0, -100);
-    
-    [Export] public Vector2 MaxPanDown { get; set; } = new Vector2(0, 100);
-
-    private Tween TweenUtil { get; set; }
-
-    private Rect2 ScreenSize { get; set; } = new Rect2(0, 0, 0, 0);
-
-    public override void _Ready()
+    public class CameraControlBehavior : Camera2D, IDebuggable<Node>, IMovableCamera
     {
-        this._logger = new GDLogger(level: LogLevelOutput.Debug);
-        this.ScreenSize = GetViewportRect();
-        this.TweenUtil = GetNode<Tween>("Tween");
-    }
+        private ILogger _logger;
+        [Export] public bool IsDebugging { get; set; }
 
-    public void SetZoom(float amount)
-    {
-        _logger.Debug("Setting zoom to: " + amount);
-        const string zoomProperty = "zoom";
-        ZoomLevel = Mathf.Clamp(amount, MinZoom, MaxZoom);
-        var endZoomLevel = new Vector2(ZoomLevel, ZoomLevel);
+        [Export] public float DefaultZoomLevel { get; set; } = 1.0f;
+        [Export] public Vector2 DefaultPan { get; set; } = new Vector2(0, 0);
+        [Export] public float MinZoom { get; set; } = 0.5f;
+        [Export] public float MaxZoom { get; set; } = 2f;
 
-        TweenUtil.InterpolateProperty(
-            this,
-            zoomProperty,
-            Zoom,
-            endZoomLevel,
-            ZoomDuration,
-            Godot.Tween.TransitionType.Sine,
-            Godot.Tween.EaseType.Out
-        );
-        TweenUtil.Start();
-    }
+        [Export] public float ZoomFactor { get; set; } = 0.1f;
+        [Export] public float ZoomDuration { get; set; } = 0.2f;
 
-    public void SetPan(Vector2 newOffset)
-    {
-        _logger.Debug("Setting pan offset to: " + newOffset);
-        const string offsetProperty = "offset";
-        //Offset = Mathf.Clamp(offset, -MaxPan, MaxPan);
-        var endZoomLevel = new Vector2(ZoomLevel, ZoomLevel);
+        [Export] public float ZoomLevel { get; set; } = 1.0f;
 
-        TweenUtil.InterpolateProperty(
-            this,
-            offsetProperty,
-            Offset,
-            newOffset,
-            ZoomDuration,
-            Godot.Tween.TransitionType.Sine,
-            Godot.Tween.EaseType.Out
-        );
-        TweenUtil.Start();
-    }
+        [Export] public Vector2 MaxPanRight { get; set; } = new Vector2(100, 0);
+        [Export] public Vector2 MaxPanLeft { get; set; } = new Vector2(-100, 0);
 
-    public void ResetCamera()
-    {
-        _logger.Debug("Camera should be reset");
-        SetZoom(DefaultZoomLevel);
-        SetPan(DefaultPan);
-    }
+        [Export] public Vector2 MaxPanUp { get; set; } = new Vector2(0, -100);
 
-    public override void _UnhandledInput(InputEvent inputEvent)
-    {
-        //inputEvent.GetActionStrength(InputAction.CameraUp) > 0 ? SetZoom(ZoomLevel+ZoomFactor) : 0;
-        var upStrength = inputEvent.GetActionStrength(InputAction.CameraUp);
-        var downStrength = inputEvent.GetActionStrength(InputAction.CameraDown);
-        var leftStrength = inputEvent.GetActionStrength(InputAction.CameraLeft);
-        var rightStrength = inputEvent.GetActionStrength(InputAction.CameraRight);
-        
-        
-        
-        _logger.Debug("downStrength = " + downStrength + "|\r\n| upStrength=" + upStrength +"leftStrength=" + leftStrength + "|\r\n| rightStrength=" + rightStrength);
-        if(leftStrength> 0.2f)
+        [Export] public Vector2 MaxPanDown { get; set; } = new Vector2(0, 100);
+
+        private Tween TweenUtil { get; set; }
+
+        public override void _Ready()
         {
-            var newOffset = MaxPanLeft * leftStrength;
-            SetPan(newOffset);
-        }
-        if(rightStrength> 0.2f)
-        {
-            var newOffset = MaxPanRight * rightStrength;
-            SetPan(newOffset);
-        }
-        if (upStrength > 0.2f)
-        {
-            //ZoomLevel = MaxZoom * upStrength;
-            //SetZoom(ZoomLevel);
-            var newOffset = MaxPanUp * upStrength;
-            SetPan(newOffset);
+            this._logger = IsDebugging ? new GDLogger(level: LogLevelOutput.Debug) :  new GDLogger(level: LogLevelOutput.Warning);
+            this.TweenUtil = GetNode<Tween>("Tween");
         }
 
-        if (downStrength > 0.2f)
+        public void SetZoom(float amount)
         {
-            //ZoomLevel = MaxZoom * -downStrength;
-            //SetZoom(ZoomLevel);
-            var newOffset = MaxPanDown * downStrength;
-            SetPan(newOffset);
+            _logger.Debug("Setting zoom to: " + amount);
+            const string zoomProperty = "zoom";
+            ZoomLevel = Mathf.Clamp(amount, MinZoom, MaxZoom);
+            var endZoomLevel = new Vector2(ZoomLevel, ZoomLevel);
+
+            TweenUtil.InterpolateProperty(
+                this,
+                zoomProperty,
+                Zoom,
+                endZoomLevel,
+                ZoomDuration,
+                Tween.TransitionType.Sine,
+                Tween.EaseType.Out
+            );
+            TweenUtil.Start();
         }
-        
-        //if (downStrength - upStrength == 0f && leftStrength-rightStrength==0f)
-        if (inputEvent.IsActionPressed(InputAction.CameraReset))
+
+        public void SetPan(Vector2 newOffset)
         {
-            ResetCamera();
+            _logger.Debug("Setting pan offset to: " + newOffset);
+            const string offsetProperty = "offset";
+
+            TweenUtil.InterpolateProperty(
+                this,
+                offsetProperty,
+                Offset,
+                newOffset,
+                ZoomDuration,
+                Tween.TransitionType.Sine,
+                Tween.EaseType.Out
+            );
+            TweenUtil.Start();
+        }
+
+        public void ResetCamera()
+        {
+            _logger.Debug("Camera should be reset");
+            SetZoom(DefaultZoomLevel);
+            SetPan(DefaultPan);
+        }
+
+        public override void _UnhandledInput(InputEvent inputEvent)
+        {
+            var upStrength = inputEvent.GetActionStrength(InputAction.CameraUp);
+            var downStrength = inputEvent.GetActionStrength(InputAction.CameraDown);
+            var leftStrength = inputEvent.GetActionStrength(InputAction.CameraLeft);
+            var rightStrength = inputEvent.GetActionStrength(InputAction.CameraRight);
+
+
+            _logger.Debug(
+                @$"| downStrength = {downStrength.ToString(CultureInfo.InvariantCulture)} |
+| upStrength= {upStrength.ToString(CultureInfo.InvariantCulture)} |
+| leftStrength={leftStrength.ToString(CultureInfo.InvariantCulture)} | 
+| rightStrength= {rightStrength.ToString(CultureInfo.InvariantCulture)} |");
+            if (leftStrength > 0.2f)
+            {
+                var newOffset = MaxPanLeft * leftStrength;
+                SetPan(newOffset);
+            }
+
+            if (rightStrength > 0.2f)
+            {
+                var newOffset = MaxPanRight * rightStrength;
+                SetPan(newOffset);
+            }
+
+            if (upStrength > 0.2f)
+            {
+                var newOffset = MaxPanUp * upStrength;
+                SetPan(newOffset);
+            }
+
+            if (downStrength > 0.2f)
+            {
+                var newOffset = MaxPanDown * downStrength;
+                SetPan(newOffset);
+            }
+
+            if (inputEvent.IsActionPressed(InputAction.CameraReset))
+            {
+                ResetCamera();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using Godot;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
@@ -11,11 +12,10 @@ namespace ThemedHorrorJam5.Entities
 
         public bool IsDebugPrintEnabled() => IsDebugging;
 
-        public bool CanInteract = false;
+        public bool CanInteract { get; set; }
 
-        public bool IsInteracting = false;
+        public bool IsInteracting { get; set; }
 
-        //public Sprite Sprite { get; set; }
 
         public void OnEntered(Node body)
         {
