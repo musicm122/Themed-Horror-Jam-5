@@ -1,18 +1,30 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Godot;
+using ThemedHorrorJam5.Entities.Components;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.GDUtils;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
-namespace ThemedHorrorJam5.Entities.Components
+namespace ThemedHorrorJam5.Entities.Behaviors
 {
     public class DamagableBehavior : Node2D, IDebuggable<Node>, IDamagableBehavior
     {
-        public bool IsDead = false;
+        private ILogger _logger;
+        
+        private static readonly List<string> DefaultDamagableNames = new List<string>{ "hitbox", "spikes" };
+    
+        [Export] public List<string> DamagableNames { get; set; } = DamagableBehavior.DefaultDamagableNames;
+        
+        private  AnimationPlayer BlinkAnimationPlayer { get; set; }
+        
+        public bool IsDead { get; set; }
 
         private Health Status { get; set; }
 
         [Export]
-        public bool IsDebugging { get; set; } = false;
+        public bool IsDebugging { get; set; }
 
         private Hurtbox HurtBox { get; set; }
 
@@ -27,18 +39,15 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void OnHurtboxAreaEntered(Node body)
         {
-            this.Print($"OnHurtboxAreaEntered({body.Name})");
+            this._logger.Debug($"OnHurtboxAreaEntered({body.Name})");
             if(this.HurtBox.IsInvincible) return ;
-            if (body.Name.ToLower() == "hitbox" || body.Name.ToLower() == "spikes")
-            {
-                this.HurtBox.StartInvincibility(0.6f);
-
-                var hitBox = (HitBox)body;
-                var force = (this.GlobalPosition - hitBox.GlobalPosition) * hitBox.EffectForce;
-                OnTakeDamage?.Invoke(body, force);
-                Status.CurrentHealth -= hitBox.Damage;
-                this.Print("Current Health =", Status.CurrentHealth);
-            }
+            if (!DamagableNames.Contains(body.Name.ToLower())) return;
+            this.HurtBox.StartInvincibility(0.6f);
+            var hitBox = (HitBox)body;
+            var force = (this.GlobalPosition - hitBox.GlobalPosition) * hitBox.EffectForce;
+            OnTakeDamage?.Invoke(body, force);
+            Status.CurrentHealth -= hitBox.Damage;
+            this._logger.Debug($"Current Health ={Status.CurrentHealth.ToString(CultureInfo.InvariantCulture)}");
         }
 
         public void OnEmptyHealthBar()
@@ -51,12 +60,14 @@ namespace ThemedHorrorJam5.Entities.Components
         public void OnHurtboxInvincibilityStarted()
         {
             this.PrintCaller();
+            BlinkAnimationPlayer?.Play("Start");
             HurtboxInvincibilityStartedCallback?.Invoke();
         }
 
         public void OnHurtboxInvincibilityEnded()
         {
             this.PrintCaller();
+            BlinkAnimationPlayer?.Play("Stop");
             HurtboxInvincibilityEndedCallback?.Invoke();
         }
 
@@ -86,19 +97,19 @@ namespace ThemedHorrorJam5.Entities.Components
             if (!HurtBox.TryConnectSignal("area_entered", this, nameof(OnHurtboxAreaEntered)))
             {
                 var arg = $"TryConnectSignal('area_entered', {this.Name}, {nameof(OnHurtboxAreaEntered)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
+                this._logger.Error($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
-
+            
             if (!HurtBox.TryConnectSignal(nameof(Hurtbox.InvincibilityStarted), this, nameof(OnHurtboxInvincibilityStarted)))
             {
                 var arg = $"TryConnectSignal({nameof(Hurtbox.InvincibilityStarted)}, {this.Name}, {nameof(OnHurtboxInvincibilityStarted)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
+                this._logger.Error($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
-
+            
             if (!HurtBox.TryConnectSignal(nameof(Hurtbox.InvincibilityEnded), this, nameof(OnHurtboxInvincibilityEnded)))
             {
                 var arg = $"TryConnectSignal({nameof(Hurtbox.InvincibilityEnded)}, {this.Name}, {nameof(OnHurtboxInvincibilityEnded)})";
-                this.Print($"Attempt to register Hurtbox's signal with args {arg} failed");
+                this._logger.Error($"Attempt to register Hurtbox's signal with args {arg} failed");
             }
         }
 
@@ -112,7 +123,10 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public override void _Ready()
         {
+            this._logger = new GDLogger(level: LogLevelOutput.Debug);
             HurtBox = GetNode<Hurtbox>("Hurtbox");
+            if (!this.HasNode("../../BlinkAnimationPlayer")) return;
+            BlinkAnimationPlayer = GetNode<AnimationPlayer>("../../BlinkAnimationPlayer");
         }
     }
 }
