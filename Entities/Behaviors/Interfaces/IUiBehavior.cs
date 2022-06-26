@@ -6,12 +6,12 @@ namespace ThemedHorrorJam5.Entities.Components
     {
         bool IsDebugging { get; set; }
         PauseMenu PauseMenu { get; set; }
-        PlayerState State { get; set; }
+        PlayerDataStore DataStore { get; set; }
 
         void AddItem(string name, int amt = 1);
         void AddMission(string title);
-        void EvaluateMissions(PlayerState playerState);
-        void Init(PlayerState state);
+        void EvaluateMissions(PlayerDataStore playerDataStore);
+        void Init(PlayerDataStore dataStore);
         bool IsDebugPrintEnabled();
         void RefreshUI();
         void RemoveItem(string name);

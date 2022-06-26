@@ -8,6 +8,12 @@ namespace ThemedHorrorJam5.Entities.Components
     public abstract class BaseMovableBehavior : KinematicBody2D, IDebuggable<Node>, IMovableBehavior
     {
         [Export]
+        public float Acceleration { get; set; } = 500f;
+        
+        [Export]
+        public float Friction { get; set; } = 500f;
+        
+        [Export]
         public float MoveSpeed { get; set; } = 10f;
 
         [Export]

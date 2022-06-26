@@ -15,7 +15,7 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
         int Count();
         IEnumerable<string> Details();
         string Display();
-        void EvaluateMissionsState(PlayerState playerState);
+        void EvaluateMissionsState(PlayerDataStore playerDataStore);
         bool HasMission(string name);
         void Remove(MissionElement mission);
         void RemoveByTitle(string missionTitle);

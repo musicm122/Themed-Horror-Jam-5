@@ -12,15 +12,15 @@ namespace ThemedHorrorJam5.Entities.Components
     public class InteractableBehavior : Node2D, IDebuggable<Node>, IInteractableBehavior
     {
 
-        public PlayerState State { get; set; }
+        public PlayerDataStore DataStore { get; set; }
 
         public Action<Examinable> InteractingCallback { get; set; }
         public Action<Examinable> InteractingCompleteCallback { get; set; }
         public Action<Examinable> InteractingAvailableCallback { get; set; }
         public Action<Examinable> InteractingUnavailableCallback { get; set; }
 
-        public bool HasKey(Key key) => State.Inventory.HasKey(key);
-        public bool HasItem(string itemName) => State.Inventory.HasItem(itemName);
+        public bool HasKey(Key key) => DataStore.Inventory.HasKey(key);
+        public bool HasItem(string itemName) => DataStore.Inventory.HasItem(itemName);
 
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -136,9 +136,9 @@ namespace ThemedHorrorJam5.Entities.Components
             this.InteractingCompleteCallback?.Invoke(lockedDoor);
         }
 
-        public void Init(PlayerState state)
+        public void Init(PlayerDataStore dataStore)
         {
-            this.State = state;
+            this.DataStore = dataStore;
         }
     }
 }

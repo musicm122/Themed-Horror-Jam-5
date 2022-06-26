@@ -15,7 +15,7 @@ namespace ThemedHorrorJam5.Scripts.Mission
             IsComplete = isComplete;
         }
 
-        public MissionElement(string title, string details, Func<PlayerState, bool> evalCondition, bool isComplete = false)
+        public MissionElement(string title, string details, Func<PlayerDataStore, bool> evalCondition, bool isComplete = false)
         {
             this.Title = title;
             this.Details = details;
@@ -28,7 +28,7 @@ namespace ThemedHorrorJam5.Scripts.Mission
         public string Title { get; set; }
         public string Details { get; set; }
 
-        public Func<PlayerState, bool> EvaluateCompletionState;
+        public Func<PlayerDataStore, bool> EvaluateCompletionState;
 
         public override string ToString() =>
             $@"Mission:

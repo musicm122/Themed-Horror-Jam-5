@@ -8,7 +8,7 @@ namespace ThemedHorrorJam5.Entities
 {
     public class PlayerV2 : PlayerMovableBehavior
     {
-        public PlayerState State { get; set; }
+        public PlayerDataStore DataStore { get; set; }
 
         public IDamagableBehavior Damagable { get; private set; }
 
@@ -25,7 +25,7 @@ namespace ThemedHorrorJam5.Entities
             base._Ready();
             PlayerStatus = GetNode<Health>("Health");
 
-            State = new PlayerState
+            DataStore = new PlayerDataStore
             {
                 PlayerStatus = PlayerStatus,
                 Inventory = new Inventory(),
@@ -36,14 +36,14 @@ namespace ThemedHorrorJam5.Entities
             Damagable.Init(PlayerStatus);
 
             Interactable = GetNode<InteractableBehavior>("Behaviors/Interactable");
-            Interactable.Init(State);
+            Interactable.Init(DataStore);
 
 
             Flashlight = GetNode<FlashlightBehavior>("Behaviors/Flashlight");
-            Flashlight.Init(State);
+            Flashlight.Init(DataStore);
 
             Ui = GetNode<UiBehavior>("UI");
-            Ui.Init(State);
+            Ui.Init(DataStore);
 
 
             Interactable.InteractingCallback += (e) => CanMove = false;
