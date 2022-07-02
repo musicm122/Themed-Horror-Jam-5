@@ -1,28 +1,37 @@
+using System;
 using Godot;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities.Behaviors
 {
     public class PlayerMovableBehavior : BaseMovableBehavior
     {
+        public Action<Vector2> OnRoll { get; set; }
+        public Action<Vector2> OnPhysicsProcessMovement { get; set; }
+        
         [Export] public float RollSpeed { get; set; } = 120f;
         
         private Vector2 RollVector { get; set; } = Vector2.Down;
         
-        public Vector2 Velocity { get; set; } = Vector2.Zero;
-
-        private AnimationTree AnimationTree { get; set; }
-
-        private AnimationNodeStateMachinePlayback StateMachinePlayback { get; set; }
-
 
         public override void _Ready()
         {
+            _logger.Level = LogLevelOutput.Debug;
             base._Ready();
-            AnimationTree = GetNode<AnimationTree>("AnimationTree");
-            AnimationTree.Active = true;
-            StateMachinePlayback = (AnimationNodeStateMachinePlayback)AnimationTree.Get("parameters/playback");
+        }
+
+        private Vector2 Roll()
+        {
+            var newVelocity = RollVector * RollSpeed;
+            OnRoll?.Invoke(newVelocity);
+            return newVelocity;
+        }
+        
+        public override void Move(float currentVelocity)
+        {
+            MoveAndSlide(Velocity);
         }
 
         private Vector2 MoveCheck(Vector2 movementVector, Vector2 currentVelocity, float delta)
@@ -30,8 +39,8 @@ namespace ThemedHorrorJam5.Entities.Behaviors
             if (movementVector != Vector2.Zero)
             {
                 RollVector = movementVector;
-                
-                StateMachinePlayback.Travel("Walk");
+                OnPhysicsProcessMovement?.Invoke(movementVector);
+                OnMove?.Invoke(movementVector, delta);
                 currentVelocity = IsRunning
                     ? currentVelocity.MoveToward(movementVector * (MaxSpeed * MoveMultiplier), Acceleration * delta)
                     : currentVelocity.MoveToward(movementVector * MaxSpeed, Acceleration * delta);
@@ -39,44 +48,26 @@ namespace ThemedHorrorJam5.Entities.Behaviors
             else
             {
                 currentVelocity = currentVelocity.MoveToward(Vector2.Zero, Friction * delta);
-                StateMachinePlayback.Travel("Idle");
+                OnIdle?.Invoke(currentVelocity, delta);
+                
             }
             return currentVelocity;
         }
         
-        private Vector2 Roll(Vector2 currentVelocity)
-        {
-            var newVelocity = RollVector * RollSpeed;
-            StateMachinePlayback?.Travel("Roll");
-            return newVelocity;
-        }
-
-        private void Move(Vector2 currentVelocity)
-        {
-            MoveAndSlide(currentVelocity);
-        }
-
-        private void SetAnimationBlendPosition(Vector2 movementVector)
-        {
-            AnimationTree.Set("parameters/Idle/blend_position", movementVector);
-            AnimationTree.Set("parameters/Walk/blend_position", movementVector);
-            AnimationTree.Set("parameters/Roll/blend_position", movementVector);
-        }
         
         public override void _PhysicsProcess(float delta)
         {
-            if (!CanMove || AnimationTree == null) return;
+            if (!CanMove) return;
             IsRunning = Input.IsActionPressed(InputAction.Run);
             
             var movementVector = InputUtils.GetTopDownWithDiagMovementInputStrengthVector();
-            SetAnimationBlendPosition(movementVector);
             Velocity = MoveCheck(movementVector, Velocity, delta);
             if (Input.IsActionPressed(InputAction.Roll))
             {
-                Velocity = Roll(Velocity);
+                Velocity = Roll();
             }
 
-            Move(Velocity);
+            Move(delta);
             if (GetSlideCount() > 0)
             {
                 this.HandleMovableObstacleCollision(Velocity);

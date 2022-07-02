@@ -9,7 +9,6 @@ using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
 namespace ThemedHorrorJam5.Entities.EnemyState
 {
-
     public class ChaseEnemyState : State
     {
         private Navigation2D Nav { get; }
@@ -58,7 +57,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
                 var paths = Nav.GetSimplePath(from, to);
 
                 var enemyNavPath = new Stack<Vector2>(paths);
-                var distanceToWalk = Enemy.MoveSpeed * delta;
+                var distanceToWalk = Enemy.MaxSpeed * delta;
                 
                 while (distanceToWalk > 0f && enemyNavPath.Count > 0)
                 {

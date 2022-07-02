@@ -21,7 +21,14 @@ namespace ThemedHorrorJam5.Entities.Components
         public void SetInvincibility(bool hasInvincibility)
         {
             IsInvincible = hasInvincibility;
-            EmitSignal(hasInvincibility ? nameof(InvincibilityStarted) : nameof(InvincibilityEnded));
+            if(IsInvincible)
+            {
+                EmitSignal(nameof(InvincibilityStarted));
+            }
+            else
+            {
+                EmitSignal(nameof(InvincibilityEnded));
+            }
         }
 
         public void StartInvincibility(float duration)

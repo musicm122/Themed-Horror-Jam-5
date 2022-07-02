@@ -45,7 +45,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
                 target = Status.PatrolPoints[Status.PatrolIndex];
             }
 
-            Enemy.Velocity = (target - Enemy.Position).Normalized() * Enemy.MoveSpeed;
+            Enemy.Velocity = (target - Enemy.Position).Normalized() * Enemy.MaxSpeed;
 
             if (Enemy.GetSlideCount() > 0)
             {
