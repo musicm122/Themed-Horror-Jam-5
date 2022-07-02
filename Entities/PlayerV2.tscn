@@ -396,8 +396,11 @@ graph_offset = Vector2( 0, 29.5991 )
 
 [node name="PlayerRoot" type="KinematicBody2D"]
 script = ExtResource( 13 )
+Acceleration = 200.0
+Friction = 800.0
 MoveMultiplier = 1.2
-MaxSpeed = 60.0
+MaxSpeed = 50.0
+RollSpeed = 250.0
 
 [node name="UI" type="Node2D" parent="."]
 script = ExtResource( 12 )
