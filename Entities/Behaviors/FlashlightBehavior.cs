@@ -7,11 +7,11 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public class FlashlightBehavior : Node2D, IDebuggable<Node>, IFlashlightBehavior
     {
-        public PlayerState State { get; set; }
+        public PlayerDataStore DataStore { get; set; }
 
-        public void Init(PlayerState state)
+        public void Init(PlayerDataStore dataStore)
         {
-            State = state;
+            DataStore = dataStore;
         }
 
         [Export]
@@ -20,7 +20,7 @@ namespace ThemedHorrorJam5.Entities.Components
         public bool IsDebugPrintEnabled() => IsDebugging;
 
         public bool HasFlashlight =>
-            State.Inventory.HasItemInInventory("Flashlight");
+            DataStore.Inventory.HasItemInInventory("Flashlight");
 
         public Light2D Flashlight { get; set; }
         private void ToggleFlashlight()

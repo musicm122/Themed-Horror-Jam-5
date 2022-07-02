@@ -3,7 +3,7 @@ using ThemedHorrorJam5.Scripts.ItemComponents;
 
 namespace ThemedHorrorJam5.Entities
 {
-    public class PlayerState
+    public class PlayerDataStore
     {
         public Health PlayerStatus { get; set; } = new Health();
         

@@ -17,8 +17,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
     
         [Export] public List<string> DamagableNames { get; set; } = DamagableBehavior.DefaultDamagableNames;
         
-        private  AnimationPlayer BlinkAnimationPlayer { get; set; }
-        
         public bool IsDead { get; set; }
 
         private Health Status { get; set; }
@@ -60,14 +58,12 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         public void OnHurtboxInvincibilityStarted()
         {
             this.PrintCaller();
-            BlinkAnimationPlayer?.Play("Start");
             HurtboxInvincibilityStartedCallback?.Invoke();
         }
 
         public void OnHurtboxInvincibilityEnded()
         {
             this.PrintCaller();
-            BlinkAnimationPlayer?.Play("Stop");
             HurtboxInvincibilityEndedCallback?.Invoke();
         }
 
@@ -125,8 +121,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
         {
             this._logger = new GDLogger(level: LogLevelOutput.Debug);
             HurtBox = GetNode<Hurtbox>("Hurtbox");
-            if (!this.HasNode("../../BlinkAnimationPlayer")) return;
-            BlinkAnimationPlayer = GetNode<AnimationPlayer>("../../BlinkAnimationPlayer");
         }
     }
 }

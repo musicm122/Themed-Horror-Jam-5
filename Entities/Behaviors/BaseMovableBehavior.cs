@@ -7,8 +7,17 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public abstract class BaseMovableBehavior : KinematicBody2D, IDebuggable<Node>, IMovableBehavior
     {
+        protected ILogger _logger { get; set; } = new GDLogger(LogLevelOutput.Warning);
+        
+        public Action<Vector2, float> OnMove { get; set; }
+        
+        public Action<Vector2, float> OnIdle { get; set; }
+        
         [Export]
-        public float MoveSpeed { get; set; } = 10f;
+        public float Acceleration { get; set; } = 500f;
+        
+        [Export]
+        public float Friction { get; set; } = 500f;
 
         [Export]
         public bool IsDebugging { get; set; } = false;
@@ -21,9 +30,20 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public Vector2 Velocity { get; set; }
 
-        public bool CanMove = true;
+        public bool CanMove { get; set; } = true;
 
-        public bool IsRunning = false;
+        public bool IsRunning { get; set; }
+        
+        public virtual Vector2 GetMovementVelocity(Vector2 movementVector, Vector2 currentVelocity, float delta) =>
+            movementVector != Vector2.Zero ? 
+                GetAcceleration(movementVector, currentVelocity, delta) : 
+                GetFriction(currentVelocity, delta);
+        
+        public virtual Vector2 GetMovementVelocity(Vector2 currentVelocity, float delta) =>
+            currentVelocity != Vector2.Zero ? 
+                GetAcceleration(currentVelocity, currentVelocity, delta) : 
+                GetFriction(currentVelocity, delta);
+        
 
         [Export]
         public float MaxSpeed { get; set; } = 10f;
@@ -36,15 +56,39 @@ namespace ThemedHorrorJam5.Entities.Components
             this.PrintCaller();
             motion = motion.Normalized();
 
-            if (GetSlideCollision(0).Collider is PushBlock box && box.CanBePushed)
+            if (GetSlideCollision(0).Collider is PushBlock { CanBePushed: true } box)
             {
                 box.Push(PushSpeed * motion);
             }
         }
 
-        public virtual Vector2 GetMovementSpeed(bool isRunning, Vector2 direction) =>
-                isRunning ? direction.Normalized() * MoveSpeed * MoveMultiplier : direction.Normalized() * MoveSpeed;
+        public virtual Vector2 GetAcceleration(Vector2 movementVector, Vector2 currentVelocity, float delta) =>
+            IsRunning
+                ? currentVelocity.MoveToward(movementVector * (MaxSpeed * MoveMultiplier), Acceleration * delta)
+                : currentVelocity.MoveToward(movementVector * MaxSpeed, Acceleration * delta);
 
+        public virtual Vector2 GetFriction(Vector2 currentVelocity, float delta) =>
+            currentVelocity.MoveToward(Vector2.Zero, Friction * delta);
+
+        public virtual void Move(float delta)
+        {
+            if (!CanMove) return;
+            if(Velocity != Vector2.Zero)
+            {
+                Velocity = GetMovementVelocity(Velocity, delta);
+                OnMove?.Invoke(Velocity, delta);
+            }
+            else
+            {
+                Velocity = GetFriction(Velocity, delta);
+                OnIdle?.Invoke(Velocity, delta);
+            }
+            MoveAndSlide(Velocity);
+            if (GetSlideCount() <= 0) return;
+            HandleMovableObstacleCollision(Velocity);
+        }
+
+        // ReSharper disable once RedundantOverriddenMember
         public override void _Ready()
         {
             base._Ready();
@@ -52,15 +96,7 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public override void _PhysicsProcess(float delta)
         {
-            if (CanMove)
-            {
-                var movement = GetMovementSpeed(IsRunning, Velocity);
-                MoveAndSlide(movement);
-                if (GetSlideCount() > 0)
-                {
-                    HandleMovableObstacleCollision(movement);
-                }
-            }
+            Move(delta);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ThemedHorrorJam5.Entities.Components
 {
     public class UiBehavior : Node2D, IDebuggable<Node>, IUiBehavior
     {
-        public PlayerState State { get; set; }
+        public PlayerDataStore DataStore { get; set; }
 
         public PauseMenu PauseMenu { get; set; }
 
@@ -39,7 +39,7 @@ namespace ThemedHorrorJam5.Entities.Components
             {
                 this.Print($"AddMission called with mission title: {title}");
 
-                State.MissionManager.AddIfDNE(mission);
+                DataStore.MissionManager.AddIfDNE(mission);
                 RefreshUI();
             }
         }
@@ -47,20 +47,20 @@ namespace ThemedHorrorJam5.Entities.Components
         public void RemoveMission(MissionElement mission)
         {
             this.Print($"RemoveMission called with mission : {mission}");
-            State.MissionManager.Remove(mission);
+            DataStore.MissionManager.Remove(mission);
             RefreshUI();
         }
 
         public void RemoveMissionByTitle(string missionTitle)
         {
             this.Print($"RemoveMission called with mission : {missionTitle}");
-            State.MissionManager.RemoveByTitle(missionTitle);
+            DataStore.MissionManager.RemoveByTitle(missionTitle);
             RefreshUI();
         }
 
-        public void EvaluateMissions(PlayerState playerState)
+        public void EvaluateMissions(PlayerDataStore playerDataStore)
         {
-            State.MissionManager.EvaluateMissionsState(playerState);
+            DataStore.MissionManager.EvaluateMissionsState(playerDataStore);
             RefreshUI();
         }
 
@@ -68,27 +68,27 @@ namespace ThemedHorrorJam5.Entities.Components
         {
             this.Print($"AddItem called with name:{name}, amt:{amt} ");
 
-            State.Inventory.Add(name, amt);
+            DataStore.Inventory.Add(name, amt);
             RefreshUI();
         }
 
         public void RemoveItem(string name)
         {
             this.Print($"RemoveItem called with name:{name}");
-            State.Inventory.Remove(name);
+            DataStore.Inventory.Remove(name);
             RefreshUI();
         }
 
         public void RemoveItems(string name, int amt)
         {
             this.Print($"RemoveItem called with name:{name}");
-            State.Inventory.RemoveAmount(name, amt);
+            DataStore.Inventory.RemoveAmount(name, amt);
             RefreshUI();
         }
 
         public override void _Process(float delta)
         {
-            if (State.PlayerStatus.IsDead())
+            if (DataStore.PlayerStatus.IsDead())
             {
                 PauseMenu.IsPauseOptionEnabled = false;
                 if (InputUtils.IsAnyKeyPressed())
@@ -101,20 +101,20 @@ namespace ThemedHorrorJam5.Entities.Components
 
         public void RefreshUI()
         {
-            Hud.RefreshUI(State.PlayerStatus);
-            PauseMenu.RefreshUI(State.Inventory, State.MissionManager);
+            Hud.RefreshUI(DataStore.PlayerStatus);
+            PauseMenu.RefreshUI(DataStore.Inventory, DataStore.MissionManager);
         }
 
-        public void Init(PlayerState state)
+        public void Init(PlayerDataStore dataStore)
         {
-            State = state;
+            DataStore = dataStore;
 
-            State.PlayerStatus.MaxHealthChangedCallback += (amt) => RefreshUI();
-            State.PlayerStatus.HealthChangedCallback += (amt) => RefreshUI();
-            State.PlayerStatus.EmptyHealthBarCallback += () => this.Print("Player Dead");
+            DataStore.PlayerStatus.MaxHealthChangedCallback += (amt) => RefreshUI();
+            DataStore.PlayerStatus.HealthChangedCallback += (amt) => RefreshUI();
+            DataStore.PlayerStatus.EmptyHealthBarCallback += () => this.Print("Player Dead");
 
-            State.MissionManager.AddMissionEvent += UpdateMissions;
-            State.MissionManager.RemoveMissionEvent += UpdateMissions;
+            DataStore.MissionManager.AddMissionEvent += UpdateMissions;
+            DataStore.MissionManager.RemoveMissionEvent += UpdateMissions;
             RefreshUI();
         }
     }

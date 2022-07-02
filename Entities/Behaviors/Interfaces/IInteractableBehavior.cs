@@ -17,12 +17,12 @@ namespace ThemedHorrorJam5.Entities.Components
         bool CanInteract { get; set; }
         Sprite ExaminableNotification { get; set; }
         bool IsDebugging { get; set; }
-        PlayerState State { get; set; }
+        PlayerDataStore DataStore { get; set; }
 
         bool HasItem(string itemName);
         bool HasKey(Key key);
         void HideExamineNotification();
-        void Init(PlayerState state);
+        void Init(PlayerDataStore dataStore);
         bool IsDebugPrintEnabled();
         void OnDoorInteraction(LockedDoor lockedDoor);
         void OnDoorInteractionComplete(LockedDoor lockedDoor);

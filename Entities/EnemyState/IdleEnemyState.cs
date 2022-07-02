@@ -1,15 +1,9 @@
-using System.Linq;
 using Godot;
-using System;
-using System.Collections.Generic;
-using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.Enum;
-using ThemedHorrorJam5.Scripts.Extensions;
-using ThemedHorrorJam5.Scripts.Patterns.Logger;
-using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 using ThemedHorrorJam5.Scripts.GDUtils;
+using ThemedHorrorJam5.Scripts.Patterns.StateMachine;
 
-namespace ThemedHorrorJam5.Entities
+namespace ThemedHorrorJam5.Entities.EnemyState
 {
     public class IdleEnemyState : State
     {

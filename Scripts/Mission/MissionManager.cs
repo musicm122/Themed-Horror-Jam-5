@@ -94,11 +94,11 @@ namespace ThemedHorrorJam5.Scripts.ItemComponents
 
         public int Count() => Missions.Count;
 
-        public void EvaluateMissionsState(PlayerState playerState)
+        public void EvaluateMissionsState(PlayerDataStore playerDataStore)
         {
             for (int i = 0; i < Missions.Count; i++)
             {
-                if (Missions[i].EvaluateCompletionState(playerState))
+                if (Missions[i].EvaluateCompletionState(playerDataStore))
                 {
                     Missions[i].IsComplete = true;
                 }
