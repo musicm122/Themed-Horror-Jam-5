@@ -1,7 +1,17 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 16 )
 
 [node name="Block" type="Node2D"]
 
 [node name="Polygon2D" type="Polygon2D" parent="."]
 color = Color( 0.239216, 0.109804, 0.870588, 1 )
 polygon = PoolVector2Array( -8, -16, -8, 16, 8, 16, 8, -16 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 7
+collision_mask = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource( 1 )

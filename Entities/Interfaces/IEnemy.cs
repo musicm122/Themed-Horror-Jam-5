@@ -9,7 +9,7 @@ namespace ThemedHorrorJam5.Entities
         IDamagableBehavior Damagable { get; }
         Node2D ObstacleAvoidance { get; set; }
         NodePath PatrolPath { get; set; }
-        EnemyStatus Status { get; set; }
+        EnemyDataStore EnemyDataStore { get; set; }
 
         void Init();
         void _PhysicsProcess(float delta);

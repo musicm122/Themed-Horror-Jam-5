@@ -14,8 +14,8 @@ namespace ThemedHorrorJam5.Entities.EnemyState
         private Navigation2D Nav { get; }
         private EnemyV4 Enemy { get; }
         private PlayerV2 PlayerRef { get; }
-        private EnemyStatus Status => Enemy.Status; 
-        private IVision VisionManager => Enemy.Status.VisionManager;
+        private EnemyDataStore DataStore => Enemy.EnemyDataStore;
+        private IVision VisionManager => Enemy.EnemyDataStore.VisionManager;
 
         public ChaseEnemyState(EnemyV4 enemy)
         {
@@ -50,7 +50,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
 
         private void ChasePlayer(float delta)
         {
-            if (Nav!=null)
+            if (Nav != null)
             {
                 var from = Nav.ToLocal(Enemy.GlobalPosition);
                 var to = Nav.ToLocal(PlayerRef.GlobalPosition);
@@ -58,7 +58,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
 
                 var enemyNavPath = new Stack<Vector2>(paths);
                 var distanceToWalk = Enemy.MaxSpeed * delta;
-                
+
                 while (distanceToWalk > 0f && enemyNavPath.Count > 0)
                 {
                     var nextPoint = Nav.ToGlobal(enemyNavPath.Peek());
@@ -82,8 +82,10 @@ namespace ThemedHorrorJam5.Entities.EnemyState
                         {
                             Enemy.HandleMovableObstacleCollision(globalDirection);
                         }
+
                         Enemy.GlobalPosition = globalNewPosition;
                     }
+
                     distanceToWalk -= globalDistance;
                 }
             }
@@ -91,9 +93,10 @@ namespace ThemedHorrorJam5.Entities.EnemyState
             {
                 Logger.Error("Navigation2D not found");
             }
-            if (Status.CurrentCoolDownCounter > 0)
+
+            if (DataStore.CurrentCoolDownCounter > 0)
             {
-                Status.CurrentCoolDownCounter -= delta;
+                DataStore.CurrentCoolDownCounter -= delta;
             }
         }
     }

@@ -10,7 +10,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
     public class WanderState : State
     {
         private float WanderAngle { get; set; }
-        
+
         private const int CircleRadius = 8;
 
         private const float Randomness = 0.2f;
@@ -81,13 +81,13 @@ namespace ThemedHorrorJam5.Entities.EnemyState
             Agent.Velocity += steering;
             Agent.Velocity = Agent.Velocity.Clamped(Agent.MaxSpeed);
 
-            Agent.Velocity = Agent.MoveAndSlide(Agent.Velocity);
-            Agent.Status.VisionManager.UpdateFacingDirection(Agent.Velocity);
+            Agent.Move(delta);
+
             if (Agent.IsDebugging)
             {
-                Agent.Status.DebugLabel.Text =
-                    Agent.Status.DebugLabel.Text =
-                   @$"
+                Agent.EnemyDataStore.DebugLabel.Text =
+                    Agent.EnemyDataStore.DebugLabel.Text =
+                        @$"
                     |-----------------------------------------------------------
                     | Agent Position : {Agent.Position.ToString()}
                     | Agent Global Position : {Agent.GlobalPosition.ToString()}
@@ -124,8 +124,8 @@ namespace ThemedHorrorJam5.Entities.EnemyState
                 var obstacle = (PhysicsBody2D)raycast.GetCollider();
                 return (Agent.Position + Agent.Velocity - obstacle.Position).Normalized() * Agent.AvoidForce;
             }
+
             return Vector2.Zero;
         }
-
     }
 }

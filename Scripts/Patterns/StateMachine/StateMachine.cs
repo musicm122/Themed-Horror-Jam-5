@@ -6,21 +6,20 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
 {
     public class StateMachine
     {
-        public ILogger Logger { get; set; } = new GDLogger();
+        private ILogger Logger { get; set; } = new GDLogger();
 
         // The collection of named states.
-        private readonly Dictionary<string, State> states = new Dictionary<string, State>();
+        private readonly Dictionary<string, State> _states = new Dictionary<string, State>();
 
         // The state that we're currently in.
 
         public State CurrentState { get; private set; }
 
         // The state that we'll start in.
-        public State InitialState;
+        private State InitialState { get; set; }
 
         public State CreateState(string name)
         {
-
             // Create the state
             var newState = new State
             {
@@ -29,29 +28,15 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
             };
 
             // If this is the first state, it will be our initial state
-            if (states.Count == 0)
+            if (_states.Count == 0)
             {
                 InitialState = newState;
             }
 
             // Add it to the dictionary
-            states[name] = newState;
+            _states[name] = newState;
 
             // And return it, so that it can be further configured
-            return newState;
-        }
-
-        public State AddState(State newState)
-        {
-
-            // If this is the first state, it will be our initial state
-            if (states.Count == 0)
-            {
-                InitialState = newState;
-            }
-
-            // Add it to the dictionary
-            states[newState.Name] = newState;
             return newState;
         }
 
@@ -59,12 +44,25 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
         public State CreateState<T>(T enumVal) where T : struct, System.Enum
             => CreateState(enumVal.GetDescription());
 
+        public State AddState(State newState)
+        {
+            // If this is the first state, it will be our initial state
+            if (_states.Count == 0)
+            {
+                InitialState = newState;
+            }
+
+            // Add it to the dictionary
+            _states[newState.Name] = newState;
+            return newState;
+        }
+
+
         // Updates the current state.
         public void Update(float delta)
         {
-
             // If we don't have any states to use, log the error.
-            if (states.Count == 0 || InitialState == null)
+            if (_states.Count == 0 || InitialState == null)
             {
                 Logger.Error("State machine has no states!");
                 return;
@@ -85,7 +83,6 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
         // Transitions to the specified state.
         public void TransitionTo(State newState)
         {
-
             // Ensure we weren't passed null
             if (newState == null)
             {
@@ -112,39 +109,34 @@ namespace ThemedHorrorJam5.Scripts.Patterns.StateMachine
         // Transitions to a named state.
         public void TransitionTo(string name)
         {
-
-            if (!states.ContainsKey(name))
+            if (!_states.ContainsKey(name))
             {
                 Logger.Error($"State machine doesn't contain a state named {name}!");
                 return;
             }
 
             // Find the state in the dictionary
-            var newState = states[name];
+            var newState = _states[name];
 
             // Transition to it
             TransitionTo(newState);
-
         }
 
 
         // Transitions to a named state.
         public void TransitionTo<T>(T enumVal) where T : struct, System.Enum
         {
-
-            if (!states.ContainsKey(enumVal.GetDescription()))
+            if (!_states.ContainsKey(enumVal.GetDescription()))
             {
                 Logger.Error($"State machine doesn't contain a state named {enumVal.GetDescription()}!");
                 return;
             }
 
             // Find the state in the dictionary
-            var newState = states[enumVal.GetDescription()];
+            var newState = _states[enumVal.GetDescription()];
 
             // Transition to it
             TransitionTo(newState);
-
         }
-
     }
 }

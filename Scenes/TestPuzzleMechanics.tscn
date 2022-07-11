@@ -22,7 +22,10 @@ position = Vector2( 736, 56 )
 
 [node name="Player" parent="." groups=["Player"] instance=ExtResource( 11 )]
 position = Vector2( 648, -40 )
+Acceleration = 500.0
+Friction = 500.0
 MaxSpeed = 150.0
+RollSpeed = 120.0
 
 [node name="NPC" parent="." instance=ExtResource( 7 )]
 position = Vector2( 448, -48 )

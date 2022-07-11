@@ -8,17 +8,25 @@ namespace ThemedHorrorJam5.Scripts.Extensions
 {
     public static class SceneTreeExtensions
     {
-        public static void AddItem(this SceneTree tree, string name, int amt = 1) {
+        public static void AlertAllEnemies(this SceneTree tree)
+        {
+            tree.CallGroup(Groups.AllEnemies, "Alert");
+        }
+
+        public static void AddItem(this SceneTree tree, string name, int amt = 1)
+        {
             var playerTuple = tree.GetPlayerNode();
-            if(!playerTuple.Item1)
+            if (!playerTuple.Item1)
             {
                 GD.PushWarning("Player node not found");
                 return;
             }
+
             playerTuple.Item2.AddItem(name, amt);
         }
 
-        public static void RemoveItem(this SceneTree tree, string name, int amt = 1) {
+        public static void RemoveItem(this SceneTree tree, string name, int amt = 1)
+        {
             tree.CallGroup(Groups.Player, "RemoveItem", name, amt);
             var playerTuple = tree.GetPlayerNode();
             if (!playerTuple.Item1)
@@ -26,15 +34,18 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                 GD.PushWarning("Player node not found");
                 return;
             }
+
             playerTuple.Item2.RemoveItems(name, amt);
         }
 
         public static void AddMission(this SceneTree tree, string title) =>
             tree.CallGroup(Groups.Player, "AddMission", title);
 
-        public static List<Examinable> GetExaminableCollection(this SceneTree tree) => tree.GetNodesByType<Examinable>();
+        public static List<Examinable> GetExaminableCollection(this SceneTree tree) =>
+            tree.GetNodesByType<Examinable>();
 
-        public static List<LockedDoor> GetLockedDoorCollection(this SceneTree tree) => tree.GetNodesByType<LockedDoor>();
+        public static List<LockedDoor> GetLockedDoorCollection(this SceneTree tree) =>
+            tree.GetNodesByType<LockedDoor>();
 
         private static List<T> GetNodesByType<T>(this SceneTree tree)
         {
@@ -46,6 +57,7 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                     retval.Add(t);
                 }
             }
+
             return retval;
         }
 
@@ -55,11 +67,20 @@ namespace ThemedHorrorJam5.Scripts.Extensions
         public static (bool, PlayerV2) GetPlayerNode(this SceneTree tree) =>
             tree.HasPlayerNode() ? (true, tree.CurrentScene.FindNode("Player") as PlayerV2) : (false, null);
 
+        public static List<EnemyV4> GetEnemyNodes(this SceneTree tree) =>
+            tree.Root.GetChildrenOfType<EnemyV4>();
+
 
         public static (bool, List<Navigation2D>) GetNavigation2dNodes(this SceneTree tree)
         {
             var navNodes = tree.GetNodesByType<Navigation2D>();
             return navNodes.Count > 0 ? (true, navNodes) : (false, default(List<Navigation2D>));
+        }
+
+        public static Vector2 GetPlayerGlobalPosition(this SceneTree tree)
+        {
+            var player = tree.GetPlayerNode();
+            return player.Item2.GlobalPosition;
         }
     }
 }

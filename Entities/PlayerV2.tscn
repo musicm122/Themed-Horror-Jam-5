@@ -395,6 +395,7 @@ graph_offset = Vector2( 0, 29.5991 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=13]
 
 [node name="PlayerRoot" type="KinematicBody2D"]
+collision_layer = 31
 script = ExtResource( 13 )
 Acceleration = 200.0
 Friction = 800.0
@@ -495,7 +496,7 @@ smoothing_enabled = true
 smoothing_speed = 2.0
 editor_draw_limits = true
 script = ExtResource( 5 )
-DefaultZoomLevel = 2.0
+DefaultZoomLevel = 3.0
 MaxZoom = 1.0
 ZoomFactor = 0.1
 
@@ -576,6 +577,8 @@ script = ExtResource( 9 )
 IsDebugging = true
 
 [node name="Hurtbox" parent="Behaviors/Damagable" instance=ExtResource( 2 )]
+collision_layer = 18
+collision_mask = 0
 
 [node name="CollisionShape" parent="Behaviors/Damagable/Hurtbox" index="0"]
 shape = SubResource( 2 )

@@ -3,12 +3,17 @@ using Godot;
 using ThemedHorrorJam5.Entities.Behaviors.Interfaces;
 using ThemedHorrorJam5.Entities.Vision;
 using ThemedHorrorJam5.Scripts.Constants;
+using ThemedHorrorJam5.Scripts.Extensions;
 using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
     public class SecurityCamera : Node2D, IDebuggable<Node2D>
     {
+        public float CurrentCoolDownCounter { get; set; }
+
+        public float MaxCoolDownTime { get; set; } = 10f;
+
         private bool IsStartMovement { get; set; } = true;
 
         private bool IsPausing { get; set; }
@@ -17,27 +22,23 @@ namespace ThemedHorrorJam5.Entities
 
         private Label DebugLabel { get; set; }
 
-        public CameraState CurrentState { get; set; } =  CameraState.Idle;
+        public CameraState CurrentState { get; set; } = CameraState.Idle;
 
         public IVision VisionManager { get; set; }
 
         public Node2D PlayerRef { get; set; }
 
-        [Export]
-        public float MaxRotationMovementTime { get; set; } = 2f;
+        [Export] public float MaxRotationMovementTime { get; set; } = 2f;
 
-        [Export]
-        public float PauseRotationTime { get; set; } = 2f;
+        [Export] public float PauseRotationTime { get; set; } = 2f;
 
-        [Export]
-        public float RotationSpeed { get; set; } = 80f;
+        [Export] public float RotationSpeed { get; set; } = 80f;
 
         public Node2D Target { get; set; }
 
         public Polygon2D CameraSprite { get; set; }
 
-        [Export]
-        public bool IsDebugging { get; set; } 
+        [Export] public bool IsDebugging { get; set; }
 
         public override void _Ready()
         {
@@ -91,6 +92,7 @@ namespace ThemedHorrorJam5.Entities
                     this.Rotation -= RotationSpeed * delta;
                 }
             }
+
             Elapsed += delta;
         }
 
@@ -101,11 +103,13 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnAggro(float delta)
         {
+            this.PrintCaller();
             if (PlayerRef == null) return;
             var targetPoint = PlayerRef.GlobalPosition;
             CameraSprite.Color = CommonColors.AggroColor;
             this.LookAt(targetPoint);
-            this.PrintCaller();
+            GetTree().AlertAllEnemies();
+            CurrentCoolDownCounter = MaxCoolDownTime;
         }
 
         private void OnDamaged(float delta)
@@ -119,6 +123,12 @@ namespace ThemedHorrorJam5.Entities
         }
 
         public bool IsDebugPrintEnabled() => IsDebugging;
+
+        public void Alert()
+        {
+            (_, PlayerRef) = GetTree().GetPlayerNode();
+            CurrentState = CameraState.Aggro;
+        }
 
         public override void _PhysicsProcess(float delta)
         {
@@ -140,10 +150,20 @@ namespace ThemedHorrorJam5.Entities
                     OnIdle(delta);
                     break;
             }
+
+            if (CurrentCoolDownCounter > 0)
+            {
+                CurrentCoolDownCounter -= delta;
+            }
+            else
+            {
+                CurrentState = CameraState.Idle;
+            }
+
             if (IsDebugging)
             {
                 DebugLabel.Text =
-@$"
+                    @$"
 ------Angle--------------
 Rotation : {Mathf.Rad2Deg(this.Rotation).ToString(CultureInfo.InvariantCulture)}
 Global Rotation: {Mathf.Rad2Deg(this.GlobalRotation).ToString(CultureInfo.InvariantCulture)}
@@ -153,7 +173,6 @@ GlobalTransform.Rotation: {Mathf.Rad2Deg(this.GlobalTransform.Rotation).ToString
 Rotation: {this.Rotation.ToString(CultureInfo.InvariantCulture)}
 Global Rotation: {this.GlobalRotation.ToString(CultureInfo.InvariantCulture)}
 GlobalTransform.Rotation: {this.GlobalTransform.Rotation.ToString(CultureInfo.InvariantCulture)}";
-
             }
         }
     }

@@ -3,5 +3,7 @@
 [ext_resource path="res://Entities/Vision/RaycastVision.cs" type="Script" id=1]
 
 [node name="RaycastVision" type="RayCast2D"]
+enabled = true
 cast_to = Vector2( 0, 20 )
 script = ExtResource( 1 )
+IsDebugging = true

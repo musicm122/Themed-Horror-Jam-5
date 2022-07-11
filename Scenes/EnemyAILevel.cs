@@ -2,12 +2,12 @@ using System.Globalization;
 using Godot;
 using ThemedHorrorJam5.Entities;
 using ThemedHorrorJam5.Scripts.Extensions;
-using ThemedHorrorJam5.Scripts.GDUtils;
 
 namespace ThemedHorrorJam5.Scenes
 {
     public class EnemyAILevel : Node2D
     {
+        public Navigation2D Navigation { get; set; }
         private PlayerV2 Player { get; set; }
 
         private EnemyV4 Enemy { get; set; }
@@ -25,6 +25,7 @@ namespace ThemedHorrorJam5.Scenes
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
+            Navigation = GetNode<Navigation2D>("Navigation2D");
             MousePosition = GetNode<Label>("CanvasLayer/MousePosition");
             Enemy = GetNode<EnemyV4>("Enemies/Enemy");
 

@@ -10,7 +10,7 @@ namespace ThemedHorrorJam5.Entities.EnemyState
     {
         private EnemyV4 Enemy { get; set; }
 
-        private EnemyStatus Status => this.Enemy.Status;
+        private EnemyDataStore DataStore => this.Enemy.EnemyDataStore;
 
         public PatrolEnemyState(EnemyV4 enemy)
         {
@@ -22,27 +22,27 @@ namespace ThemedHorrorJam5.Entities.EnemyState
             this.OnExit += () => this.Logger.Debug("PatrolEnemyState Exit called");
             this.OnFrame += Patrol;
 
-            if (Status.PatrolPath != null)
+            if (DataStore.PatrolPath != null)
             {
-                Status.Path = Enemy.GetNode<Path2D>(Status.PatrolPath);
-                Status.PatrolPoints = Status.Path.Curve.GetBakedPoints();
+                DataStore.Path = Enemy.GetNode<Path2D>(DataStore.PatrolPath);
+                DataStore.PatrolPoints = DataStore.Path.Curve.GetBakedPoints();
             }
             else
             {
-                Status.DebugLabel.Text += "Status.PatrolPath is null";
+                DataStore.DebugLabel.Text += "Status.PatrolPath is null";
             }
         }
 
         private void Patrol(float delta)
         {
-            if (Status.PatrolPath == null || !Enemy.CanMove) return;
+            if (DataStore.PatrolPath == null || !Enemy.CanMove) return;
 
-            var target = Status.PatrolPoints[Status.PatrolIndex];
+            var target = DataStore.PatrolPoints[DataStore.PatrolIndex];
 
             if (Enemy.Position.DistanceTo(target) <= 1)
             {
-                Status.PatrolIndex = Mathf.Wrap(Status.PatrolIndex + 1, 0, Status.PatrolPoints.Length);
-                target = Status.PatrolPoints[Status.PatrolIndex];
+                DataStore.PatrolIndex = Mathf.Wrap(DataStore.PatrolIndex + 1, 0, DataStore.PatrolPoints.Length);
+                target = DataStore.PatrolPoints[DataStore.PatrolIndex];
             }
 
             Enemy.Velocity = (target - Enemy.Position).Normalized() * Enemy.MaxSpeed;
@@ -53,7 +53,6 @@ namespace ThemedHorrorJam5.Entities.EnemyState
             }
 
             Enemy.Velocity = Enemy.MoveAndSlide(Enemy.Velocity);
-            Status.VisionManager.UpdateFacingDirection(Enemy.Velocity);
         }
     }
 }

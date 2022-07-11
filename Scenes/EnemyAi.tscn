@@ -120,19 +120,18 @@ rotation = -2.61153
 [node name="SecurityCamera" parent="." groups=["Movable"] instance=ExtResource( 4 )]
 position = Vector2( -752, -171 )
 rotation = -5.49778
-RotationSpeed = 0.2
 MaxRotationMovementTime = 3.0
+RotationSpeed = 0.2
 
 [node name="SecurityCamera2" parent="." groups=["Movable"] instance=ExtResource( 4 )]
 position = Vector2( -736, 72 )
 rotation = -1.0472
-RotationSpeed = 1.1
 MaxRotationMovementTime = 1.0
 PauseRotationTime = 1.0
+RotationSpeed = 1.1
 
 [node name="Enemy" parent="." groups=["Movable"] instance=ExtResource( 5 )]
 position = Vector2( -344, 32 )
-MoveSpeed = 20.0
 MaxSpeed = 40.0
 PatrolPath = NodePath("../Enemy2_Path2D")
 

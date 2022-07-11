@@ -2,7 +2,6 @@
 using ThemedHorrorJam5.Entities.Behaviors;
 using ThemedHorrorJam5.Entities.Components;
 using ThemedHorrorJam5.Scripts.ItemComponents;
-using ThemedHorrorJam5.Scripts.Patterns.Logger;
 
 namespace ThemedHorrorJam5.Entities
 {
@@ -21,6 +20,7 @@ namespace ThemedHorrorJam5.Entities
         public Health PlayerStatus { get; set; }
 
         public PlayerAnimationManager AnimationManager { get; set; }
+
         public override void _Ready()
         {
             base._Ready();
@@ -62,7 +62,6 @@ namespace ThemedHorrorJam5.Entities
         private void OnHurtboxInvincibilityEnded()
         {
             AnimationManager?.StopBlinkAnimation();
-            
         }
 
         private void OnHurtboxInvincibilityStarted()
@@ -72,9 +71,9 @@ namespace ThemedHorrorJam5.Entities
 
         private void OnProcessMovement(Vector2 vector2)
         {
-            AnimationManager?.UpdateAnimationBlendPositions(vector2);            
+            AnimationManager?.UpdateAnimationBlendPositions(vector2);
         }
-        
+
         private void OnRollAction(Vector2 velocity)
         {
             AnimationManager?.PlayRollAnimation(velocity);

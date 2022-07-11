@@ -11,10 +11,11 @@ namespace ThemedHorrorJam5.Entities.Vision
         public Action<Node2D> OnTargetSeen { get; set; }
         public Action<Node2D> OnTargetOutOfSight { get; set; }
 
-        public Node2D Target { get; set; }
 
-        [Export]
-        public bool IsDebugging { get; set; }
+        [Export] public bool IsDebugging { get; set; }
+
+        public Node2D OldTarget { get; set; }
+        public Node2D NewTarget { get; set; }
 
         private bool LineOfSight { get; set; }
 
@@ -26,32 +27,25 @@ namespace ThemedHorrorJam5.Entities.Vision
 
         private void OnVisionRadiusBodyEntered(Node body)
         {
-            if (body.Name.ToLower().Contains("player"))
-            {
-                this.PrintCaller();
-                Target = (Node2D)body;
-                if (HasLineOfSight(Target.Position))
-                {
-                    OnTargetSeen?.Invoke(Target);
-                }
-            }
+            if (!body.Name.ToLower().Contains("player")) return;
+
+            this.PrintCaller();
+            NewTarget = (Node2D)body;
+            LineOfSight = HasLineOfSight(NewTarget.Position);
+            if (!LineOfSight) return;
+            OnTargetSeen?.Invoke(NewTarget);
+            OldTarget = NewTarget;
+            NewTarget = null;
         }
 
         private void OnVisionRadiusBodyExit(Node body)
         {
-            if (body.Name.ToLower().Contains("player"))
-            {
-                Target = (Node2D)body;
-                this.PrintCaller();
-                if (!HasLineOfSight(Target.Position))
-                {
-                    OnTargetOutOfSight?.Invoke(Target);
-                }
-                else
-                {
-                    OnTargetSeen?.Invoke(Target);
-                }
-            }
+            if (!body.Name.ToLower().Contains("player")) return;
+            this.PrintCaller();
+            if (OldTarget == null) return;
+            LineOfSight = HasLineOfSight(OldTarget.GlobalPosition);
+            if (!LineOfSight) return;
+            OnTargetOutOfSight?.Invoke(OldTarget);
         }
 
         public bool CanSeeTarget()
@@ -66,6 +60,7 @@ namespace ThemedHorrorJam5.Entities.Vision
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -80,6 +75,11 @@ namespace ThemedHorrorJam5.Entities.Vision
         public void UpdateFacingDirection(Vector2 newVelocity)
         {
             this.Rotation = this.Position.AngleToPoint(newVelocity);
+        }
+
+        public void LookAtPoint(Vector2 point)
+        {
+            this.LookAt(point);
         }
     }
 }

@@ -9,7 +9,6 @@ namespace ThemedHorrorJam5.Entities.Behaviors
     {
         private ILogger _logger;
         [Export] public bool IsDebugging { get; set; }
-
         [Export] public float DefaultZoomLevel { get; set; } = 1.0f;
         [Export] public Vector2 DefaultPan { get; set; } = new Vector2(0, 0);
         [Export] public float MinZoom { get; set; } = 0.5f;
@@ -31,8 +30,11 @@ namespace ThemedHorrorJam5.Entities.Behaviors
 
         public override void _Ready()
         {
-            this._logger = IsDebugging ? new GDLogger(level: LogLevelOutput.Debug) :  new GDLogger(level: LogLevelOutput.Warning);
+            this._logger = IsDebugging
+                ? new GDLogger(level: LogLevelOutput.Debug)
+                : new GDLogger(level: LogLevelOutput.Warning);
             this.TweenUtil = GetNode<Tween>("Tween");
+            ResetCamera();
         }
 
         public void SetZoom(float amount)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Godot;
@@ -15,9 +16,10 @@ namespace ThemedHorrorJam5.Scripts.Extensions
         }
 
         public static TinyIoCContainer GetContainer(this Node node) => node.GetGlobal().Container;
-        
 
-        public static void DrawCircleArc(this Node2D node , Vector2 center, float radius, float angleFrom, float angleTo, Color color)
+
+        public static void DrawCircleArc(this Node2D node, Vector2 center, float radius, float angleFrom, float angleTo,
+            Color color)
         {
             int nbPoints = 32;
             var pointsArc = new Vector2[nbPoints + 1];
@@ -43,7 +45,7 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                 if (result != Error.Ok)
                 {
                     var message =
-                    $@"-------------------------------------
+                        $@"-------------------------------------
                     ConnectBodyEntered with args failed with {result.ToString()}
                     TryConnectSignal args
                     node:{node.Name ?? "null"}
@@ -52,7 +54,8 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                     methodName :{methodName ?? "null"}
                     -------------------------------------";
 
-                    GD.PrintErr(MethodBase.GetCurrentMethod()?.Name, new ApplicationException(result.ToString()), message);
+                    GD.PrintErr(MethodBase.GetCurrentMethod()?.Name, new ApplicationException(result.ToString()),
+                        message);
                     GD.PrintStack();
                 }
             }
@@ -66,6 +69,7 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                     methodName :{methodName ?? "null"}");
                 throw;
             }
+
             return result == Error.Ok;
         }
 
@@ -78,14 +82,13 @@ namespace ThemedHorrorJam5.Scripts.Extensions
                     node.Disconnect(signal, target, methodName);
                     return true;
                 }
-                
+
                 GD.Print($@"TryDisconnectSignal failed args
                 node:{node.Name ?? "null"}
                 signal:{signal ?? "null"}
                 target:{target.ToString() ?? "null"}
                 methodName :{methodName ?? "null"}");
                 return false;
-                
             }
             catch (Exception ex)
             {
@@ -118,6 +121,20 @@ namespace ThemedHorrorJam5.Scripts.Extensions
             node.GetTree().Paused = (!node.GetTree().Paused);
         }
 
+        public static List<T> GetChildrenOfType<T>(this Node node)
+        {
+            var retval = new List<T>();
+            var children = node.GetChildren();
+            var childCount = children.Count;
+            for (int i = 0; i < childCount; i++)
+            {
+                if (children[i] is T)
+                    retval.Add((T)children[i]);
+            }
+
+            return retval;
+        }
+
         public static async Task WaitForSeconds(this Node node, float seconds)
         {
             try
@@ -132,11 +149,10 @@ namespace ThemedHorrorJam5.Scripts.Extensions
         }
 
         public static string DisplayPositionData(this Node2D node, string title) =>
-        @$"
+            @$"
         |-----------------------------------------------------------
         | {title} Global Position: {node.GlobalPosition.ToString()}
         | {title} Local Position: {node.Position.ToString()}
         |-----------------------------------------------------------";
-        
     }
 }

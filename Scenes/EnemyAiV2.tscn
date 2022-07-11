@@ -65,39 +65,38 @@ position = Vector2( 394.595, -26 )
 
 [node name="Enemy" parent="Enemies" instance=ExtResource( 5 )]
 position = Vector2( -98.595, 10 )
-MoveSpeed = 20.0
+IsDebugging = false
 MaxSpeed = 20.0
 ArrivalZoneRadius = 5
 EnclosureZone = Rect2( 0, 0, 10, 10 )
 PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
 [node name="Enemy2" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( -415.595, 121 )
-MoveSpeed = 20.0
+position = Vector2( -923.595, 107 )
+IsDebugging = false
 MaxSpeed = 20.0
 ArrivalZoneRadius = 5
 EnclosureZone = Rect2( 0, 0, 10, 10 )
 PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
 [node name="Enemy3" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( -267.595, -183 )
-MoveSpeed = 20.0
+position = Vector2( -537.595, -167 )
+IsDebugging = false
 MaxSpeed = 20.0
 ArrivalZoneRadius = 5
 EnclosureZone = Rect2( 0, 0, 10, 10 )
 PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
 [node name="Enemy4" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( -475.595, -174 )
-MoveSpeed = 20.0
+position = Vector2( -825.595, -166 )
 MaxSpeed = 20.0
 ArrivalZoneRadius = 5
 EnclosureZone = Rect2( 0, 0, 10, 10 )
 PatrolPath = NodePath("../../Paths/Enemy2_Path2D")
 
 [node name="Enemy5" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( -166.595, -133 )
-MoveSpeed = 20.0
+position = Vector2( -257.595, -97 )
+IsDebugging = false
 MaxSpeed = 20.0
 ArrivalZoneRadius = 5
 EnclosureZone = Rect2( 0, 0, 10, 10 )
